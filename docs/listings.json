@@ -1,0 +1,29 @@
+[
+  {
+    "listing": "/blog.html",
+    "items": [
+      "/posts/post-with-code/index.html",
+      "/posts/welcome/index.html"
+    ]
+  },
+  {
+    "listing": "/index.html",
+    "items": [
+      "/posts/post-with-code/index.html",
+      "/posts/welcome/index.html"
+    ]
+  },
+  {
+    "listing": "/ramblings.html",
+    "items": [
+      "/ramblings/2025-09-03-thoughts-on-ai.html"
+    ]
+  },
+  {
+    "listing": "/resources.html",
+    "items": [
+      "/resources/ml/neural-networks-intro.html",
+      "/resources/physics/quantum-mechanics-basics.html"
+    ]
+  }
+]

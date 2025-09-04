@@ -1,0 +1,12 @@
+---
+title: "Quantum Mechanics Fundamentals"
+description: "Interactive course on quantum mechanics principles"
+date: "2024-01-10"
+categories: [physics, quantum]
+---
+
+# Quantum Mechanics Fundamentals
+
+[Link to resource](https://example.com/quantum-course)
+
+Essential resource for understanding quantum mechanical principles.

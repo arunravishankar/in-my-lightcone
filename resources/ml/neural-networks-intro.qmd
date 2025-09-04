@@ -1,0 +1,12 @@
+---
+title: "Neural Networks Introduction"
+description: "Comprehensive guide to understanding neural networks from first principles"
+date: "2024-01-15"
+categories: [machine-learning, deep-learning]
+---
+
+# Neural Networks Introduction
+
+[Link to resource](https://example.com/neural-networks-guide)
+
+Brief description of why this resource is valuable and what it covers.

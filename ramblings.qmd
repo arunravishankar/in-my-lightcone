@@ -1,0 +1,16 @@
+---
+title: "Ramblings"
+page-layout: full
+listing:
+  contents: "ramblings/*.qmd"
+  sort: "date desc" 
+  type: default
+  categories: true
+  fields: [title, date, description]
+  sort-ui: false
+  filter-ui: false
+---
+
+# Ramblings
+
+Quick thoughts, observations, and musings - curated from my social media posts and spontaneous ideas.

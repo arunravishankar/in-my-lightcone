@@ -1,0 +1,10 @@
+---
+title: "Thoughts on AI development"
+date: "2024-01-15"
+description: "Random observation about the pace of AI progress"
+categories: [ai, technology]
+---
+
+The fascinating thing about AI development isn't just the technical breakthroughs - it's how quickly our baseline assumptions about "impossible" keep shifting.
+
+*Originally posted on Bluesky*

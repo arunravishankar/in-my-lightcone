@@ -1,12 +1,14 @@
 {
   "listingMap": {
+    "ramblings.qmd": [
+      "ramblings/*.qmd"
+    ],
     "index.qmd": [
       "posts"
     ],
     "resources.qmd": [
       "resources/ml/*.qmd",
-      "resources/physics/*.qmd",
-      "resources/development/*.qmd"
+      "resources/physics/*.qmd"
     ],
     "blog.qmd": [
       "posts"

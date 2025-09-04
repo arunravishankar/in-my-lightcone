@@ -16,5 +16,17 @@
   },
   "blog.qmd": {
     "blog.html": "35498b70"
+  },
+  "resources/ml/neural-networks-intro.qmd": {
+    "neural-networks-intro.html": "85bda51c"
+  },
+  "resources/physics/quantum-mechanics-basics.qmd": {
+    "quantum-mechanics-basics.html": "c269ab44"
+  },
+  "ramblings.qmd": {
+    "ramblings.html": "5752c2ba"
+  },
+  "ramblings/2025-09-03-thoughts-on-ai.qmd": {
+    "2025-09-03-thoughts-on-ai.html": "af7af780"
   }
 }

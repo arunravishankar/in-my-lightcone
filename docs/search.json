@@ -1,0 +1,93 @@
+[
+  {
+    "objectID": "blog.html",
+    "href": "blog.html",
+    "title": "Blog",
+    "section": "",
+    "text": "Post With Code\n\n\n\nnews\n\ncode\n\nanalysis\n\n\n\n\n\n\n\n\n\nSep 3, 2025\n\n\nHarlow Malloc\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nAug 31, 2025\n\n\nTristan O’Malley\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "ramblings/2025-09-03-thoughts-on-ai.html",
+    "href": "ramblings/2025-09-03-thoughts-on-ai.html",
+    "title": "Thoughts on AI development",
+    "section": "",
+    "text": "The fascinating thing about AI development isn’t just the technical breakthroughs - it’s how quickly our baseline assumptions about “impossible” keep shifting.\nOriginally posted on Bluesky"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "In My Lightcone",
+    "section": "",
+    "text": "Welcome to my exploration of ideas across past, present, and future lightcones. Here I document thoughts, discoveries, and connections spanning technology, science, and the boundaries of curiosity.\nThe concept of a lightcone from physics describes the region of spacetime that can causally influence or be influenced by a given event. Everything I write about here exists within my informational lightcone - connected to my past experiences and potentially shaping future understanding."
+  },
+  {
+    "objectID": "index.html#recent-posts",
+    "href": "index.html#recent-posts",
+    "title": "In My Lightcone",
+    "section": "Recent Posts",
+    "text": "Recent Posts\nLatest thoughts and explorations:\nView all posts →"
+  },
+  {
+    "objectID": "resources/ml/neural-networks-intro.html",
+    "href": "resources/ml/neural-networks-intro.html",
+    "title": "Neural Networks Introduction",
+    "section": "",
+    "text": "Neural Networks Introduction\nLink to resource\nBrief description of why this resource is valuable and what it covers."
+  },
+  {
+    "objectID": "posts/post-with-code/index.html",
+    "href": "posts/post-with-code/index.html",
+    "title": "Post With Code",
+    "section": "",
+    "text": "This is a post with executable code."
+  },
+  {
+    "objectID": "ramblings.html",
+    "href": "ramblings.html",
+    "title": "Ramblings",
+    "section": "",
+    "text": "Ramblings\nQuick thoughts, observations, and musings - curated from my social media posts and spontaneous ideas.\n\n\n\n\n\n\n\n\n\n\nThoughts on AI development\n\n\nRandom observation about the pace of AI progress\n\n\n\n\n\nJan 15, 2024\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome To My Blog",
+    "section": "",
+    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+  },
+  {
+    "objectID": "resources/physics/quantum-mechanics-basics.html",
+    "href": "resources/physics/quantum-mechanics-basics.html",
+    "title": "Quantum Mechanics Fundamentals",
+    "section": "",
+    "text": "Quantum Mechanics Fundamentals\nLink to resource\nEssential resource for understanding quantum mechanical principles."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this blog"
+  },
+  {
+    "objectID": "resources.html",
+    "href": "resources.html",
+    "title": "Resources",
+    "section": "",
+    "text": "Resources I’ve found valuable, automatically organized by category.\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nDescription\n\n\n\nDate\n\n\n\n\n\n\n\n\nNeural Networks Introduction\n\n\nComprehensive guide to understanding neural networks from first principles\n\n\nJan 15, 2024\n\n\n\n\n\n\nNo matching items\n\n\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nDescription\n\n\n\nDate\n\n\n\n\n\n\n\n\nQuantum Mechanics Fundamentals\n\n\nInteractive course on quantum mechanics principles\n\n\nJan 10, 2024\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "resources.html#machine-learning-ai",
+    "href": "resources.html#machine-learning-ai",
+    "title": "Resources",
+    "section": "",
+    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nDescription\n\n\n\nDate\n\n\n\n\n\n\n\n\nNeural Networks Introduction\n\n\nComprehensive guide to understanding neural networks from first principles\n\n\nJan 15, 2024\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "resources.html#physics-mathematics",
+    "href": "resources.html#physics-mathematics",
+    "title": "Resources",
+    "section": "",
+    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nDescription\n\n\n\nDate\n\n\n\n\n\n\n\n\nQuantum Mechanics Fundamentals\n\n\nInteractive course on quantum mechanics principles\n\n\nJan 10, 2024\n\n\n\n\n\n\nNo matching items"
+  }
+]
