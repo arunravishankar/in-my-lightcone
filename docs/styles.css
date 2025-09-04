@@ -1,1 +1,70 @@
 /* css styles */
+/* Yellow Theme Overrides for Simplex */
+
+/* Primary Yellow Colors */
+:root {
+  --yellow-primary: #ffdd3c;
+  --yellow-secondary: #ffea61;
+  --yellow-light: #fff8d7;
+  --yellow-dark: #e6c635;
+}
+
+/* Navigation and Header Styling */
+.navbar-brand {
+  color: var(--yellow-primary) !important;
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--yellow-primary) !important;
+}
+
+/* Link Colors */
+a {
+  color: var(--yellow-dark);
+}
+
+a:hover {
+  color: var(--yellow-primary);
+}
+
+/* Highlight and Accent Colors */
+.btn-primary {
+  background-color: var(--yellow-primary);
+  border-color: var(--yellow-primary);
+  color: #000;
+}
+
+.btn-primary:hover {
+  background-color: var(--yellow-dark);
+  border-color: var(--yellow-dark);
+  color: #000;
+}
+
+/* Table of Contents */
+.sidebar-navigation .sidebar-item a.active {
+  color: var(--yellow-primary) !important;
+}
+
+/* Code blocks accent */
+.sourceCode {
+  border-left: 3px solid var(--yellow-secondary);
+}
+
+/* Blockquotes */
+blockquote {
+  border-left: 4px solid var(--yellow-primary);
+  background-color: var(--yellow-light);
+  padding: 1rem;
+}
+
+/* Headers with subtle yellow accent */
+h1, h2 {
+  border-bottom-color: var(--yellow-secondary);
+}
+
+/* Focus states for accessibility */
+.nav-link:focus,
+.btn:focus,
+a:focus {
+  box-shadow: 0 0 0 2px var(--yellow-secondary);
+}

@@ -29,5 +29,11 @@ website:
 
 format:
   html:
-    theme: simplex
+    theme: sketchy
+    css: styles.css
+    include-in-header:
+      - text: |
+yamlformat:
+  html:
+    theme: sketchy
     css: styles.css
