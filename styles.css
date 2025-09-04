@@ -68,3 +68,26 @@ h1, h2 {
 a:focus {
   box-shadow: 0 0 0 2px var(--yellow-secondary);
 }
+
+/* Navigation bar styling */
+.navbar {
+    background-color: #2c4c3b !important;
+}
+
+/* Alternative dark green options - uncomment one if you prefer it */
+/* .navbar { background-color: #0d2818 !important; } */ /* Even darker */
+/* .navbar { background-color: #2d5a3d !important; } */ /* Slightly lighter */
+
+/* Ensure text remains readable on dark green background */
+.navbar-nav .nav-link {
+    color: #ffffff !important;
+}
+
+.navbar-brand {
+    color: #ffdd3c !important; /* Keeps your yellow brand color */
+}
+
+/* Hover effects for navigation links */
+.navbar-nav .nav-link:hover {
+    color: #ffdd3c !important; /* Yellow on hover */
+}
