@@ -1,0 +1,23 @@
+---
+title: "In My Lightcone"
+page-layout: full
+title-block-banner: true
+listing:
+  contents: posts
+  sort: "date desc"
+  type: default
+  categories: false
+  sort-ui: false
+  filter-ui: false
+  max-items: 5
+---
+
+Welcome to my exploration of ideas across past, present, and future lightcones. Here I document thoughts, discoveries, and connections spanning technology, science, and the boundaries of curiosity.
+
+The concept of a lightcone from physics describes the region of spacetime that can causally influence or be influenced by a given event. Everything I write about here exists within my informational lightcone - connected to my past experiences and potentially shaping future understanding.
+
+## Recent Posts
+
+*Latest thoughts and explorations:*
+
+[View all posts →](blog.qmd)

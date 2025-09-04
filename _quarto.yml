@@ -1,0 +1,30 @@
+project:
+  type: website
+
+website:
+  title: "In My Lightcone"
+  site-url: https://yourdomain.com  
+  description: "Exploring ideas across past, present, and future lightcones"
+  
+  navbar:
+    left:
+      - text: "Home"
+        file: index.qmd
+      - text: "About" 
+        file: about.qmd
+      - text: "Blog"
+        file: blog.qmd
+      - text: "Resources"
+        file: resources.qmd
+    right:
+      - icon: github
+        href: https://github.com/arunravishankar
+      - icon: linkedin
+        href: https://www.linkedin.com/in/arunravishankar
+      - icon: bluesky
+        href: https://bsky.app/profile/arunravishankar.bsky.social
+
+format:
+  html:
+    theme: litera  # This is a clean, modern built-in theme
+    css: styles.css

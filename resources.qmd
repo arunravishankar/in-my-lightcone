@@ -1,0 +1,35 @@
+---
+title: "Resources"
+listing:
+  - id: ml-resources
+    contents: "resources/ml/*.qmd"
+    type: table
+    fields: [title, description, date]
+    sort: "date desc"
+  - id: physics-resources  
+    contents: "resources/physics/*.qmd"
+    type: table
+    fields: [title, description, date]
+    sort: "date desc"
+  - id: dev-resources
+    contents: "resources/development/*.qmd" 
+    type: table
+    fields: [title, description, date]
+    sort: "date desc"
+---
+
+# Curated Resources
+
+Resources I've found valuable, automatically organized by category.
+
+## Machine Learning & AI
+::: {#ml-resources}
+:::
+
+## Physics & Mathematics
+::: {#physics-resources}
+:::
+
+## Development & Programming
+::: {#dev-resources}
+:::s

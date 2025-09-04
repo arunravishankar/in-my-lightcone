@@ -1,0 +1,19 @@
+---
+title: "About"
+image: profile.jpg
+about:
+  template: jolla
+  links:
+    - icon: bluesky
+      text: Bluesky
+      href: https://bsky.app/profile/arunravishankar.bsky.social
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/arunravishankar/
+    - icon: github
+      text: Github
+      href: https://github.com/arunravishankar
+
+---
+
+About this blog

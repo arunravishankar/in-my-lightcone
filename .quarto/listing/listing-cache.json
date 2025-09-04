@@ -1,0 +1,15 @@
+{
+  "listingMap": {
+    "index.qmd": [
+      "posts"
+    ],
+    "resources.qmd": [
+      "resources/ml/*.qmd",
+      "resources/physics/*.qmd",
+      "resources/development/*.qmd"
+    ],
+    "blog.qmd": [
+      "posts"
+    ]
+  }
+}
