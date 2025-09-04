@@ -29,5 +29,5 @@ website:
 
 format:
   html:
-    theme: morph
+    theme: simplex
     css: styles.css
