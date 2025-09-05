@@ -11,28 +11,46 @@ listing:
   max-items: 5
 ---
 
-## Why "In My Lightcone"?
-In physics, a lightcone represents all the events in spacetime that can causally influence or be influenced by a given point. It's the boundary of what can affect you and what you can affect. I chose this name because this blog is about the ideas, experiences and connections within m own sphere of influence and interest.
+## Welcome to In My Lightcone
 
-## What you'll find here
-My curiosity spans an unusually wide range of topics, and this blog is where I hope to methodically document what I'm learning and thinking about. It serves two purposes: helping me reflect on and consolidate my own ideas, and sharing parts of my journey that might be useful to others who stumble upon this corner of the internet.
-My current interests include:
+I document the things I'm learning here, mostly for my own reference. 
+My curiosity jumps around a lot, so this ends up being a pretty eclectic mix of topics.
 
-- **Game Theory & Economics** - Optimal play in games, price discovery & auction design
+The name comes from physics — a lightcone contains all events that can influence you and what you can influence. 
+This blog is basically my intellectual lightcone: the ideas I'm grappling with and the questions that won't leave me alone.
 
-- **AI & ML** - Recommendation systems, Memory in LLM Agents
 
-- **Decision Science** - Experimentation
+## What I'm figuring out
+Right now I'm deep in a bunch of different areas that probably don't seem related but somehow all scratch the same itch:
 
-- **Systems & Emergence** - Complex systems, emergent phenomena
+**Optimal play in games** - Understanding how to find the best strategies across different types of games: 
+deterministic vs stochastic, complete vs incomplete information. This will involve learning game theory fundamentals, 
+depending on the game structure.
 
-## Join the conversation
-This isn't just a one-way broadcast. I'm hoping to connect with fellow curious minds—researchers switching fields, builders exploring new domains, or anyone who gets excited about understanding how systems work.
-If something I write sparks a thought, challenges your perspective, or reminds you of your own journey, I'd love to hear about it. The best insights often come from unexpected conversations with people who see things differently.
+**Price discovery and auction design** - How do individuals behave with limited information and cognitive biases 
+in auctions? How does auction design influence whether the final transaction value reflects actual value? 
+This pulls me into mechanism design, behavioral economics, and understanding how market structure affects outcomes.
 
-Email: arunravishankar@gmail.com
+**Recommendation systems** - I'm particularly curious about how these systems create user bubbles and 
+whether there are ways to resolve this inherent property without destroying the user experience.
 
-LinkedIn: linkedin.com/in/arunravishankar
+**Experimentation** - Bayesian approaches in experimentation and when they're a useful addition to your 
+toolkit as a data scientist.
+
+**Memory in LLMs** - Knowledge graphs, graph databases, and ways to store and retrieve memory for AI agents 
+in a cheap, quick and efficient way. I want to learn about semantic search, knowledge graphs, 
+and other memory architectures.
+
+These topics will definitely shift over time. That's kind of the point.
+
+## Why write publicly?
+Partly because writing forces me to actually understand things instead of just thinking I do. 
+Working in industry forces you to be quick and efficient in your work which has it's own merits. But you don't 
+get a lot of time to grind slowly. I want to use this blog to bring back those muscles that took years of training to develop.
+But also because I'm hoping to find people who are curious about similar stuff. If you're working on any of these problems, or if something I write reminds you of something completely different that you're thinking about, I'd love to hear from you.
+Maybe you're part of the pack I'm looking for.
+
+Email: [arunravishankar@gmail.com](mailto:arunravishankar@gmail.com) | LinkedIn: [linkedin.com/in/arunravishankar](linkedin.com/in/arunravishankar)
 
 ## Recent Posts
 

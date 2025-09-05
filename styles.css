@@ -71,7 +71,7 @@ a:focus {
 
 /* Navigation bar styling */
 .navbar {
-    background-color: #2c4c3b !important;
+    background-color: #666666 !important;
 }
 
 /* Alternative dark green options - uncomment one if you prefer it */
@@ -90,4 +90,83 @@ a:focus {
 /* Hover effects for navigation links */
 .navbar-nav .nav-link:hover {
     color: #ffdd3c !important; /* Yellow on hover */
+}
+
+/* About page layout */
+.about-container {
+    display: flex;
+    gap: 2rem;
+    margin-top: 2rem;
+    align-items: flex-start;
+}
+
+.about-photo {
+    flex: 0 0 300px; /* Fixed width for photo column */
+    position: sticky;
+    top: 2rem;
+}
+
+.profile-img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.about-content {
+    flex: 1;
+    min-width: 0; /* Allows text to wrap properly */
+}
+
+/* Social badges styling */
+.social-badges {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.social-badges img {
+    margin: 0 0.5rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .about-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .about-photo {
+        flex: none;
+        position: relative;
+        text-align: center;
+    }
+    
+    .profile-img {
+        width: 200px;
+        max-width: 100%;
+    }
+}
+
+/* Timeline styling enhancement */
+.about-content h2 {
+    color: #666666;
+    border-bottom: 2px solid #ffdd3c;
+    padding-bottom: 0.5rem;
+    margin-top: 2rem;
+}
+
+/* Project links styling */
+.about-content a {
+    color: #1a4d3a;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.about-content a:hover {
+    color: #ffdd3c;
+    background-color: #666666;
+    padding: 2px 4px;
+    border-radius: 3px;
 }

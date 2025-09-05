@@ -2,7 +2,7 @@
 title: "About"
 image: profile.jpg
 about:
-  template: jolla
+  template: solana
   links:
     - icon: bluesky
       text: Bluesky
@@ -13,7 +13,66 @@ about:
     - icon: github
       text: Github
       href: https://github.com/arunravishankar
+    - icon: gmail
+      text: Gmail
+      href: mailto:arunravishankar@gmail.com
 
 ---
+I get excited about figuring things out, which has taken me on a rather wandering path across continents and disciplines.
 
-About this blog
+If we're going by standard buckets, I'd call myself a theoretical physicist-turned-data scientist, 
+but my interests are all over the place, so I'd rather not be stuck with that label.
+
+Curiosity about the quantum foundations took me from India to Munich, where I worked with the late [Detlef Dürr](https://www.mathematik.uni-muenchen.de/~duerr/) 
+on Bohmian mechanics. His research group was full of people who were inquisitive, and deeply cared about the work they did. 
+This was where I started looking at systems with the bottom-up approach — figuring out how to formulate a 
+theory that ontologically describes how nature works at a fundamental level, with the constraints of 
+having to describe known phenomena.
+
+I went to Tucson planning to work with [Sam Gralla](https://sgralla.arizona.edu/) on the self-force problem, but ended up getting sucked into 
+[black hole physics](https://inspirehep.net/authors/1798223) instead. The PhD years in Arizona were intense in ways I didn't expect. 
+I got really good at sitting with hard problems for months without making progress, 
+then suddenly seeing the path forward. Somewhere along the way, I also started caring about the math itself, 
+not just what it could tell me about black holes.
+
+Then Schnucki showed up with those brown eyes and infinite capacity for love, and suddenly being with her 
+in a place where she could run around freely became a priority. Seattle called — I'm a sucker for gloomy, 
+drizzly weather and the beautiful outdoors. I was fortunate to find my first position outside academia at Rover, 
+working with genuinely amazing people, and everything clicked differently. Instead of 
+"What fundamental dynamics make this happen?" I started asking "What can we actually figure out from messy, 
+real-world data?". I went from exact solutions and clean equations to thinking in distributions and probabilities. 
+Turns out that adding programming to your toolkit allows you to ask questions that you'd never 
+even think of asking if you didn't have those techniques under your belt.
+
+Long-term immigration stability brought me to Vancouver in 2024. Now I'm doing Stanford's AI program while consulting for 
+Turno (another 2-sided marketplace, because apparently I have a type). These days I'm obsessed with where game theory, 
+reinforcement learning, and economics overlap — it's this sweet spot where bottom-up and top-down thinking actually 
+play nice together. And yeah, like everyone else, I'm trying to figure out what to do with large language models.
+
+
+## Education
+**Stanford University** | Remote
+AI Graduate Certificate | Sep 2025 - present
+
+**The Data Incubator** | Remote
+Data Science Fellowship | Feb 2021 - May 2021
+
+**University of Arizona** | Tucson, AZ 
+PhD in Physics | Aug 2015 - Jul 2021
+
+**Ludwig Maximilians University** | Munich, DE
+Visiting student for Master's thesis | Aug 2013 - Jul 2014 
+
+**Birla Institute of Technology and Sciences** | Hyderabad, India
+MSc in Physics & Bachelors in Pharmacy | Aug 2009 - Jul 2014
+
+## Experience
+**Rover** | Seattle, WA
+Data Scientist II & III | Sep 2021 - Sep 2024
+
+**Turno** | Vancouver, BC
+Data Scientist | Sep 2024 - present
+
+If you're interested in more specifics of what I've done professionally, you can find more details on my [Resume](https://arunravishankar.github.io/cv/) and on [Linkedin](https://www.linkedin.com/in/arunravishankar/).
+
+The questions keep changing, but I'm still just as curious about complex systems — whether they're quantum foundations, black holes, markets, or whatever's next.

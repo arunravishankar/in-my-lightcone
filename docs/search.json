@@ -18,28 +18,28 @@
     "href": "index.html",
     "title": "In My Lightcone",
     "section": "",
-    "text": "In physics, a lightcone represents all the events in spacetime that can causally influence or be influenced by a given point. It’s the boundary of what can affect you and what you can affect. I chose this name because this blog is about the ideas, experiences and connections within m own sphere of influence and interest."
+    "text": "I document the things I’m learning here, mostly for my own reference. My curiosity jumps around a lot, so this ends up being a pretty eclectic mix of topics.\nThe name comes from physics — a lightcone contains all events that can influence you and what you can influence. This blog is basically my intellectual lightcone: the ideas I’m grappling with and the questions that won’t leave me alone."
   },
   {
-    "objectID": "index.html#why-in-my-lightcone",
-    "href": "index.html#why-in-my-lightcone",
+    "objectID": "index.html#welcome-to-in-my-lightcone",
+    "href": "index.html#welcome-to-in-my-lightcone",
     "title": "In My Lightcone",
     "section": "",
-    "text": "In physics, a lightcone represents all the events in spacetime that can causally influence or be influenced by a given point. It’s the boundary of what can affect you and what you can affect. I chose this name because this blog is about the ideas, experiences and connections within m own sphere of influence and interest."
+    "text": "I document the things I’m learning here, mostly for my own reference. My curiosity jumps around a lot, so this ends up being a pretty eclectic mix of topics.\nThe name comes from physics — a lightcone contains all events that can influence you and what you can influence. This blog is basically my intellectual lightcone: the ideas I’m grappling with and the questions that won’t leave me alone."
   },
   {
-    "objectID": "index.html#what-youll-find-here",
-    "href": "index.html#what-youll-find-here",
+    "objectID": "index.html#what-im-figuring-out",
+    "href": "index.html#what-im-figuring-out",
     "title": "In My Lightcone",
-    "section": "What you’ll find here",
-    "text": "What you’ll find here\nMy curiosity spans an unusually wide range of topics, and this blog is where I hope to methodically document what I’m learning and thinking about. It serves two purposes: helping me reflect on and consolidate my own ideas, and sharing parts of my journey that might be useful to others who stumble upon this corner of the internet. My current interests include:\n\nGame Theory & Economics - Optimal play in games, price discovery & auction design\nAI & ML - Recommendation systems, Memory in LLM Agents\nDecision Science - Experimentation\nSystems & Emergence - Complex systems, emergent phenomena"
+    "section": "What I’m figuring out",
+    "text": "What I’m figuring out\nRight now I’m deep in a bunch of different areas that probably don’t seem related but somehow all scratch the same itch:\nOptimal play in games - Understanding how to find the best strategies across different types of games: deterministic vs stochastic, complete vs incomplete information. This will involve learning game theory fundamentals, depending on the game structure.\nPrice discovery and auction design - How do individuals behave with limited information and cognitive biases in auctions? How does auction design influence whether the final transaction value reflects actual value? This pulls me into mechanism design, behavioral economics, and understanding how market structure affects outcomes.\nRecommendation systems - I’m particularly curious about how these systems create user bubbles and whether there are ways to resolve this inherent property without destroying the user experience.\nExperimentation - Bayesian approaches in experimentation and when they’re a useful addition to your toolkit as a data scientist.\nMemory in LLMs - Knowledge graphs, graph databases, and ways to store and retrieve memory for AI agents in a cheap, quick and efficient way. I want to learn about semantic search, knowledge graphs, and other memory architectures.\nThese topics will definitely shift over time. That’s kind of the point."
   },
   {
-    "objectID": "index.html#join-the-conversation",
-    "href": "index.html#join-the-conversation",
+    "objectID": "index.html#why-write-publicly",
+    "href": "index.html#why-write-publicly",
     "title": "In My Lightcone",
-    "section": "Join the conversation",
-    "text": "Join the conversation\nThis isn’t just a one-way broadcast. I’m hoping to connect with fellow curious minds—researchers switching fields, builders exploring new domains, or anyone who gets excited about understanding how systems work. If something I write sparks a thought, challenges your perspective, or reminds you of your own journey, I’d love to hear about it. The best insights often come from unexpected conversations with people who see things differently.\nEmail: arunravishankar@gmail.com\nLinkedIn: linkedin.com/in/arunravishankar"
+    "section": "Why write publicly?",
+    "text": "Why write publicly?\nPartly because writing forces me to actually understand things instead of just thinking I do. Working in industry forces you to be quick and efficient in your work which has it’s own merits. But you don’t get a lot of time to grind slowly. I want to use this blog to bring back those muscles that took years of training to develop. But also because I’m hoping to find people who are curious about similar stuff. If you’re working on any of these problems, or if something I write reminds you of something completely different that you’re thinking about, I’d love to hear from you. Maybe you’re part of the pack I’m looking for.\nEmail: arunravishankar@gmail.com | LinkedIn: linkedin.com/in/arunravishankar"
   },
   {
     "objectID": "index.html#recent-posts",
@@ -88,7 +88,21 @@
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "About this blog"
+    "text": "I get excited about figuring things out, which has taken me on a rather wandering path across continents and disciplines.\nIf we’re going by standard buckets, I’d call myself a theoretical physicist-turned-data scientist, but my interests are all over the place, so I’d rather not be stuck with that label.\nCuriosity about the quantum foundations took me from India to Munich, where I worked with the late Detlef Dürr on Bohmian mechanics. His research group was full of people who were inquisitive, and deeply cared about the work they did. This was where I started looking at systems with the bottom-up approach — figuring out how to formulate a theory that ontologically describes how nature works at a fundamental level, with the constraints of having to describe known phenomena.\nI went to Tucson planning to work with Sam Gralla on the self-force problem, but ended up getting sucked into black hole physics instead. The PhD years in Arizona were intense in ways I didn’t expect. I got really good at sitting with hard problems for months without making progress, then suddenly seeing the path forward. Somewhere along the way, I also started caring about the math itself, not just what it could tell me about black holes.\nThen Schnucki showed up with those brown eyes and infinite capacity for love, and suddenly being with her in a place where she could run around freely became a priority. Seattle called — I’m a sucker for gloomy, drizzly weather and the beautiful outdoors. I was fortunate to find my first position outside academia at Rover, working with genuinely amazing people, and everything clicked differently. Instead of “What fundamental dynamics make this happen?” I started asking “What can we actually figure out from messy, real-world data?”. I went from exact solutions and clean equations to thinking in distributions and probabilities. Turns out that adding programming to your toolkit allows you to ask questions that you’d never even think of asking if you didn’t have those techniques under your belt.\nLong-term immigration stability brought me to Vancouver in 2024. Now I’m doing Stanford’s AI program while consulting for Turno (another 2-sided marketplace, because apparently I have a type). These days I’m obsessed with where game theory, reinforcement learning, and economics overlap — it’s this sweet spot where bottom-up and top-down thinking actually play nice together. And yeah, like everyone else, I’m trying to figure out what to do with large language models."
+  },
+  {
+    "objectID": "about.html#education",
+    "href": "about.html#education",
+    "title": "About",
+    "section": "Education",
+    "text": "Education\nStanford University | Remote AI Graduate Certificate | Sep 2025 - present\nThe Data Incubator | Remote Data Science Fellowship | Feb 2021 - May 2021\nUniversity of Arizona | Tucson, AZ PhD in Physics | Aug 2015 - Jul 2021\nLudwig Maximilians University | Munich, DE Visiting student for Master’s thesis | Aug 2013 - Jul 2014\nBirla Institute of Technology and Sciences | Hyderabad, India MSc in Physics & Bachelors in Pharmacy | Aug 2009 - Jul 2014"
+  },
+  {
+    "objectID": "about.html#experience",
+    "href": "about.html#experience",
+    "title": "About",
+    "section": "Experience",
+    "text": "Experience\nRover | Seattle, WA Data Scientist II & III | Sep 2021 - Sep 2024\nTurno | Vancouver, BC Data Scientist | Sep 2024 - present\nIf you’re interested in more specifics of what I’ve done professionally, you can find more details on my Resume and on Linkedin.\nThe questions keep changing, but I’m still just as curious about complex systems — whether they’re quantum foundations, black holes, markets, or whatever’s next."
   },
   {
     "objectID": "resources.html",
