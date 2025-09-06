@@ -1,0 +1,12 @@
+{
+  "name": "knowledge-graph-explorer",
+  "version": "1.0.0",
+  "description": "Interactive 3D-style knowledge graph library",
+  "main": "dist/knowledge-graph.js",
+  "scripts": {
+    "dev": "python -m http.server 8000",
+    "build": "echo 'Build process will be added later'"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
