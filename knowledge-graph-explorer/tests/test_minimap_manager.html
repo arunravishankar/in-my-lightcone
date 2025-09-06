@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniMapManager Test</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        .test-title {
+            color: #2780e3;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        .result {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .test-data {
+            background-color: #f1f3f4;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+            margin: 10px 0;
+            white-space: pre-wrap;
+        }
+        h1 {
+            color: #2780e3;
+            text-align: center;
+        }
+        .summary {
+            background-color: #e7f3ff;
+            border: 2px solid #2780e3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .demo-container {
+            background: white;
+            border: 2px solid #2780e3;
+            margin: 10px 0;
+            position: relative;
+            width: 800px;
+            height: 500px;
+            overflow: hidden;
+        }
+        .demo-controls {
+            margin: 10px 0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .demo-controls button {
+            padding: 8px 16px;
+            background-color: #2780e3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .demo-controls button:hover {
+            background-color: #1e6bc7;
+        }
+        .demo-main-graph {
+            width: 100%;
+            height: 100%;
+            background: #f8f9fa;
+            position: relative;
+        }
+        .demo-node {
+            position: absolute;
+            border-radius: 50%;
+            background-color: #2780e3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+        }
+        .demo-node.education { background-color: #2780e3; }
+        .demo-node.research { background-color: #3fb618; }
+        .demo-node.industry { background-color: #ffdd3c; color: #212529; }
+        .demo-link {
+            position: absolute;
+            background-color: #868e96;
+            transform-origin: left center;
+            pointer-events: none;
+        }
+        .stats-display {
+            background-color: #f1f3f4;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            margin: 10px 0;
+        }
+        .viewport-overlay {
+            position: absolute;
+            border: 2px solid #ff0039;
+            background-color: rgba(255, 0, 57, 0.1);
+            pointer-events: none;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+    <h1>MiniMapManager Test Suite</h1>
+    
+    <div class="summary" id="summary">
+        <strong>Test Summary:</strong> <span id="summary-text">Running tests...</span>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 1: Initialization and Configuration</div>
+        <div id="test1-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 2: Bounds Calculation and Scaling</div>
+        <div id="test2-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 3: Data Updates and Rendering</div>
+        <div id="test3-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 4: Navigation and Interaction</div>
+        <div id="test4-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 5: Visibility and Configuration Updates</div>
+        <div id="test5-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Interactive Demo: Live MiniMap</div>
+        <div class="demo-controls">
+            <button onclick="demoToggleVisibility()">Toggle Visibility</button>
+            <button onclick="demoChangePosition('top-right')">Top Right</button>
+            <button onclick="demoChangePosition('bottom-left')">Bottom Left</button>
+            <button onclick="demoHighlightNodes(['B', 'D'])">Highlight B & D</button>
+            <button onclick="demoClearHighlights()">Clear Highlights</button>
+            <button onclick="demoFocusNode('C')">Focus Node C</button>
+            <button onclick="demoSimulateZoom()">Simulate Zoom</button>
+        </div>
+        <div class="demo-container" id="demo-container">
+            <div class="demo-main-graph" id="demo-main-graph"></div>
+        </div>
+        <div class="stats-display" id="demo-stats">Minimap not initialized</div>
+        <div id="demo-result"></div>
+    </div>
+
+    <!-- Load D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <!-- Load dependencies -->
+    <script src="../src/utils/CoordinateTransform.js"></script>
+    <script src="../src/core/MiniMapManager.js"></script>
+
+    <script>
+        // Test runner
+        let testsPassed = 0;
+        let testsTotal = 0;
+        let demoMiniMap = null;
+        let demoCoordinateTransform = null;
+        let demoNodes = [];
+        let demoLinks = [];
+        let currentViewport = { x: 0, y: 0, scale: 1 };
+
+        function runTest(testName, testFunction, resultElementId) {
+            testsTotal++;
+            try {
+                const result = testFunction();
+                displayResult(resultElementId, result, testName);
+                if (result.success) testsPassed++;
+            } catch (error) {
+                displayResult(resultElementId, {
+                    success: false,
+                    message: `Test threw error: ${error.message}`,
+                    error: error
+                });
+            }
+        }
+
+        function displayResult(elementId, result, testName) {
+            const element = document.getElementById(elementId);
+            const className = result.success ? 'success' : 'error';
+            
+            let html = `<div class="result ${className}">`;
+            html += `<strong>${testName}:</strong> ${result.success ? 'PASSED' : 'FAILED'}<br>`;
+            html += `${result.message}`;
+            if (result.data) {
+                html += `<div class="test-data">${JSON.stringify(result.data, null, 2)}</div>`;
+            }
+            html += `</div>`;
+            
+            element.innerHTML = html;
+        }
+
+        // Create test data
+        const testNodes = [
+            { id: 'A', x: 100, y: 150, size: 12, type: 'education', layer: 'education' },
+            { id: 'B', x: 300, y: 100, size: 15, type: 'research', layer: 'research' },
+            { id: 'C', x: 500, y: 200, size: 10, type: 'education', layer: 'education' },
+            { id: 'D', x: 400, y: 300, size: 18, type: 'research', layer: 'research' },
+            { id: 'E', x: 200, y: 350, size: 14, type: 'industry', layer: 'industry' }
+        ];
+
+        const testLinks = [
+            { source: 'A', target: 'B', strength: 0.8 },
+            { source: 'B', target: 'C', strength: 0.6 },
+            { source: 'C', target: 'D', strength: 0.4 },
+            { source: 'D', target: 'E', strength: 0.7 },
+            { source: 'E', target: 'A', strength: 0.5 }
+        ];
+
+        // Test 1: Initialization and configuration
+        runTest('Initialization and Configuration', () => {
+            const testContainer = document.createElement('div');
+            testContainer.style.position = 'relative';
+            testContainer.style.width = '400px';
+            testContainer.style.height = '300px';
+            document.body.appendChild(testContainer);
+
+            const coordinateTransform = new CoordinateTransform();
+            coordinateTransform.updateViewport(400, 300);
+
+            const config = {
+                width: 120,
+                height: 100,
+                position: 'top-right',
+                backgroundColor: '#ffffff',
+                borderColor: '#ff0000'
+            };
+
+            const miniMap = new MiniMapManager(config);
+            
+            const hasCorrectConfig = miniMap.config.width === 120 &&
+                                   miniMap.config.height === 100 &&
+                                   miniMap.config.position === 'top-right' &&
+                                   miniMap.config.backgroundColor === '#ffffff';
+
+            // Test initialization
+            miniMap.initialize(testContainer, coordinateTransform);
+            
+            const hasContainer = miniMap.containerElement !== null;
+            const hasSvg = miniMap.svg !== null;
+            const containerInDOM = testContainer.contains(miniMap.containerElement);
+
+            const initialStats = miniMap.getStats();
+            const hasValidStats = initialStats && typeof initialStats.isVisible === 'boolean';
+
+            // Cleanup
+            miniMap.destroy();
+            document.body.removeChild(testContainer);
+
+            return {
+                success: hasCorrectConfig && hasContainer && hasSvg && containerInDOM && hasValidStats,
+                message: hasCorrectConfig && hasContainer && hasSvg && containerInDOM && hasValidStats ?
+                    'MiniMapManager initialized correctly with custom config' :
+                    'Initialization failed',
+                data: {
+                    hasCorrectConfig,
+                    hasContainer,
+                    hasSvg,
+                    containerInDOM,
+                    hasValidStats,
+                    initialStats
+                }
+            };
+        }, 'test1-result');
+
+        // Test 2: Bounds calculation and scaling
+        runTest('Bounds Calculation and Scaling', () => {
+            const testContainer = document.createElement('div');
+            testContainer.style.position = 'relative';
+            document.body.appendChild(testContainer);
+
+            const coordinateTransform = new CoordinateTransform();
+            const miniMap = new MiniMapManager();
+            miniMap.initialize(testContainer, coordinateTransform);
+            miniMap.updateData(testNodes, []);
+
+            // Test bounds calculation
+            const bounds = miniMap.calculateBounds();            const boundsCorrect = bounds && 
+                                bounds.minX === 100 && bounds.maxX === 500 &&
+                                bounds.minY === 100 && bounds.maxY === 350 &&
+                                bounds.width === 400 && bounds.height === 250;
+
+            // Test transform calculation
+            miniMap.calculateTransform();
+            const hasValidTransform = typeof miniMap.scale === 'number' &&
+                                    typeof miniMap.offsetX === 'number' &&
+                                    typeof miniMap.offsetY === 'number' &&
+                                    miniMap.scale > 0;
+
+            // Test with empty data
+            miniMap.updateData([], []);
+            const emptyBounds = miniMap.calculateBounds();
+            const emptyBoundsCorrect = emptyBounds === null;
+
+            miniMap.destroy();
+            document.body.removeChild(testContainer);
+            
+            return {
+                success: boundsCorrect && hasValidTransform && emptyBoundsCorrect,
+                message: boundsCorrect && hasValidTransform && emptyBoundsCorrect ?
+                    'Bounds calculation and scaling work correctly' :
+                    'Bounds calculation or scaling failed',
+                data: {
+                    bounds,
+                    boundsCorrect,
+                    hasValidTransform,
+                    scale: miniMap.scale,
+                    offsetX: miniMap.offsetX,
+                    offsetY: miniMap.offsetY,
+                    emptyBoundsCorrect
+                }
+            };
+        }, 'test2-result');
+
+        // Test 3: Data updates and rendering
+        runTest('Data Updates and Rendering', () => {
+            const testContainer = document.createElement('div');
+            testContainer.style.position = 'relative';
+            document.body.appendChild(testContainer);
+
+            const coordinateTransform = new CoordinateTransform();
+            const miniMap = new MiniMapManager();
+            miniMap.initialize(testContainer, coordinateTransform);
+
+            // Test data update
+            miniMap.updateData(testNodes, testLinks);
+            const dataUpdated = miniMap.nodes.length === testNodes.length &&
+                               miniMap.links.length === testLinks.length;
+
+            // Test rendering (check if SVG elements are created)
+            let renderingWorked = false;
+            try {
+                miniMap.render();
+                const nodeElements = miniMap.nodeGroup.selectAll('circle').size();
+                const linkElements = miniMap.linkGroup.selectAll('line').size();
+                renderingWorked = nodeElements > 0 && linkElements > 0;
+            } catch (error) {
+                renderingWorked = false;
+            }
+
+            // Test helper methods
+            const sourceId = miniMap.getLinkSourceId(testLinks[0]);
+            const targetId = miniMap.getLinkTargetId(testLinks[0]);
+            const sourceNode = miniMap.getLinkSourceNode(testLinks[0]);
+            const targetNode = miniMap.getLinkTargetNode(testLinks[0]);
+            
+            const helpersWork = sourceId === 'A' && targetId === 'B' &&
+                              sourceNode.id === 'A' && targetNode.id === 'B';
+
+            // Cleanup
+            miniMap.destroy();
+            document.body.removeChild(testContainer);
+
+            return {
+                success: dataUpdated && renderingWorked && helpersWork,
+                message: dataUpdated && renderingWorked && helpersWork ?
+                    'Data updates and rendering work correctly' :
+                    'Data updates or rendering failed',
+                data: {
+                    dataUpdated,
+                    renderingWorked,
+                    helpersWork,
+                    nodeCount: miniMap.nodes.length,
+                    linkCount: miniMap.links.length
+                }
+            };
+        }, 'test3-result');
+
+        // Test 4: Navigation and interaction
+        runTest('Navigation and Interaction', () => {
+            const testContainer = document.createElement('div');
+            testContainer.style.position = 'relative';
+            document.body.appendChild(testContainer);
+
+            const coordinateTransform = new CoordinateTransform();
+            const miniMap = new MiniMapManager({ clickToNavigate: true });
+            miniMap.initialize(testContainer, coordinateTransform);
+            miniMap.updateData(testNodes, []);
+
+            // Test navigation event
+            let navigationEvent = null;
+            miniMap.on('navigate', (data) => {
+                navigationEvent = data;
+            });
+
+            // Simulate navigation
+            miniMap.navigateToPosition(50, 60);
+            const navigationWorked = navigationEvent !== null &&
+                                   typeof navigationEvent.graphPosition.x === 'number' &&
+                                   typeof navigationEvent.graphPosition.y === 'number';
+
+            // Test node focusing
+            let focusWorked = false;
+            try {
+                miniMap.focusNode('A');
+                focusWorked = true;
+            } catch (error) {
+                focusWorked = false;
+            }
+
+            // Test highlighting
+            let highlightWorked = false;
+            try {
+                miniMap.highlightNodes(['A', 'B']);
+                miniMap.clearHighlights();
+                highlightWorked = true;
+            } catch (error) {
+                highlightWorked = false;
+            }
+
+            // Test event system
+            let eventRemoved = false;
+            const testCallback = () => {};
+            miniMap.on('testEvent', testCallback);
+            miniMap.off('testEvent', testCallback);
+            eventRemoved = !miniMap.eventHandlers.testEvent || 
+                          miniMap.eventHandlers.testEvent.length === 0;
+
+            // Cleanup
+            miniMap.destroy();
+            document.body.removeChild(testContainer);
+
+            return {
+                success: navigationWorked && focusWorked && highlightWorked && eventRemoved,
+                message: navigationWorked && focusWorked && highlightWorked && eventRemoved ?
+                    'Navigation and interaction work correctly' :
+                    'Navigation or interaction failed',
+                data: {
+                    navigationWorked,
+                    focusWorked,
+                    highlightWorked,
+                    eventRemoved,
+                    navigationEvent
+                }
+            };
+        }, 'test4-result');
+
+        // Test 5: Visibility and configuration updates
+        runTest('Visibility and Configuration Updates', () => {
+            const testContainer = document.createElement('div');
+            testContainer.style.position = 'relative';
+            document.body.appendChild(testContainer);
+
+            const coordinateTransform = new CoordinateTransform();
+            const miniMap = new MiniMapManager();
+            miniMap.initialize(testContainer, coordinateTransform);
+
+            // Test visibility
+            const initiallyVisible = miniMap.isVisible;
+            miniMap.hide();
+            const hiddenCorrectly = !miniMap.isVisible && 
+                                  miniMap.containerElement.style.display === 'none';
+            
+            miniMap.show();
+            const shownCorrectly = miniMap.isVisible && 
+                                 miniMap.containerElement.style.display === 'block';
+
+            miniMap.toggle();
+            const toggledCorrectly = !miniMap.isVisible;
+
+            // Test position updates
+            miniMap.setPosition('top-right');
+            const positionUpdated = miniMap.config.position === 'top-right';
+
+            // Test resize
+            const originalWidth = miniMap.config.width;
+            miniMap.resize(200, 160);
+            const resizeWorked = miniMap.config.width === 200 && 
+                               miniMap.config.height === 160;
+
+            // Test config updates
+            miniMap.updateConfig({ borderColor: '#ff0000', padding: 20 });
+            const configUpdated = miniMap.config.borderColor === '#ff0000' && 
+                                miniMap.config.padding === 20;
+
+            // Test stats
+            const stats = miniMap.getStats();
+            const statsValid = stats && typeof stats.isVisible === 'boolean' &&
+                             typeof stats.nodeCount === 'number';
+
+            // Cleanup
+            miniMap.destroy();
+            document.body.removeChild(testContainer);
+
+            return {
+                success: initiallyVisible && hiddenCorrectly && shownCorrectly && 
+                        toggledCorrectly && positionUpdated && resizeWorked && 
+                        configUpdated && statsValid,
+                message: initiallyVisible && hiddenCorrectly && shownCorrectly && 
+                        toggledCorrectly && positionUpdated && resizeWorked && 
+                        configUpdated && statsValid ?
+                    'Visibility and configuration updates work correctly' :
+                    'Visibility or configuration updates failed',
+                data: {
+                    initiallyVisible,
+                    hiddenCorrectly,
+                    shownCorrectly,
+                    toggledCorrectly,
+                    positionUpdated,
+                    resizeWorked,
+                    configUpdated,
+                    statsValid,
+                    finalStats: stats
+                }
+            };
+        }, 'test5-result');
+
+        // Interactive Demo Setup
+        function setupInteractiveDemo() {
+            const container = document.getElementById('demo-container');
+            const mainGraph = document.getElementById('demo-main-graph');
+            
+            // Create demo data with positions scaled for larger view
+            demoNodes = [
+                { id: 'A', x: 150, y: 200, size: 12, type: 'education', layer: 'education' },
+                { id: 'B', x: 400, y: 120, size: 15, type: 'research', layer: 'research' },
+                { id: 'C', x: 650, y: 250, size: 10, type: 'education', layer: 'education' },
+                { id: 'D', x: 500, y: 380, size: 18, type: 'research', layer: 'research' },
+                { id: 'E', x: 250, y: 420, size: 14, type: 'industry', layer: 'industry' }
+            ];
+
+            demoLinks = [
+                { source: 'A', target: 'B', strength: 0.8 },
+                { source: 'B', target: 'C', strength: 0.6 },
+                { source: 'C', target: 'D', strength: 0.4 },
+                { source: 'D', target: 'E', strength: 0.7 },
+                { source: 'E', target: 'A', strength: 0.5 }
+            ];
+
+            // Create coordinate transform
+            demoCoordinateTransform = new CoordinateTransform();
+            demoCoordinateTransform.updateViewport(800, 500);
+
+            // Create minimap
+            demoMiniMap = new MiniMapManager({
+                width: 160,
+                height: 120,
+                position: 'bottom-left',
+                clickToNavigate: true
+            });
+
+            demoMiniMap.initialize(container, demoCoordinateTransform);
+            demoMiniMap.updateData(demoNodes, demoLinks);
+
+            // Add navigation event listener
+            demoMiniMap.on('navigate', (data) => {
+                console.log('Navigate to:', data.graphPosition);
+                // Simulate viewport change
+                currentViewport.x = data.graphPosition.x - 400;
+                currentViewport.y = data.graphPosition.y - 250;
+                updateDemoVisualization();
+                updateViewportIndicator();
+            });
+
+            // Create main graph visualization
+            createMainGraphVisualization();
+            updateDemoStats();
+        }
+
+        function createMainGraphVisualization() {
+            const mainGraph = document.getElementById('demo-main-graph');
+            mainGraph.innerHTML = ''; // Clear existing content
+
+            // Create links
+            demoLinks.forEach(link => {
+                const sourceNode = demoNodes.find(n => n.id === link.source);
+                const targetNode = demoNodes.find(n => n.id === link.target);
+                
+                if (sourceNode && targetNode) {
+                    const linkEl = document.createElement('div');
+                    linkEl.className = 'demo-link';
+                    
+                    const dx = targetNode.x - sourceNode.x;
+                    const dy = targetNode.y - sourceNode.y;
+                    const length = Math.sqrt(dx * dx + dy * dy);
+                    const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+                    
+                    linkEl.style.left = (sourceNode.x - currentViewport.x) + 'px';
+                    linkEl.style.top = (sourceNode.y - currentViewport.y) + 'px';
+                    linkEl.style.width = length + 'px';
+                    linkEl.style.height = '2px';
+                    linkEl.style.transform = `rotate(${angle}deg)`;
+                    linkEl.style.opacity = link.strength || 0.5;
+                    
+                    mainGraph.appendChild(linkEl);
+                }
+            });
+
+            // Create nodes
+            demoNodes.forEach(node => {
+                const nodeEl = document.createElement('div');
+                nodeEl.className = `demo-node ${node.type}`;
+                nodeEl.id = `main-node-${node.id}`;
+                
+                const size = (node.size || 10) * 2;
+                nodeEl.style.width = size + 'px';
+                nodeEl.style.height = size + 'px';
+                nodeEl.style.left = (node.x - currentViewport.x - size/2) + 'px';
+                nodeEl.style.top = (node.y - currentViewport.y - size/2) + 'px';
+                nodeEl.textContent = node.id;
+                
+                mainGraph.appendChild(nodeEl);
+            });
+
+            updateViewportIndicator();
+        }
+
+        function updateDemoVisualization() {
+            const mainGraph = document.getElementById('demo-main-graph');
+            
+            // Update node positions
+            demoNodes.forEach(node => {
+                const nodeEl = document.getElementById(`main-node-${node.id}`);
+                if (nodeEl) {
+                    const size = (node.size || 10) * 2;
+                    nodeEl.style.left = (node.x - currentViewport.x - size/2) + 'px';
+                    nodeEl.style.top = (node.y - currentViewport.y - size/2) + 'px';
+                }
+            });
+
+            // Update link positions
+            const linkElements = mainGraph.querySelectorAll('.demo-link');
+            demoLinks.forEach((link, index) => {
+                const linkEl = linkElements[index];
+                if (linkEl) {
+                    const sourceNode = demoNodes.find(n => n.id === link.source);
+                    if (sourceNode) {
+                        linkEl.style.left = (sourceNode.x - currentViewport.x) + 'px';
+                        linkEl.style.top = (sourceNode.y - currentViewport.y) + 'px';
+                    }
+                }
+            });
+        }
+
+        function updateViewportIndicator() {
+            if (demoMiniMap) {
+                // Simulate coordinate transform update
+                const mockTransform = {
+                    x: -currentViewport.x * currentViewport.scale,
+                    y: -currentViewport.y * currentViewport.scale,
+                    k: currentViewport.scale
+                };
+                
+                demoCoordinateTransform.updateTransform(mockTransform);
+                demoMiniMap.updateViewportIndicator();
+            }
+        }
+
+        function updateDemoStats() {
+            const statsDiv = document.getElementById('demo-stats');
+            if (demoMiniMap) {
+                const stats = demoMiniMap.getStats();
+                statsDiv.textContent = `Visible: ${stats.isVisible} | Position: ${stats.position} | Nodes: ${stats.nodeCount} | Scale: ${stats.transform.scale.toFixed(2)}`;
+            }
+        }
+
+        // Demo control functions
+        function demoToggleVisibility() {
+            if (demoMiniMap) {
+                demoMiniMap.toggle();
+                updateDemoStats();
+            }
+        }
+
+        function demoChangePosition(position) {
+            if (demoMiniMap) {
+                demoMiniMap.setPosition(position);
+                updateDemoStats();
+            }
+        }
+
+        function demoHighlightNodes(nodeIds) {
+            if (demoMiniMap) {
+                demoMiniMap.highlightNodes(nodeIds, { color: '#ff0039', strokeWidth: 3 });
+            }
+        }
+
+        function demoClearHighlights() {
+            if (demoMiniMap) {
+                demoMiniMap.clearHighlights();
+            }
+        }
+
+        function demoFocusNode(nodeId) {
+            if (demoMiniMap) {
+                demoMiniMap.focusNode(nodeId);
+            }
+        }
+
+        function demoSimulateZoom() {
+            currentViewport.scale = currentViewport.scale === 1 ? 1.5 : 1;
+            updateViewportIndicator();
+            updateDemoStats();
+        }
+
+        // Initialize demo after tests
+        setTimeout(() => {
+            setupInteractiveDemo();
+            
+            document.getElementById('demo-result').innerHTML = `
+                <div class="result success">
+                    <strong>Interactive Demo:</strong> Live minimap with navigation and viewport indicator<br>
+                    Click on the minimap to navigate, use buttons to test different features.
+                </div>
+            `;
+        }, 100);
+
+        // Update summary
+        setTimeout(() => {
+            const summaryText = document.getElementById('summary-text');
+            const summaryElement = document.getElementById('summary');
+            
+            if (testsPassed === testsTotal) {
+                summaryText.textContent = `All ${testsTotal} tests passed! MiniMapManager is working correctly.`;
+                summaryElement.style.backgroundColor = '#d4edda';
+                summaryElement.style.borderColor = '#c3e6cb';
+            } else {
+                summaryText.textContent = `${testsPassed}/${testsTotal} tests passed. Check failed tests above.`;
+                summaryElement.style.backgroundColor = '#f8d7da';
+                summaryElement.style.borderColor = '#f5c6cb';
+            }
+        }, 200);
+    </script>
+</body>
+</html>

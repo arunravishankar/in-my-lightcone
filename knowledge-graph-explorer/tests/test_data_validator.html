@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataValidator Test</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        .test-title {
+            color: #2780e3;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        .result {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        .test-data {
+            background-color: #f1f3f4;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+            margin: 10px 0;
+            white-space: pre-wrap;
+        }
+        h1 {
+            color: #2780e3;
+            text-align: center;
+        }
+        .summary {
+            background-color: #e7f3ff;
+            border: 2px solid #2780e3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>DataValidator Test Suite</h1>
+    
+    <div class="summary" id="summary">
+        <strong>Test Summary:</strong> <span id="summary-text">Running tests...</span>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 1: Valid Data</div>
+        <div id="test1-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 2: Missing Required Fields</div>
+        <div id="test2-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 3: Invalid Node Structure</div>
+        <div id="test3-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 4: Invalid Links</div>
+        <div id="test4-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 5: Timespan Validation</div>
+        <div id="test5-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 6: Configuration Validation</div>
+        <div id="test6-result"></div>
+    </div>
+
+    <!-- Load the DataValidator -->
+    <script src="../src/utils/DataValidator.js"></script>
+    
+    <!-- Load your sample data for comparison -->
+    <script src="../src/utils/sampleData.js"></script>
+
+    <script>
+        // Test runner
+        let testsPassed = 0;
+        let testsTotal = 0;
+
+        function runTest(testName, testFunction, resultElementId) {
+            testsTotal++;
+            try {
+                const result = testFunction();
+                displayResult(resultElementId, result, testName);
+                if (result.success) testsPassed++;
+            } catch (error) {
+                displayResult(resultElementId, {
+                    success: false,
+                    message: `Test threw error: ${error.message}`,
+                    error: error
+                });
+            }
+        }
+
+        function displayResult(elementId, result, testName) {
+            const element = document.getElementById(elementId);
+            const className = result.success ? 'success' : 'error';
+            
+            let html = `<div class="result ${className}">`;
+            html += `<strong>${testName}:</strong> ${result.success ? 'PASSED' : 'FAILED'}<br>`;
+            html += `${result.message}`;
+            if (result.data) {
+                html += `<div class="test-data">${JSON.stringify(result.data, null, 2)}</div>`;
+            }
+            if (result.validationResult) {
+                html += `<div class="test-data">Validation Result: ${JSON.stringify(result.validationResult, null, 2)}</div>`;
+            }
+            html += `</div>`;
+            
+            element.innerHTML = html;
+        }
+
+        // Test 1: Valid data (using your sample data if available)
+        runTest('Valid Data Test', () => {
+            const validData = {
+                nodes: [
+                    {
+                        id: 'test1',
+                        label: 'Test Node 1',
+                        type: 'education',
+                        layer: 'education',
+                        size: 12,
+                        timespan: { start: 2020, end: 2022 },
+                        description: 'Test description'
+                    },
+                    {
+                        id: 'test2',
+                        label: 'Test Node 2',
+                        type: 'research',
+                        layer: 'research',
+                        size: 15,
+                        timespan: { start: 2021, end: null },
+                        description: 'Another test'
+                    }
+                ],
+                links: [
+                    {
+                        source: 'test1',
+                        target: 'test2',
+                        strength: 0.8,
+                        description: 'Test connection'
+                    }
+                ]
+            };
+
+            const result = DataValidator.validate(validData);
+            
+            return {
+                success: result.isValid && result.errors.length === 0,
+                message: result.isValid ? 'Valid data passed validation' : 'Valid data failed validation',
+                validationResult: result
+            };
+        }, 'test1-result');
+
+        // Test 2: Missing required fields
+        runTest('Missing Required Fields', () => {
+            const invalidData = {
+                nodes: [
+                    { label: 'Missing ID' }, // Missing id
+                    { id: 'test2' } // Missing label
+                ],
+                links: [
+                    { source: 'test1' }, // Missing target
+                    { target: 'test2' } // Missing source
+                ]
+            };
+
+            const result = DataValidator.validate(invalidData);
+            
+            return {
+                success: !result.isValid && result.errors.length >= 4,
+                message: `Found ${result.errors.length} errors as expected`,
+                validationResult: result
+            };
+        }, 'test2-result');
+
+        // Test 3: Invalid node structure
+        runTest('Invalid Node Structure', () => {
+            const invalidData = {
+                nodes: [
+                    {
+                        id: 123, // Should be string
+                        label: 'Test',
+                        size: -5, // Should be positive
+                        timespan: { start: 2025, end: 2020 } // End before start
+                    },
+                    {
+                        id: 'duplicate',
+                        label: 'First'
+                    },
+                    {
+                        id: 'duplicate', // Duplicate ID
+                        label: 'Second'
+                    }
+                ],
+                links: []
+            };
+
+            const result = DataValidator.validate(invalidData);
+            
+            return {
+                success: !result.isValid && result.errors.length >= 3,
+                message: `Found ${result.errors.length} errors for invalid nodes`,
+                validationResult: result
+            };
+        }, 'test3-result');
+
+        // Test 4: Invalid links
+        runTest('Invalid Links', () => {
+            const invalidData = {
+                nodes: [
+                    { id: 'node1', label: 'Node 1' },
+                    { id: 'node2', label: 'Node 2' }
+                ],
+                links: [
+                    {
+                        source: 'node1',
+                        target: 'nonexistent', // Target doesn't exist
+                        strength: 1.5 // Invalid strength
+                    },
+                    {
+                        source: 'node2',
+                        target: 'node2' // Self-loop (warning)
+                    }
+                ]
+            };
+
+            const result = DataValidator.validate(invalidData);
+            
+            return {
+                success: !result.isValid && result.errors.length >= 2 && result.warnings.length >= 1,
+                message: `Found ${result.errors.length} errors and ${result.warnings.length} warnings for invalid links`,
+                validationResult: result
+            };
+        }, 'test4-result');
+
+        // Test 5: Timespan validation
+        runTest('Timespan Validation', () => {
+            const invalidData = {
+                nodes: [
+                    {
+                        id: 'node1',
+                        label: 'Node 1',
+                        timespan: 'invalid' // Should be object
+                    },
+                    {
+                        id: 'node2',
+                        label: 'Node 2',
+                        timespan: {
+                            start: 1800, // Too early
+                            end: 2200 // Too late
+                        }
+                    }
+                ],
+                links: []
+            };
+
+            const result = DataValidator.validate(invalidData);
+            
+            return {
+                success: !result.isValid && result.errors.length >= 3,
+                message: `Found ${result.errors.length} errors for invalid timespans`,
+                validationResult: result
+            };
+        }, 'test5-result');
+
+        // Test 6: Configuration validation
+        runTest('Configuration Validation', () => {
+            const invalidConfig = {
+                width: -100, // Invalid
+                height: 'not a number', // Invalid
+                layers: 'not an array', // Invalid
+                timeline: {
+                    start: 2025,
+                    end: 2020 // End before start
+                }
+            };
+
+            const result = DataValidator.validateConfiguration(invalidConfig);
+            
+            return {
+                success: !result.isValid && result.errors.length >= 4,
+                message: `Found ${result.errors.length} errors for invalid config`,
+                validationResult: result
+            };
+        }, 'test6-result');
+
+        // Update summary
+        setTimeout(() => {
+            const summaryText = document.getElementById('summary-text');
+            const summaryElement = document.getElementById('summary');
+            
+            if (testsPassed === testsTotal) {
+                summaryText.textContent = `All ${testsTotal} tests passed! DataValidator is working correctly.`;
+                summaryElement.style.backgroundColor = '#d4edda';
+                summaryElement.style.borderColor = '#c3e6cb';
+            } else {
+                summaryText.textContent = `${testsPassed}/${testsTotal} tests passed. Check failed tests above.`;
+                summaryElement.style.backgroundColor = '#f8d7da';
+                summaryElement.style.borderColor = '#f5c6cb';
+            }
+        }, 100);
+
+        // Test with your actual sample data if it exists
+        if (typeof sampleData !== 'undefined') {
+            setTimeout(() => {
+                const actualDataTest = document.createElement('div');
+                actualDataTest.className = 'test-section';
+                actualDataTest.innerHTML = '<div class="test-title">Test 7: Your Actual Sample Data</div><div id="actual-data-result"></div>';
+                document.body.appendChild(actualDataTest);
+
+                runTest('Your Sample Data', () => {
+                    const result = DataValidator.validate(sampleData);
+                    
+                    return {
+                        success: true, // Always show result
+                        message: result.isValid ? 'Your sample data is valid!' : `Your sample data has issues: ${result.errors.length} errors, ${result.warnings.length} warnings`,
+                        validationResult: result
+                    };
+                }, 'actual-data-result');
+            }, 200);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+metadata:
+  title: "Arun's Academic & Professional Journey"
+  description: "From quantum foundations to data science - a wandering path across continents and disciplines"
+  timeline:
+    start: 2009
+    end: 2025
+
+layers:
+  - id: "education"
+    name: "Education"
+    color: "#2780e3"
+  - id: "research"
+    name: "Research"
+    color: "#3fb618"
+  - id: "industry"
+    name: "Industry"
+    color: "#ffdd3c"
+  - id: "current"
+    name: "Current Focus"
+    color: "#ff0039"
+  - id: "geographic"
+    name: "Geographic"
+    color: "#613d7c"
+
+nodes:
+  # Education nodes
+  - id: "bits_undergrad"
+    label: "BITS Hyderabad"
+    type: "education"
+    layer: "education"
+    size: 15
+    timespan: {start: 2009, end: 2014}
+    description: "MSc in Physics & Bachelors in Pharmacy at Birla Institute of Technology and Sciences, Hyderabad. Where the physics journey began."
+    
+  - id: "lmu_thesis"
+    label: "LMU Munich"
+    type: "education" 
+    layer: "education"
+    size: 12
+    timespan: {start: 2013, end: 2014}
+    description: "Visiting student for Master's thesis at Ludwig Maximilians University. First deep dive into quantum foundations with Detlef Dürr's group."
+    
+  - id: "arizona_phd"
+    label: "University of Arizona"
+    type: "education"
+    layer: "education"
+    size: 18
+    timespan: {start: 2015, end: 2021}
+    description: "PhD in Physics focusing on black hole physics. Learned to sit with hard problems for months, then suddenly see the path forward."
+    
+  - id: "data_incubator"
+    label: "Data Incubator"
+    type: "education"
+    layer: "education"
+    size: 10
+    timespan: {start: 2021, end: 2021}
+    description: "Data Science Fellowship. Bridge between academia and industry, learning to work with messy, real-world data."
+    
+  - id: "stanford_ai"
+    label: "Stanford AI Program"
+    type: "education"
+    layer: "current"
+    size: 14
+    timespan: {start: 2024, end: 2025}
+    description: "AI Graduate Certificate. Current exploration into game theory, reinforcement learning, and economics intersection."
+
+  # Research focus areas
+  - id: "bohmian_mechanics"
+    label: "Bohmian Mechanics"
+    type: "research"
+    layer: "research"
+    size: 14
+    timespan: {start: 2013, end: 2015}
+    description: "Research with Detlef Dürr on quantum foundations. Bottom-up approach to fundamental theory with ontological descriptions of nature."
+    
+  - id: "black_hole_physics"
+    label: "Black Hole Physics"
+    type: "research"
+    layer: "research"
+    size: 16
+    timespan: {start: 2015, end: 2021}
+    description: "PhD research on black holes. Started with self-force problems, ended up deep in black hole physics. Published work on theoretical aspects."
+    
+  - id: "data_science_methods"
+    label: "Data Science & ML"
+    type: "research"
+    layer: "research"
+    size: 15
+    timespan: {start: 2021, end: 2025}
+    description: "Transition from exact solutions to thinking in distributions and probabilities. Programming opens up new types of questions."
+    
+  - id: "ai_game_theory"
+    label: "AI & Game Theory"
+    type: "research"
+    layer: "current"
+    size: 12
+    timespan: {start: 2024, end: 2025}
+    description: "Current obsession: intersection of game theory, reinforcement learning, and economics. Where bottom-up and top-down thinking play nice."
+
+  # Industry experience
+  - id: "rover"
+    label: "Rover"
+    type: "industry"
+    layer: "industry"
+    size: 16
+    timespan: {start: 2021, end: 2024}
+    description: "Data Scientist II & III in Seattle. First position outside academia working with amazing people. Everything clicked differently - from fundamental dynamics to practical insights from messy data."
+    
+  - id: "turno"
+    label: "Turno"
+    type: "industry"
+    layer: "current"
+    size: 12
+    timespan: {start: 2024, end: 2025}
+    description: "Data Scientist consultant in Vancouver. Another 2-sided marketplace (apparently I have a type). Applying AI and game theory to real-world problems."
+
+  # Geographic/life nodes
+  - id: "india"
+    label: "India"
+    type: "geographic"
+    layer: "geographic"
+    size: 12
+    timespan: {start: 2009, end: 2013}
+    description: "Home base in Hyderabad. Where curiosity about quantum foundations first sparked."
+    
+  - id: "munich"
+    label: "Munich"
+    type: "geographic"
+    layer: "geographic"
+    size: 10
+    timespan: {start: 2013, end: 2014}
+    description: "First international experience. Immersion in rigorous quantum foundations research with Dürr's group."
+    
+  - id: "tucson"
+    label: "Tucson"
+    type: "geographic"
+    layer: "geographic"
+    size: 14
+    timespan: {start: 2015, end: 2021}
+    description: "PhD years in Arizona. Intense in unexpected ways. Learned patience with hard problems and developed appreciation for mathematics itself."
+    
+  - id: "seattle"
+    label: "Seattle"
+    type: "geographic"
+    layer: "geographic"
+    size: 12
+    timespan: {start: 2021, end: 2024}
+    description: "Move motivated by Schnucki and love for gloomy, drizzly weather and beautiful outdoors. Industry transition and new perspectives."
+    
+  - id: "vancouver"
+    label: "Vancouver"
+    type: "geographic"
+    layer: "current"
+    size: 10
+    timespan: {start: 2024, end: 2025}
+    description: "Current home base. Long-term immigration stability. Continuing the journey in AI and game theory."
+
+  # Key people/influences
+  - id: "detlef_durr"
+    label: "Detlef Dürr"
+    type: "research"
+    layer: "research"
+    size: 8
+    timespan: {start: 2013, end: 2014}
+    description: "Late mentor at LMU Munich. His research group was full of inquisitive people who deeply cared about their work. Foundational influence on approach to physics."
+    
+  - id: "sam_gralla"
+    label: "Sam Gralla"
+    type: "research" 
+    layer: "research"
+    size: 8
+    timespan: {start: 2015, end: 2021}
+    description: "PhD advisor at University of Arizona. Initially planned to work on self-force problem, but research evolved into broader black hole physics."
+    
+  - id: "schnucki"
+    label: "Schnucki"
+    type: "geographic"
+    layer: "geographic"
+    size: 6
+    timespan: {start: 2020, end: 2025}
+    description: "Brown-eyed companion with infinite capacity for love. Her need for freedom to run around influenced major life decisions including move to Seattle."
+
+links:
+  # Educational progression
+  - source: "bits_undergrad"
+    target: "lmu_thesis"
+    strength: 0.9
+    description: "Physics degree led to research opportunity in Munich"
+    
+  - source: "lmu_thesis"
+    target: "arizona_phd"
+    strength: 0.8
+    description: "Quantum foundations work opened path to PhD studies"
+    
+  - source: "arizona_phd"
+    target: "data_incubator"
+    strength: 0.7
+    description: "Transition from academia to data science"
+    
+  - source: "data_incubator"
+    target: "rover"
+    strength: 0.9
+    description: "Fellowship led directly to first industry position"
+    
+  - source: "rover"
+    target: "stanford_ai"
+    strength: 0.6
+    description: "Industry experience motivated deeper AI education"
+
+  # Research evolution
+  - source: "bits_undergrad"
+    target: "bohmian_mechanics"
+    strength: 0.7
+    description: "Physics foundation enabled quantum foundations research"
+    
+  - source: "bohmian_mechanics"
+    target: "black_hole_physics"
+    strength: 0.6
+    description: "Bottom-up thinking approach carried forward"
+    
+  - source: "black_hole_physics"
+    target: "data_science_methods"
+    strength: 0.5
+    description: "From exact solutions to probabilistic thinking"
+    
+  - source: "data_science_methods"
+    target: "ai_game_theory"
+    strength: 0.8
+    description: "Evolution into AI and game theory intersection"
+
+  # Geographic and institutional connections
+  - source: "india"
+    target: "munich"
+    strength: 0.8
+    description: "First international move for research"
+    
+  - source: "munich"
+    target: "tucson"
+    strength: 0.7
+    description: "PhD opportunity brought move to Arizona"
+    
+  - source: "tucson"
+    target: "seattle"
+    strength: 0.9
+    description: "Schnucki and industry opportunity motivated Seattle move"
+    
+  - source: "seattle"
+    target: "vancouver"
+    strength: 0.8
+    description: "Immigration stability and new opportunities"
+
+  # Mentor relationships
+  - source: "detlef_durr"
+    target: "bohmian_mechanics"
+    strength: 0.9
+    description: "Direct research supervision and mentorship"
+    
+  - source: "detlef_durr"
+    target: "lmu_thesis"
+    strength: 0.9
+    description: "Thesis advisor relationship"
+    
+  - source: "sam_gralla"
+    target: "black_hole_physics"
+    strength: 0.9
+    description: "PhD supervision and research guidance"
+    
+  - source: "sam_gralla"
+    target: "arizona_phd"
+    strength: 0.9
+    description: "Doctoral advisor relationship"
+
+  # Personal influence
+  - source: "schnucki"
+    target: "seattle"
+    strength: 0.8
+    description: "Her needs influenced major life decisions"
+    
+  - source: "schnucki"
+    target: "vancouver"
+    strength: 0.6
+    description: "Continued consideration in location choices"
+
+  # Industry connections
+  - source: "rover"
+    target: "turno"
+    strength: 0.7
+    description: "Experience with 2-sided marketplaces carried forward"
+    
+  - source: "rover"
+    target: "data_science_methods"
+    strength: 0.8
+    description: "Practical application of data science techniques"
+    
+  - source: "turno"
+    target: "ai_game_theory"
+    strength: 0.8
+    description: "Current application of AI and game theory concepts"
+
+  # Cross-domain connections
+  - source: "black_hole_physics"
+    target: "rover"
+    strength: 0.4
+    description: "Problem-solving skills transferred to industry"
+    
+  - source: "bohmian_mechanics"
+    target: "ai_game_theory"
+    strength: 0.5
+    description: "Bottom-up thinking approach continues in current work"
+    
+  - source: "arizona_phd"
+    target: "vancouver"
+    strength: 0.3
+    description: "PhD experience contributed to immigration path"

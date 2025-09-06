@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InteractionManager Test</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        .test-title {
+            color: #2780e3;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        .result {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .test-data {
+            background-color: #f1f3f4;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+            margin: 10px 0;
+            white-space: pre-wrap;
+        }
+        h1 {
+            color: #2780e3;
+            text-align: center;
+        }
+        .summary {
+            background-color: #e7f3ff;
+            border: 2px solid #2780e3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .visual-demo {
+            background: white;
+            border: 2px solid #2780e3;
+            margin: 10px 0;
+            position: relative;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+        .demo-instructions {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .demo-node {
+            position: absolute;
+            border-radius: 50%;
+            background-color: #2780e3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            user-select: none;
+        }
+        .demo-node.hovered {
+            background-color: #ff0039;
+            transform: scale(1.3);
+        }
+        .demo-node.dragging {
+            background-color: #3fb618;
+            transform: scale(1.2);
+            z-index: 10;
+        }
+        .demo-link {
+            position: absolute;
+            background-color: #868e96;
+            transform-origin: left center;
+            pointer-events: none;
+        }
+        .event-log {
+            background-color: #f1f3f4;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            height: 150px;
+            overflow-y: auto;
+            margin: 10px 0;
+            border: 1px solid #dee2e6;
+        }
+        .event-entry {
+            padding: 2px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .event-entry.click { color: #2780e3; }
+        .event-entry.hover { color: #3fb618; }
+        .event-entry.drag { color: #ff0039; }
+    </style>
+</head>
+<body>
+    <h1>InteractionManager Test Suite</h1>
+    
+    <div class="summary" id="summary">
+        <strong>Test Summary:</strong> <span id="summary-text">Running tests...</span>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 1: Initialization and Configuration</div>
+        <div id="test1-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 2: Event System</div>
+        <div id="test2-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 3: Node Detection and Positioning</div>
+        <div id="test3-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 4: Hover State Management</div>
+        <div id="test4-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 5: Configuration Updates</div>
+        <div id="test5-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Interactive Demo: Mouse Interactions</div>
+        <div class="demo-instructions">
+            <strong>Instructions:</strong> Move your mouse over the nodes to see hover effects. 
+            Click nodes to see click events. Try dragging nodes around (drag detection may be simulated).
+            Right-click for context menu events.
+        </div>
+        <div class="visual-demo" id="visual-demo" style="width: 600px; height: 400px;"></div>
+        <div class="event-log" id="event-log"></div>
+        <div id="demo-result"></div>
+    </div>
+
+    <!-- Load D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <!-- Load dependencies -->
+    <script src="../src/utils/CoordinateTransform.js"></script>
+    <script src="../src/core/InteractionManager.js"></script>
+
+    <script>
+        // Test runner
+        let testsPassed = 0;
+        let testsTotal = 0;
+        let demoInteractionManager = null;
+        let eventLog = [];
+
+        function runTest(testName, testFunction, resultElementId) {
+            testsTotal++;
+            try {
+                const result = testFunction();
+                displayResult(resultElementId, result, testName);
+                if (result.success) testsPassed++;
+            } catch (error) {
+                displayResult(resultElementId, {
+                    success: false,
+                    message: `Test threw error: ${error.message}`,
+                    error: error
+                });
+            }
+        }
+
+        function displayResult(elementId, result, testName) {
+            const element = document.getElementById(elementId);
+            const className = result.success ? 'success' : 'error';
+            
+            let html = `<div class="result ${className}">`;
+            html += `<strong>${testName}:</strong> ${result.success ? 'PASSED' : 'FAILED'}<br>`;
+            html += `${result.message}`;
+            if (result.data) {
+                html += `<div class="test-data">${JSON.stringify(result.data, null, 2)}</div>`;
+            }
+            html += `</div>`;
+            
+            element.innerHTML = html;
+        }
+
+        // Test 1: Initialization and configuration
+        runTest('Initialization and Configuration', () => {
+            const config = {
+                hoverRadius: 60,
+                maxHoverScale: 1.5,
+                clickRadius: 25
+            };
+
+            const interactionManager = new InteractionManager(config);
+            
+            const hasCorrectConfig = interactionManager.config.hoverRadius === 60 &&
+                                   interactionManager.config.maxHoverScale === 1.5 &&
+                                   interactionManager.config.clickRadius === 25;
+
+            const hasEventHandlers = typeof interactionManager.eventHandlers === 'object';
+            const hasBoundHandlers = typeof interactionManager.boundHandlers === 'object';
+
+            const stats = interactionManager.getStats();
+            const hasValidStats = stats && typeof stats.hoveredNode !== 'undefined';
+
+            interactionManager.destroy();
+
+            return {
+                success: hasCorrectConfig && hasEventHandlers && hasBoundHandlers && hasValidStats,
+                message: hasCorrectConfig && hasEventHandlers && hasBoundHandlers && hasValidStats ?
+                    'InteractionManager initialized correctly with custom config' :
+                    'Initialization failed',
+                data: {
+                    hasCorrectConfig,
+                    hasEventHandlers,
+                    hasBoundHandlers,
+                    hasValidStats,
+                    initialStats: stats
+                }
+            };
+        }, 'test1-result');
+
+        // Test 2: Event system
+        runTest('Event System', () => {
+            const interactionManager = new InteractionManager();
+            
+            let eventReceived = false;
+            let eventData = null;
+
+            // Test adding event listener
+            interactionManager.on('testEvent', (data) => {
+                eventReceived = true;
+                eventData = data;
+            });
+
+            // Test emitting event
+            const testData = { test: 'value' };
+            interactionManager.emit('testEvent', testData);
+
+            const eventWorked = eventReceived && eventData && eventData.test === 'value';
+
+            // Test removing event listener
+            const callback = () => {};
+            interactionManager.on('removeTest', callback);
+            interactionManager.off('removeTest', callback);
+
+            const hasNoHandlers = !interactionManager.eventHandlers.removeTest || 
+                                 interactionManager.eventHandlers.removeTest.length === 0;
+
+            interactionManager.destroy();
+
+            return {
+                success: eventWorked && hasNoHandlers,
+                message: eventWorked && hasNoHandlers ?
+                    'Event system works correctly' :
+                    'Event system failed',
+                data: {
+                    eventWorked,
+                    hasNoHandlers,
+                    receivedData: eventData
+                }
+            };
+        }, 'test2-result');
+
+        // Test 3: Node detection and positioning
+        runTest('Node Detection and Positioning', () => {
+            const interactionManager = new InteractionManager({ clickRadius: 15 });
+            const coordinateTransform = new CoordinateTransform();
+
+            // Setup test data
+            const testNodes = [
+                { id: 'node1', x: 100, y: 100, size: 10 },
+                { id: 'node2', x: 200, y: 150, size: 15 },
+                { id: 'node3', x: 300, y: 200, size: 12 }
+            ];
+
+            interactionManager.updateData(testNodes, []);
+
+            // Initialize the interaction manager with coordinate transform
+            interactionManager.coordinateTransform = coordinateTransform;
+
+            // Test finding node at position
+            const exactPosition = { x: 100, y: 100 };
+            const foundExact = interactionManager.findNodeAtPosition(exactPosition);
+            const foundCorrectNode = foundExact && foundExact.id === 'node1';
+
+            // Test position just outside click radius
+            const farPosition = { x: 150, y: 150 };
+            const foundFar = interactionManager.findNodeAtPosition(farPosition);
+            const noNodeFound = foundFar === null;
+
+            // Test position within click radius
+            const nearPosition = { x: 110, y: 110 }; // 14.14 pixels away, within radius
+            const foundNear = interactionManager.findNodeAtPosition(nearPosition);
+            const foundNearNode = foundNear && foundNear.id === 'node1';
+
+            interactionManager.destroy();
+
+            return {
+                success: foundCorrectNode && noNodeFound && foundNearNode,
+                message: foundCorrectNode && noNodeFound && foundNearNode ?
+                    'Node detection works correctly' :
+                    'Node detection failed',
+                data: {
+                    foundCorrectNode,
+                    noNodeFound,
+                    foundNearNode,
+                    exactNode: foundExact ? foundExact.id : null,
+                    farNode: foundFar ? foundFar.id : null,
+                    nearNode: foundNear ? foundNear.id : null
+                }
+            };
+        }, 'test3-result');
+
+        // Test 4: Hover state management
+        runTest('Hover State Management', () => {
+            const interactionManager = new InteractionManager();
+            
+            const testNodes = [
+                { id: 'node1', x: 100, y: 100, size: 10 }
+            ];
+            interactionManager.updateData(testNodes, []);
+
+            let hoverStartReceived = false;
+            let hoverEndReceived = false;
+            let hoveredNodeId = null;
+
+            interactionManager.on('nodeHoverStart', (data) => {
+                hoverStartReceived = true;
+                hoveredNodeId = data.node.id;
+            });
+
+            interactionManager.on('nodeHoverEnd', (data) => {
+                hoverEndReceived = true;
+            });
+
+            // Test programmatic hover
+            interactionManager.hoverNode('node1');
+            const hoverStartWorked = hoverStartReceived && hoveredNodeId === 'node1';
+
+            // Check stats
+            const statsWithHover = interactionManager.getStats();
+            const statsCorrect = statsWithHover.hoveredNode === 'node1';
+
+            // Test clearing hover
+            interactionManager.clearHover();
+            const hoverEndWorked = hoverEndReceived;
+
+            const statsAfterClear = interactionManager.getStats();
+            const statsClearedCorrect = statsAfterClear.hoveredNode === null;
+
+            interactionManager.destroy();
+
+            return {
+                success: hoverStartWorked && statsCorrect && hoverEndWorked && statsClearedCorrect,
+                message: hoverStartWorked && statsCorrect && hoverEndWorked && statsClearedCorrect ?
+                    'Hover state management works correctly' :
+                    'Hover state management failed',
+                data: {
+                    hoverStartWorked,
+                    statsCorrect,
+                    hoverEndWorked,
+                    statsClearedCorrect,
+                    hoveredNodeId
+                }
+            };
+        }, 'test4-result');
+
+        // Test 5: Configuration updates
+        runTest('Configuration Updates', () => {
+            const interactionManager = new InteractionManager({ hoverRadius: 50 });
+
+            const originalRadius = interactionManager.config.hoverRadius;
+
+            // Test updating configuration
+            interactionManager.updateConfig({ hoverRadius: 80, newProperty: 'test' });
+
+            const updatedRadius = interactionManager.config.hoverRadius;
+            const hasNewProperty = interactionManager.config.newProperty === 'test';
+
+            // Test enabling/disabling features
+            interactionManager.setDragEnabled(false);
+            interactionManager.setHoverEnabled(false);
+
+            const dragDisabled = interactionManager.config.dragEnabled === false;
+            const hoverDisabled = interactionManager.config.hoverEnabled === false;
+
+            interactionManager.destroy();
+
+            return {
+                success: originalRadius === 50 && updatedRadius === 80 && hasNewProperty && dragDisabled && hoverDisabled,
+                message: originalRadius === 50 && updatedRadius === 80 && hasNewProperty && dragDisabled && hoverDisabled ?
+                    'Configuration updates work correctly' :
+                    'Configuration updates failed',
+                data: {
+                    originalRadius,
+                    updatedRadius,
+                    hasNewProperty,
+                    dragDisabled,
+                    hoverDisabled
+                }
+            };
+        }, 'test5-result');
+
+        // Interactive Demo Setup
+        function setupInteractiveDemo() {
+            const demoDiv = document.getElementById('visual-demo');
+            const logDiv = document.getElementById('event-log');
+            
+            // Create demo nodes
+            const demoNodes = [
+                { id: 'A', x: 150, y: 150, size: 12 },
+                { id: 'B', x: 300, y: 100, size: 15 },
+                { id: 'C', x: 450, y: 200, size: 10 },
+                { id: 'D', x: 350, y: 300, size: 18 }
+            ];
+
+            const demoLinks = [
+                { source: 'A', target: 'B' },
+                { source: 'B', target: 'C' },
+                { source: 'C', target: 'D' }
+            ];
+
+            // Create coordinate transform and interaction manager
+            const coordinateTransform = new CoordinateTransform();
+            coordinateTransform.updateViewport(600, 400);
+
+            demoInteractionManager = new InteractionManager({
+                hoverRadius: 60,
+                maxHoverScale: 1.3,
+                clickRadius: 20
+            });
+
+            // Create SVG for interaction
+            const svg = d3.select(demoDiv)
+                .append('svg')
+                .attr('width', 600)
+                .attr('height', 400);
+
+            // Mock elements for interaction manager
+            const elements = {
+                svg: svg,
+                nodes: svg.selectAll('.demo-node-svg'), // Empty initially
+                links: svg.selectAll('.demo-link-svg'), // Empty initially
+                labels: svg.selectAll('.demo-label-svg') // Empty initially
+            };
+
+            demoInteractionManager.initialize(elements, coordinateTransform);
+            demoInteractionManager.updateData(demoNodes, demoLinks);
+
+            // Add event listeners for demo
+            const eventTypes = [
+                'nodeClick', 'nodeDoubleClick', 'linkClick', 'backgroundClick',
+                'nodeHover', 'nodeHoverStart', 'nodeHoverEnd', 'hoverReset',
+                'dragStart', 'dragMove', 'dragEnd',
+                'nodeContextMenu', 'backgroundContextMenu'
+            ];
+
+            eventTypes.forEach(eventType => {
+                demoInteractionManager.on(eventType, (data) => {
+                    logEvent(eventType, data);
+                });
+            });
+
+            // Create visual nodes
+            demoNodes.forEach(node => {
+                const nodeEl = document.createElement('div');
+                nodeEl.className = 'demo-node';
+                nodeEl.id = `demo-node-${node.id}`;
+                
+                const size = (node.size || 10) * 2;
+                nodeEl.style.width = size + 'px';
+                nodeEl.style.height = size + 'px';
+                nodeEl.style.left = (node.x - size/2) + 'px';
+                nodeEl.style.top = (node.y - size/2) + 'px';
+                nodeEl.textContent = node.id;
+                
+                demoDiv.appendChild(nodeEl);
+            });
+
+            // Create visual links
+            demoLinks.forEach(link => {
+                const sourceNode = demoNodes.find(n => n.id === link.source);
+                const targetNode = demoNodes.find(n => n.id === link.target);
+                
+                if (sourceNode && targetNode) {
+                    const linkEl = document.createElement('div');
+                    linkEl.className = 'demo-link';
+                    
+                    const dx = targetNode.x - sourceNode.x;
+                    const dy = targetNode.y - sourceNode.y;
+                    const length = Math.sqrt(dx * dx + dy * dy);
+                    const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+                    
+                    linkEl.style.left = sourceNode.x + 'px';
+                    linkEl.style.top = sourceNode.y + 'px';
+                    linkEl.style.width = length + 'px';
+                    linkEl.style.height = '2px';
+                    linkEl.style.transform = `rotate(${angle}deg)`;
+                    
+                    demoDiv.appendChild(linkEl);
+                }
+            });
+
+            // Add hover effect handlers
+            demoInteractionManager.on('nodeHoverStart', (data) => {
+                const nodeEl = document.getElementById(`demo-node-${data.node.id}`);
+                if (nodeEl) nodeEl.classList.add('hovered');
+            });
+
+            demoInteractionManager.on('nodeHoverEnd', (data) => {
+                const nodeEl = document.getElementById(`demo-node-${data.node.id}`);
+                if (nodeEl) nodeEl.classList.remove('hovered');
+            });
+
+            demoInteractionManager.on('hoverReset', () => {
+                demoDiv.querySelectorAll('.demo-node').forEach(el => {
+                    el.classList.remove('hovered');
+                });
+            });
+
+            demoInteractionManager.on('dragStart', (data) => {
+                const nodeEl = document.getElementById(`demo-node-${data.node.id}`);
+                if (nodeEl) nodeEl.classList.add('dragging');
+            });
+
+            demoInteractionManager.on('dragEnd', (data) => {
+                const nodeEl = document.getElementById(`demo-node-${data.node.id}`);
+                if (nodeEl) nodeEl.classList.remove('dragging');
+            });
+        }
+
+        function logEvent(eventType, data) {
+            const logDiv = document.getElementById('event-log');
+            const entry = document.createElement('div');
+            entry.className = 'event-entry';
+            
+            let className = '';
+            if (eventType.includes('click') || eventType.includes('ContextMenu')) className = 'click';
+            else if (eventType.includes('hover') || eventType.includes('Hover')) className = 'hover';
+            else if (eventType.includes('drag') || eventType.includes('Drag')) className = 'drag';
+            
+            entry.classList.add(className);
+            
+            const timestamp = new Date().toLocaleTimeString();
+            let details = '';
+            
+            if (data.node) details += ` node:${data.node.id}`;
+            if (data.link) details += ` link:${data.link.source}-${data.link.target}`;
+            if (data.distance !== undefined) details += ` dist:${data.distance.toFixed(1)}`;
+            
+            entry.textContent = `[${timestamp}] ${eventType}${details}`;
+            
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+            
+            // Keep only last 20 entries
+            while (logDiv.children.length > 20) {
+                logDiv.removeChild(logDiv.firstChild);
+            }
+        }
+
+        // Initialize demo after tests
+        setTimeout(() => {
+            setupInteractiveDemo();
+            
+            document.getElementById('demo-result').innerHTML = `
+                <div class="result success">
+                    <strong>Interactive Demo:</strong> Mouse interactions with event logging<br>
+                    Hover over nodes to see effects, click for events, try right-clicking for context menus.
+                </div>
+            `;
+        }, 100);
+
+        // Update summary
+        setTimeout(() => {
+            const summaryText = document.getElementById('summary-text');
+            const summaryElement = document.getElementById('summary');
+            
+            if (testsPassed === testsTotal) {
+                summaryText.textContent = `All ${testsTotal} tests passed! InteractionManager is working correctly.`;
+                summaryElement.style.backgroundColor = '#d4edda';
+                summaryElement.style.borderColor = '#c3e6cb';
+            } else {
+                summaryText.textContent = `${testsPassed}/${testsTotal} tests passed. Check failed tests above.`;
+                summaryElement.style.backgroundColor = '#f8d7da';
+                summaryElement.style.borderColor = '#f5c6cb';
+            }
+        }, 200);
+    </script>
+</body>
+</html>

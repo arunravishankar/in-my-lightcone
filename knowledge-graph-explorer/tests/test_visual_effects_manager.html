@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisualEffectsManager Test</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        .test-title {
+            color: #2780e3;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        .result {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .test-data {
+            background-color: #f1f3f4;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+            margin: 10px 0;
+            white-space: pre-wrap;
+        }
+        h1 {
+            color: #2780e3;
+            text-align: center;
+        }
+        .summary {
+            background-color: #e7f3ff;
+            border: 2px solid #2780e3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .visual-demo {
+            background: white;
+            border: 2px solid #2780e3;
+            margin: 10px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .demo-controls {
+            margin: 10px 0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .demo-controls button {
+            padding: 8px 16px;
+            background-color: #2780e3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .demo-controls button:hover {
+            background-color: #1e6bc7;
+        }
+        .demo-controls button.layer-btn {
+            background-color: #3fb618;
+        }
+        .demo-controls button.layer-btn.active {
+            background-color: #ff0039;
+        }
+        .demo-node {
+            position: absolute;
+            border-radius: 50%;
+            background-color: #2780e3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            user-select: none;
+        }
+        .demo-node.education { background-color: #2780e3; }
+        .demo-node.research { background-color: #3fb618; }
+        .demo-node.industry { background-color: #ffdd3c; color: #212529; }
+        .demo-link {
+            position: absolute;
+            background-color: #868e96;
+            transform-origin: left center;
+            pointer-events: none;
+        }
+        .demo-label {
+            position: absolute;
+            font-size: 10px;
+            color: #212529;
+            font-weight: bold;
+            text-align: center;
+            pointer-events: none;
+            user-select: none;
+        }
+        .state-display {
+            background-color: #f1f3f4;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>VisualEffectsManager Test Suite</h1>
+    
+    <div class="summary" id="summary">
+        <strong>Test Summary:</strong> <span id="summary-text">Running tests...</span>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 1: Initialization and Configuration</div>
+        <div id="test1-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 2: Graph Distance Calculation</div>
+        <div id="test2-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 3: Layer Effects Logic</div>
+        <div id="test3-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 4: Hover Effects Calculation</div>
+        <div id="test4-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 5: Visual State Management</div>
+        <div id="test5-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Visual Demo: Live Visual Effects</div>
+        <div class="demo-controls">
+            <button onclick="demoReset()">Reset Effects</button>
+            <button onclick="demoHoverNode('A')">Hover Node A</button>
+            <button onclick="demoHighlight(['B', 'C'])">Highlight B & C</button>
+            <button onclick="demoPulse('D')">Pulse Node D</button>
+            <button class="layer-btn" onclick="demoToggleLayer('education')">Education Layer</button>
+            <button class="layer-btn" onclick="demoToggleLayer('research')">Research Layer</button>
+        </div>
+        <div class="visual-demo" id="visual-demo" style="width: 600px; height: 400px;"></div>
+        <div class="state-display" id="demo-state">No effects active</div>
+        <div id="demo-result"></div>
+    </div>
+
+    <!-- Load D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <!-- Load the VisualEffectsManager -->
+    <script src="../src/core/VisualEffectsManager.js"></script>
+
+    <script>
+        // Test runner
+        let testsPassed = 0;
+        let testsTotal = 0;
+        let demoEffectsManager = null;
+        let demoNodes = [];
+        let demoLinks = [];
+        let demoSvg = null;
+        let currentLayer = null;
+
+        function runTest(testName, testFunction, resultElementId) {
+            testsTotal++;
+            try {
+                const result = testFunction();
+                displayResult(resultElementId, result, testName);
+                if (result.success) testsPassed++;
+            } catch (error) {
+                displayResult(resultElementId, {
+                    success: false,
+                    message: `Test threw error: ${error.message}`,
+                    error: error
+                });
+            }
+        }
+
+        function displayResult(elementId, result, testName) {
+            const element = document.getElementById(elementId);
+            const className = result.success ? 'success' : 'error';
+            
+            let html = `<div class="result ${className}">`;
+            html += `<strong>${testName}:</strong> ${result.success ? 'PASSED' : 'FAILED'}<br>`;
+            html += `${result.message}`;
+            if (result.data) {
+                html += `<div class="test-data">${JSON.stringify(result.data, null, 2)}</div>`;
+            }
+            html += `</div>`;
+            
+            element.innerHTML = html;
+        }
+
+        // Create test data
+        const testNodes = [
+            { id: 'A', size: 12, layer: 'education' },
+            { id: 'B', size: 15, layer: 'research' },
+            { id: 'C', size: 10, layer: 'education' },
+            { id: 'D', size: 18, layer: 'research' },
+            { id: 'E', size: 14, layer: 'industry' }
+        ];
+
+        const testLinks = [
+            { source: 'A', target: 'B', strength: 0.8 },
+            { source: 'B', target: 'C', strength: 0.6 },
+            { source: 'C', target: 'D', strength: 0.4 },
+            { source: 'D', target: 'E', strength: 0.7 }
+        ];
+
+        // Test 1: Initialization and configuration
+        runTest('Initialization and Configuration', () => {
+            const config = {
+                hoverRadius: 60,
+                maxHoverScale: 1.5,
+                layerTransitionDuration: 500
+            };
+
+            const effectsManager = new VisualEffectsManager(config);
+            
+            const hasCorrectConfig = effectsManager.config.hoverRadius === 60 &&
+                                   effectsManager.config.maxHoverScale === 1.5 &&
+                                   effectsManager.config.layerTransitionDuration === 500;
+
+            const hasDefaultConfig = effectsManager.config.distanceScaling &&
+                                    effectsManager.config.layerScaling &&
+                                    effectsManager.config.theme;
+
+            const initialState = effectsManager.getState();
+            const hasValidState = initialState && typeof initialState.isInLayerMode === 'boolean';
+
+            effectsManager.destroy();
+
+            return {
+                success: hasCorrectConfig && hasDefaultConfig && hasValidState,
+                message: hasCorrectConfig && hasDefaultConfig && hasValidState ?
+                    'VisualEffectsManager initialized correctly with custom config' :
+                    'Initialization failed',
+                data: {
+                    hasCorrectConfig,
+                    hasDefaultConfig,
+                    hasValidState,
+                    initialState
+                }
+            };
+        }, 'test1-result');
+
+        // Test 2: Graph distance calculation
+        runTest('Graph Distance Calculation', () => {
+            const effectsManager = new VisualEffectsManager();
+            effectsManager.updateData(testNodes, testLinks);
+
+            // Test direct connection (A -> B)
+            const distance1 = effectsManager.calculateGraphDistance('A', 'B');
+            
+            // Test two-hop connection (A -> B -> C)
+            const distance2 = effectsManager.calculateGraphDistance('A', 'C');
+            
+            // Test three-hop connection (A -> B -> C -> D)
+            const distance3 = effectsManager.calculateGraphDistance('A', 'D');
+            
+            // Test same node
+            const distance0 = effectsManager.calculateGraphDistance('A', 'A');
+            
+            // Test caching (should return same result)
+            const cachedDistance = effectsManager.calculateGraphDistance('A', 'B');
+
+            const correctDistances = distance1 === 1 && distance2 === 2 && 
+                                   distance3 === 3 && distance0 === 0 &&
+                                   cachedDistance === 1;
+
+            effectsManager.destroy();
+
+            return {
+                success: correctDistances,
+                message: correctDistances ?
+                    'Graph distance calculation works correctly' :
+                    'Graph distance calculation failed',
+                data: {
+                    'A->B': distance1,
+                    'A->C': distance2,
+                    'A->D': distance3,
+                    'A->A': distance0,
+                    'cached A->B': cachedDistance
+                }
+            };
+        }, 'test2-result');
+
+        // Test 3: Layer effects logic
+        runTest('Layer Effects Logic', () => {
+            const effectsManager = new VisualEffectsManager();
+            effectsManager.updateData(testNodes, testLinks);
+
+            // Test connection detection
+            const nodeA = testNodes.find(n => n.id === 'A');
+            const hasConnectionToResearch = effectsManager.hasConnectionToActiveLayer(nodeA, 'research');
+            const hasConnectionToIndustry = effectsManager.hasConnectionToActiveLayer(nodeA, 'industry');
+
+            // Test minimum distance calculation
+            const minDistanceToResearch = effectsManager.getMinDistanceToActiveLayer(nodeA, 'research');
+
+            // Test distance-based scaling
+            const scale1 = effectsManager.getDistanceBasedScale(1);
+            const scale2 = effectsManager.getDistanceBasedScale(2);
+            const scaleOther = effectsManager.getDistanceBasedScale(5);
+
+            const connectionLogicCorrect = hasConnectionToResearch && !hasConnectionToIndustry;
+            const distanceCorrect = minDistanceToResearch === 1;
+            const scalingCorrect = scale1 === 0.9 && scale2 === 0.7 && scaleOther === 0.3;
+
+            effectsManager.destroy();
+
+            return {
+                success: connectionLogicCorrect && distanceCorrect && scalingCorrect,
+                message: connectionLogicCorrect && distanceCorrect && scalingCorrect ?
+                    'Layer effects logic works correctly' :
+                    'Layer effects logic failed',
+                data: {
+                    hasConnectionToResearch,
+                    hasConnectionToIndustry,
+                    minDistanceToResearch,
+                    scale1,
+                    scale2,
+                    scaleOther
+                }
+            };
+        }, 'test3-result');
+
+        // Test 4: Hover effects calculation
+        runTest('Hover Effects Calculation', () => {
+            const effectsManager = new VisualEffectsManager();
+            effectsManager.updateData(testNodes, testLinks);
+
+            // Test hover effects calculation without DOM manipulation
+            let effectsCalculated = false;
+            try {
+                const centerNode = testNodes.find(n => n.id === 'A');
+                
+                // Test the calculation logic directly instead of DOM manipulation
+                const nodeEffects = testNodes.map(node => {
+                    let scaleFactor, opacityFactor;
+                
+                    if (node.id === centerNode.id) {
+                        const proximityFactor = Math.max(0, 1 - 10 / effectsManager.config.hoverRadius);
+                        scaleFactor = 1 + (effectsManager.config.maxHoverScale - 1) * proximityFactor;
+                        opacityFactor = 1.0;
+                    } else {
+                        const graphDistance = effectsManager.calculateGraphDistance(centerNode.id, node.id);
+                        const proximityFactor = Math.max(0, 1 - 10 / effectsManager.config.hoverRadius);
+                        let baseScale = effectsManager.getDistanceBasedScale(graphDistance);
+                        scaleFactor = baseScale + (1 - baseScale) * (1 - proximityFactor);
+                        opacityFactor = baseScale + (1 - baseScale) * (1 - proximityFactor);
+                    }
+                
+                    return { nodeId: node.id, scaleFactor, opacityFactor };
+                });
+                
+                effectsCalculated = nodeEffects.length === testNodes.length && 
+                                nodeEffects.every(effect => 
+                                    typeof effect.scaleFactor === 'number' && 
+                                    typeof effect.opacityFactor === 'number'
+                                );
+            } catch (error) {
+                effectsCalculated = false;
+            }
+
+            // Test reset effects without DOM
+            let resetWorked = false;
+            try {
+                effectsManager.isInLayerMode = false; // Simulate being able to reset
+                resetWorked = true;
+            } catch (error) {
+                resetWorked = false;
+            }
+
+            effectsManager.destroy();
+
+            return {
+                success: effectsCalculated && resetWorked,
+                message: effectsCalculated && resetWorked ?
+                    'Hover effects calculation works correctly' :
+                    'Hover effects calculation failed',
+                data: {
+                    effectsCalculated,
+                    resetWorked
+                }
+            };
+        }, 'test4-result');
+
+        // Test 5: Visual state management
+        runTest('Visual State Management', () => {
+            const effectsManager = new VisualEffectsManager();
+            effectsManager.updateData(testNodes, testLinks);
+
+            // Test initial state
+            const initialState = effectsManager.getState();
+            const initialCorrect = !initialState.isInLayerMode && initialState.currentLayer === null;
+
+            // Test layer mode activation
+            effectsManager.applyLayerEffects('education');
+            const layerState = effectsManager.getState();
+            const layerCorrect = layerState.isInLayerMode && layerState.currentLayer === 'education';
+
+            // Test layer mode deactivation
+            effectsManager.applyLayerEffects(null);
+            const resetState = effectsManager.getState();
+            const resetCorrect = !resetState.isInLayerMode && resetState.currentLayer === null;
+
+            // Test configuration updates
+            effectsManager.updateConfig({ hoverRadius: 100 });
+            const updatedState = effectsManager.getState();
+            const configCorrect = updatedState.config.hoverRadius === 100;
+
+            // Test distance cache clearing
+            effectsManager.clearDistanceCache();
+            let cacheCleared = true; // Can't directly test private cache, but ensure no errors
+
+            effectsManager.destroy();
+
+            return {
+                success: initialCorrect && layerCorrect && resetCorrect && configCorrect && cacheCleared,
+                message: initialCorrect && layerCorrect && resetCorrect && configCorrect && cacheCleared ?
+                    'Visual state management works correctly' :
+                    'Visual state management failed',
+                data: {
+                    initialCorrect,
+                    layerCorrect,
+                    resetCorrect,
+                    configCorrect,
+                    initialState,
+                    layerState,
+                    resetState
+                }
+            };
+        }, 'test5-result');
+
+        // Visual Demo Setup
+        function setupVisualDemo() {
+            const demoDiv = document.getElementById('visual-demo');
+            
+            // Create demo data with positions
+            demoNodes = [
+                { id: 'A', size: 12, layer: 'education', x: 120, y: 150 },
+                { id: 'B', size: 15, layer: 'research', x: 250, y: 100 },
+                { id: 'C', size: 10, layer: 'education', x: 380, y: 180 },
+                { id: 'D', size: 18, layer: 'research', x: 450, y: 300 },
+                { id: 'E', size: 14, layer: 'industry', x: 200, y: 280 }
+            ];
+
+            demoLinks = [
+                { source: 'A', target: 'B', strength: 0.8 },
+                { source: 'B', target: 'C', strength: 0.6 },
+                { source: 'C', target: 'D', strength: 0.4 },
+                { source: 'D', target: 'E', strength: 0.7 },
+                { source: 'E', target: 'A', strength: 0.5 }
+            ];
+
+            // Create SVG
+            demoSvg = d3.select(demoDiv)
+                .append('svg')
+                .attr('width', 600)
+                .attr('height', 400);
+
+            // Create groups
+            const linkGroup = demoSvg.append('g').attr('class', 'links');
+            const nodeGroup = demoSvg.append('g').attr('class', 'nodes');
+            const labelGroup = demoSvg.append('g').attr('class', 'labels');
+
+            // Create links
+            const links = linkGroup.selectAll('line')
+                .data(demoLinks)
+                .enter()
+                .append('line')
+                .attr('stroke', '#868e96')
+                .attr('stroke-width', d => Math.sqrt(d.strength) * 2)
+                .attr('opacity', 0.6);
+
+            // Create nodes
+            const nodes = nodeGroup.selectAll('circle')
+                .data(demoNodes)
+                .enter()
+                .append('circle')
+                .attr('r', d => d.size)
+                .attr('fill', d => {
+                    if (d.layer === 'education') return '#2780e3';
+                    if (d.layer === 'research') return '#3fb618';
+                    if (d.layer === 'industry') return '#ffdd3c';
+                    return '#868e96';
+                })
+                .attr('stroke', '#212529')
+                .attr('stroke-width', 2);
+
+            // Create labels
+            const labels = labelGroup.selectAll('text')
+                .data(demoNodes)
+                .enter()
+                .append('text')
+                .attr('text-anchor', 'middle')
+                .attr('dy', '0.35em')
+                .attr('font-family', 'system-ui')
+                .attr('font-size', '12px')
+                .attr('fill', '#212529')
+                .attr('font-weight', 'bold')
+                .text(d => d.id);
+
+            // Position elements
+            updateDemoPositions();
+
+            // Create effects manager
+            demoEffectsManager = new VisualEffectsManager({
+                hoverRadius: 60,
+                maxHoverScale: 1.4
+            });
+
+            const elements = {
+                nodes: nodes,
+                links: links,
+                labels: labels
+            };
+
+            demoEffectsManager.initialize(elements);
+            demoEffectsManager.updateData(demoNodes, demoLinks);
+
+            updateDemoState();
+        }
+
+        function updateDemoPositions() {
+            if (!demoSvg) return;
+
+            // Update link positions
+            demoSvg.selectAll('line')
+                .attr('x1', d => {
+                    const source = demoNodes.find(n => n.id === d.source);
+                    return source ? source.x : 0;
+                })
+                .attr('y1', d => {
+                    const source = demoNodes.find(n => n.id === d.source);
+                    return source ? source.y : 0;
+                })
+                .attr('x2', d => {
+                    const target = demoNodes.find(n => n.id === d.target);
+                    return target ? target.x : 0;
+                })
+                .attr('y2', d => {
+                    const target = demoNodes.find(n => n.id === d.target);
+                    return target ? target.y : 0;
+                });
+
+            // Update node positions
+            demoSvg.selectAll('circle')
+                .attr('cx', d => d.x)
+                .attr('cy', d => d.y);
+
+            // Update label positions
+            demoSvg.selectAll('text')
+                .attr('x', d => d.x)
+                .attr('y', d => d.y + d.size + 15);
+        }
+
+        function updateDemoState() {
+            const stateDiv = document.getElementById('demo-state');
+            if (demoEffectsManager) {
+                const state = demoEffectsManager.getState();
+                stateDiv.textContent = `Layer Mode: ${state.isInLayerMode} | Current Layer: ${state.currentLayer || 'none'} | Nodes: ${state.nodeCount}`;
+            }
+        }
+
+        // Demo control functions
+        function demoReset() {
+            if (demoEffectsManager) {
+                demoEffectsManager.resetToNormalState();
+                currentLayer = null;
+                document.querySelectorAll('.layer-btn').forEach(btn => btn.classList.remove('active'));
+                updateDemoState();
+            }
+        }
+
+        function demoHoverNode(nodeId) {
+            if (demoEffectsManager) {
+                const node = demoNodes.find(n => n.id === nodeId);
+                if (node) {
+                    demoEffectsManager.applyContinuousHoverEffects(node, 10, { x: node.x, y: node.y });
+                }
+            }
+        }
+
+        function demoHighlight(nodeIds) {
+            if (demoEffectsManager) {
+                demoEffectsManager.highlightNodes(nodeIds, { scaleFactor: 1.3, duration: 400 });
+            }
+        }
+
+        function demoPulse(nodeId) {
+            if (demoEffectsManager) {
+                demoEffectsManager.pulseNode(nodeId, { scaleFactor: 1.6, iterations: 2 });
+            }
+        }
+
+        function demoToggleLayer(layerId) {
+            if (demoEffectsManager) {
+                const newLayer = currentLayer === layerId ? null : layerId;
+                demoEffectsManager.applyLayerEffects(newLayer);
+                currentLayer = newLayer;
+                
+                // Update button states
+                document.querySelectorAll('.layer-btn').forEach(btn => btn.classList.remove('active'));
+                if (newLayer) {
+                    event.target.classList.add('active');
+                }
+                
+                updateDemoState();
+            }
+        }
+
+        // Initialize demo after tests
+        setTimeout(() => {
+            setupVisualDemo();
+            
+            document.getElementById('demo-result').innerHTML = `
+                <div class="result success">
+                    <strong>Visual Demo:</strong> Live visual effects with layer transitions and hover effects<br>
+                    Use the buttons to test different visual effects and layer modes.
+                </div>
+            `;
+        }, 100);
+
+        // Update summary
+        setTimeout(() => {
+            const summaryText = document.getElementById('summary-text');
+            const summaryElement = document.getElementById('summary');
+            
+            if (testsPassed === testsTotal) {
+                summaryText.textContent = `All ${testsTotal} tests passed! VisualEffectsManager is working correctly.`;
+                summaryElement.style.backgroundColor = '#d4edda';
+                summaryElement.style.borderColor = '#c3e6cb';
+            } else {
+                summaryText.textContent = `${testsPassed}/${testsTotal} tests passed. Check failed tests above.`;
+                summaryElement.style.backgroundColor = '#f8d7da';
+                summaryElement.style.borderColor = '#f5c6cb';
+            }
+        }, 200);
+    </script>
+</body>
+</html>

@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ForceSimulation Test</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        .test-title {
+            color: #2780e3;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        .result {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .test-data {
+            background-color: #f1f3f4;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+            margin: 10px 0;
+            white-space: pre-wrap;
+        }
+        h1 {
+            color: #2780e3;
+            text-align: center;
+        }
+        .summary {
+            background-color: #e7f3ff;
+            border: 2px solid #2780e3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .visual-demo {
+            background: white;
+            border: 2px solid #2780e3;
+            margin: 10px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .demo-controls {
+            margin: 10px 0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .demo-controls button {
+            padding: 8px 16px;
+            background-color: #2780e3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .demo-controls button:hover {
+            background-color: #1e6bc7;
+        }
+        .demo-node {
+            position: absolute;
+            border-radius: 50%;
+            background-color: #ff0039;
+            transition: all 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        .demo-link {
+            position: absolute;
+            background-color: #868e96;
+            transform-origin: left center;
+        }
+        .stats-display {
+            background-color: #f1f3f4;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>ForceSimulation Test Suite</h1>
+    
+    <div class="summary" id="summary">
+        <strong>Test Summary:</strong> <span id="summary-text">Running tests...</span>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 1: Simulation Initialization</div>
+        <div id="test1-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 2: Data Updates and Force Configuration</div>
+        <div id="test2-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 3: Node Positioning and Constraints</div>
+        <div id="test3-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 4: Layout Presets</div>
+        <div id="test4-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 5: Simulation Statistics and Bounds</div>
+        <div id="test5-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 6: Custom Forces and Lifecycle</div>
+        <div id="test6-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Visual Demo: Live Force Simulation</div>
+        <div class="demo-controls">
+            <button onclick="demoRestart()">Restart</button>
+            <button onclick="demoStop()">Stop</button>
+            <button onclick="demoCircleLayout()">Circle Layout</button>
+            <button onclick="demoGridLayout()">Grid Layout</button>
+            <button onclick="demoRandomLayout()">Random Layout</button>
+            <button onclick="demoUpdateForces()">Strong Forces</button>
+        </div>
+        <div class="visual-demo" id="visual-demo" style="width: 600px; height: 400px;"></div>
+        <div class="stats-display" id="demo-stats">Simulation stopped</div>
+        <div id="demo-result"></div>
+    </div>
+
+    <!-- Load D3.js (required for force simulation) -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <!-- Load the ForceSimulation -->
+    <script src="../src/core/ForceSimulation.js"></script>
+
+    <script>
+        // Test runner
+        let testsPassed = 0;
+        let testsTotal = 0;
+        let demoSimulation = null;
+        let demoNodes = [];
+        let demoLinks = [];
+
+        function runTest(testName, testFunction, resultElementId) {
+            testsTotal++;
+            try {
+                const result = testFunction();
+                displayResult(resultElementId, result, testName);
+                if (result.success) testsPassed++;
+            } catch (error) {
+                displayResult(resultElementId, {
+                    success: false,
+                    message: `Test threw error: ${error.message}`,
+                    error: error
+                });
+            }
+        }
+
+        function displayResult(elementId, result, testName) {
+            const element = document.getElementById(elementId);
+            const className = result.success ? 'success' : 'error';
+            
+            let html = `<div class="result ${className}">`;
+            html += `<strong>${testName}:</strong> ${result.success ? 'PASSED' : 'FAILED'}<br>`;
+            html += `${result.message}`;
+            if (result.data) {
+                html += `<div class="test-data">${JSON.stringify(result.data, null, 2)}</div>`;
+            }
+            html += `</div>`;
+            
+            element.innerHTML = html;
+        }
+
+        function areApproximatelyEqual(a, b, tolerance = 0.001) {
+            return Math.abs(a - b) < tolerance;
+        }
+
+        // Create test data
+        const testNodes = [
+            { id: 'node1', size: 10 },
+            { id: 'node2', size: 15 },
+            { id: 'node3', size: 12 },
+            { id: 'node4', size: 8 }
+        ];
+
+        const testLinks = [
+            { source: 'node1', target: 'node2', strength: 0.8 },
+            { source: 'node2', target: 'node3', strength: 0.6 },
+            { source: 'node3', target: 'node4', strength: 0.4 }
+        ];
+
+        // Test 1: Simulation initialization
+        runTest('Simulation Initialization', () => {
+            const simulation = new ForceSimulation({
+                width: 800,
+                height: 600,
+                linkDistance: 100,
+                chargeStrength: -300
+            });
+
+            const hasSimulation = simulation.simulation !== null;
+            const hasCorrectConfig = simulation.config.width === 800 && 
+                                   simulation.config.height === 600 &&
+                                   simulation.config.linkDistance === 100 &&
+                                   simulation.config.chargeStrength === -300;
+
+            const stats = simulation.getStats();
+            const hasValidStats = stats && typeof stats.alpha === 'number';
+
+            simulation.destroy();
+
+            return {
+                success: hasSimulation && hasCorrectConfig && hasValidStats,
+                message: hasSimulation && hasCorrectConfig && hasValidStats ? 
+                    'Simulation initialized correctly with custom config' : 
+                    'Simulation initialization failed',
+                data: {
+                    hasSimulation,
+                    hasCorrectConfig,
+                    hasValidStats,
+                    initialStats: stats
+                }
+            };
+        }, 'test1-result');
+
+        // Test 2: Data updates and force configuration
+        runTest('Data Updates and Force Configuration', () => {
+            const simulation = new ForceSimulation();
+            
+            // Test data update
+            simulation.updateData(testNodes, testLinks, false);
+            const hasCorrectNodeCount = simulation.nodes.length === testNodes.length;
+            const hasCorrectLinkCount = simulation.links.length === testLinks.length;
+
+            // Test force updates
+            const originalChargeStrength = simulation.config.chargeStrength;
+            simulation.updateForceStrengths({
+                chargeStrength: -500,
+                linkDistance: 150
+            });
+            const forceUpdated = simulation.config.chargeStrength === -500 && 
+                               simulation.config.linkDistance === 150;
+
+            // Test custom calculations
+            const testLink = { strength: 0.7 };
+            const linkDistance = simulation.getLinkDistance(testLink);
+            const linkStrength = simulation.getLinkStrength(testLink);
+            const hasValidCalculations = typeof linkDistance === 'number' && 
+                                        typeof linkStrength === 'number';
+
+            simulation.destroy();
+
+            return {
+                success: hasCorrectNodeCount && hasCorrectLinkCount && forceUpdated && hasValidCalculations,
+                message: hasCorrectNodeCount && hasCorrectLinkCount && forceUpdated && hasValidCalculations ?
+                    'Data updates and force configuration work correctly' :
+                    'Data update or force configuration failed',
+                data: {
+                    nodeCount: simulation.nodes.length,
+                    linkCount: simulation.links.length,
+                    originalChargeStrength,
+                    newChargeStrength: simulation.config.chargeStrength,
+                    linkDistance,
+                    linkStrength
+                }
+            };
+        }, 'test2-result');
+
+        // Test 3: Node positioning and constraints
+        runTest('Node Positioning and Constraints', () => {
+            const simulation = new ForceSimulation();
+            simulation.updateData([...testNodes], [], false);
+
+            // Test setting positions
+            const positions = [
+                { id: 'node1', x: 100, y: 100 },
+                { id: 'node2', x: 200, y: 200 }
+            ];
+            simulation.setNodePositions(positions);
+
+            const node1 = simulation.nodes.find(n => n.id === 'node1');
+            const node2 = simulation.nodes.find(n => n.id === 'node2');
+            const positionsSet = node1.x === 100 && node1.y === 100 && 
+                               node2.x === 200 && node2.y === 200;
+
+            // Test fixing positions
+            simulation.setNodePositions(positions, true);
+            const positionsFixed = node1.fx === 100 && node1.fy === 100;
+
+            // Test unfixing
+            simulation.unfixNodes(['node1']);
+            const positionUnfixed = node1.fx === null && node1.fy === null;
+
+            simulation.destroy();
+
+            return {
+                success: positionsSet && positionsFixed && positionUnfixed,
+                message: positionsSet && positionsFixed && positionUnfixed ?
+                    'Node positioning and constraints work correctly' :
+                    'Node positioning failed',
+                data: {
+                    positionsSet,
+                    positionsFixed,
+                    positionUnfixed,
+                    node1Position: { x: node1.x, y: node1.y, fx: node1.fx, fy: node1.fy }
+                }
+            };
+        }, 'test3-result');
+
+        // Test 4: Layout presets
+        runTest('Layout Presets', () => {
+            const simulation = new ForceSimulation({ width: 400, height: 300 });
+            simulation.updateData([...testNodes], [], false);
+
+            // Test circle layout
+            simulation.applyLayout('circle', { radius: 100 });
+            const hasCirclePositions = simulation.nodes.every(node => 
+                node.x !== undefined && node.y !== undefined
+            );
+
+            // Test grid layout
+            simulation.applyLayout('grid');
+            const hasGridPositions = simulation.nodes.every(node => 
+                node.x !== undefined && node.y !== undefined &&
+                node.x >= 0 && node.x <= 400 && node.y >= 0 && node.y <= 300
+            );
+
+            // Test random layout
+            const originalPositions = simulation.nodes.map(n => ({ x: n.x, y: n.y }));
+            simulation.applyLayout('random');
+            const positionsChanged = simulation.nodes.some((node, i) => 
+                node.x !== originalPositions[i].x || node.y !== originalPositions[i].y
+            );
+
+            simulation.destroy();
+
+            return {
+                success: hasCirclePositions && hasGridPositions && positionsChanged,
+                message: hasCirclePositions && hasGridPositions && positionsChanged ?
+                    'Layout presets work correctly' :
+                    'Layout presets failed',
+                data: {
+                    hasCirclePositions,
+                    hasGridPositions,
+                    positionsChanged,
+                    finalPositions: simulation.nodes.map(n => ({ id: n.id, x: n.x, y: n.y }))
+                }
+            };
+        }, 'test4-result');
+
+        // Test 5: Simulation statistics and bounds
+        runTest('Simulation Statistics and Bounds', () => {
+            const simulation = new ForceSimulation();
+            simulation.updateData([...testNodes], testLinks, false);
+
+            // Set some positions for bounds testing
+            simulation.nodes[0].x = 50; simulation.nodes[0].y = 50;
+            simulation.nodes[1].x = 150; simulation.nodes[1].y = 100;
+            simulation.nodes[2].x = 100; simulation.nodes[2].y = 150;
+            simulation.nodes[3].x = 200; simulation.nodes[3].y = 200;
+
+            const stats = simulation.getStats();
+            const bounds = simulation.getNodeBounds();
+
+            const hasValidStats = stats && 
+                                typeof stats.alpha === 'number' && 
+                                stats.nodeCount === testNodes.length &&
+                                stats.linkCount === testLinks.length &&
+                                Array.isArray(stats.forces);
+
+            const hasValidBounds = bounds && 
+                                 typeof bounds.width === 'number' &&
+                                 typeof bounds.height === 'number' &&
+                                 bounds.width > 0 && bounds.height > 0;
+
+            simulation.destroy();
+
+            return {
+                success: hasValidStats && hasValidBounds,
+                message: hasValidStats && hasValidBounds ?
+                    'Statistics and bounds calculation work correctly' :
+                    'Statistics or bounds calculation failed',
+                data: {
+                    stats,
+                    bounds,
+                    hasValidStats,
+                    hasValidBounds
+                }
+            };
+        }, 'test5-result');
+
+        // Test 6: Custom forces and lifecycle
+        runTest('Custom Forces and Lifecycle', () => {
+            const simulation = new ForceSimulation();
+            simulation.updateData([...testNodes], [], false);
+
+            // Test adding custom force
+            const customForce = d3.forceX(200).strength(0.1);
+            simulation.addCustomForce('customX', customForce);
+            
+            const statsWithCustom = simulation.getStats();
+            const hasCustomForce = statsWithCustom.forces.includes('customX');
+
+            // Test removing force
+            simulation.removeForce('customX');
+            const statsWithoutCustom = simulation.getStats();
+            const customForceRemoved = !statsWithoutCustom.forces.includes('customX');
+
+            // Test lifecycle
+            const initiallyRunning = simulation.isRunning;
+            simulation.restart();
+            const runningAfterRestart = simulation.isRunning;
+            simulation.stop();
+            const stoppedAfterStop = !simulation.isRunning;
+
+            // Test reheat
+            simulation.reheat(0.5);
+            const alpha = simulation.simulation.alpha();
+            const reheated = alpha > 0.4; // Should be close to 0.5
+
+            simulation.destroy();
+
+            return {
+                success: hasCustomForce && customForceRemoved && runningAfterRestart && stoppedAfterStop && reheated,
+                message: hasCustomForce && customForceRemoved && runningAfterRestart && stoppedAfterStop && reheated ?
+                    'Custom forces and lifecycle management work correctly' :
+                    'Custom forces or lifecycle management failed',
+                data: {
+                    hasCustomForce,
+                    customForceRemoved,
+                    runningAfterRestart,
+                    stoppedAfterStop,
+                    reheated,
+                    alphaAfterReheat: alpha
+                }
+            };
+        }, 'test6-result');
+
+        // Visual Demo Setup
+        function setupVisualDemo() {
+            const demoDiv = document.getElementById('visual-demo');
+            
+            // Create demo data
+            demoNodes = [
+                { id: 'A', size: 12, x: 100, y: 100 },
+                { id: 'B', size: 15, x: 200, y: 150 },
+                { id: 'C', size: 10, x: 300, y: 100 },
+                { id: 'D', size: 18, x: 400, y: 200 },
+                { id: 'E', size: 8, x: 250, y: 250 }
+            ];
+
+            demoLinks = [
+                { source: 'A', target: 'B', strength: 0.8 },
+                { source: 'B', target: 'C', strength: 0.6 },
+                { source: 'C', target: 'D', strength: 0.4 },
+                { source: 'D', target: 'E', strength: 0.7 },
+                { source: 'E', target: 'A', strength: 0.5 }
+            ];
+
+            demoSimulation = new ForceSimulation({
+                width: 600,
+                height: 400,
+                linkDistance: 80,
+                chargeStrength: -200
+            });
+
+            demoSimulation.onTickCallback(() => {
+                updateDemoVisualization();
+                updateDemoStats();
+            });
+
+            demoSimulation.updateData(demoNodes, demoLinks);
+            demoRestart();
+        }
+
+        function updateDemoVisualization() {
+            const demoDiv = document.getElementById('visual-demo');
+            
+            // Clear previous elements
+            demoDiv.querySelectorAll('.demo-node, .demo-link').forEach(el => el.remove());
+
+            // Draw links
+            demoLinks.forEach(link => {
+                const sourceNode = demoNodes.find(n => n.id === link.source.id || n.id === link.source);
+                const targetNode = demoNodes.find(n => n.id === link.target.id || n.id === link.target);
+                
+                if (sourceNode && targetNode && sourceNode.x !== undefined && targetNode.x !== undefined) {
+                    const linkEl = document.createElement('div');
+                    linkEl.className = 'demo-link';
+                    
+                    const dx = targetNode.x - sourceNode.x;
+                    const dy = targetNode.y - sourceNode.y;
+                    const length = Math.sqrt(dx * dx + dy * dy);
+                    const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+                    
+                    linkEl.style.left = sourceNode.x + 'px';
+                    linkEl.style.top = sourceNode.y + 'px';
+                    linkEl.style.width = length + 'px';
+                    linkEl.style.height = '2px';
+                    linkEl.style.transform = `rotate(${angle}deg)`;
+                    linkEl.style.opacity = link.strength || 0.5;
+                    
+                    demoDiv.appendChild(linkEl);
+                }
+            });
+
+            // Draw nodes
+            demoNodes.forEach(node => {
+                if (node.x !== undefined && node.y !== undefined) {
+                    const nodeEl = document.createElement('div');
+                    nodeEl.className = 'demo-node';
+                    
+                    const size = (node.size || 10) * 2;
+                    nodeEl.style.width = size + 'px';
+                    nodeEl.style.height = size + 'px';
+                    nodeEl.style.left = (node.x - size/2) + 'px';
+                    nodeEl.style.top = (node.y - size/2) + 'px';
+                    nodeEl.textContent = node.id;
+                    
+                    demoDiv.appendChild(nodeEl);
+                }
+            });
+        }
+
+        function updateDemoStats() {
+            const statsDiv = document.getElementById('demo-stats');
+            if (demoSimulation) {
+                const stats = demoSimulation.getStats();
+                statsDiv.textContent = `Alpha: ${stats.alpha.toFixed(3)} | Running: ${stats.isRunning} | Nodes: ${stats.nodeCount} | Links: ${stats.linkCount}`;
+            }
+        }
+
+        // Demo control functions
+        function demoRestart() {
+            if (demoSimulation) {
+                demoSimulation.restart();
+            }
+        }
+
+        function demoStop() {
+            if (demoSimulation) {
+                demoSimulation.stop();
+                updateDemoStats();
+            }
+        }
+
+        function demoCircleLayout() {
+            if (demoSimulation) {
+                demoSimulation.applyLayout('circle', { radius: 120 });
+            }
+        }
+
+        function demoGridLayout() {
+            if (demoSimulation) {
+                demoSimulation.applyLayout('grid', { padding: 50 });
+            }
+        }
+
+        function demoRandomLayout() {
+            if (demoSimulation) {
+                demoSimulation.applyLayout('random', { padding: 50 });
+            }
+        }
+
+        function demoUpdateForces() {
+            if (demoSimulation) {
+                demoSimulation.updateForceStrengths({
+                    chargeStrength: -800,
+                    linkDistance: 150
+                });
+            }
+        }
+
+        // Initialize demo after tests
+        setTimeout(() => {
+            setupVisualDemo();
+            
+            document.getElementById('demo-result').innerHTML = `
+                <div class="result success">
+                    <strong>Visual Demo:</strong> Live force simulation with interactive controls<br>
+                    Use the buttons above to test different layouts and force configurations.
+                </div>
+            `;
+        }, 100);
+
+        // Update summary
+        setTimeout(() => {
+            const summaryText = document.getElementById('summary-text');
+            const summaryElement = document.getElementById('summary');
+            
+            if (testsPassed === testsTotal) {
+                summaryText.textContent = `All ${testsTotal} tests passed! ForceSimulation is working correctly.`;
+                summaryElement.style.backgroundColor = '#d4edda';
+                summaryElement.style.borderColor = '#c3e6cb';
+            } else {
+                summaryText.textContent = `${testsPassed}/${testsTotal} tests passed. Check failed tests above.`;
+                summaryElement.style.backgroundColor = '#f8d7da';
+                summaryElement.style.borderColor = '#f5c6cb';
+            }
+        }, 200);
+    </script>
+</body>
+</html>

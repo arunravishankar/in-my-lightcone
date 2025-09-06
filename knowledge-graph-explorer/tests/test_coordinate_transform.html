@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoordinateTransform Test</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        .test-title {
+            color: #2780e3;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        .result {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .test-data {
+            background-color: #f1f3f4;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+            margin: 10px 0;
+            white-space: pre-wrap;
+        }
+        h1 {
+            color: #2780e3;
+            text-align: center;
+        }
+        .summary {
+            background-color: #e7f3ff;
+            border: 2px solid #2780e3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .visual-demo {
+            background: white;
+            border: 2px solid #2780e3;
+            margin: 10px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .demo-point {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: #ff0039;
+            border-radius: 50%;
+            transform: translate(-4px, -4px);
+        }
+        .demo-label {
+            position: absolute;
+            font-size: 10px;
+            color: #2780e3;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <h1>CoordinateTransform Test Suite</h1>
+    
+    <div class="summary" id="summary">
+        <strong>Test Summary:</strong> <span id="summary-text">Running tests...</span>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 1: Basic Coordinate Conversion</div>
+        <div id="test1-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 2: Transform Updates</div>
+        <div id="test2-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 3: Distance Calculations</div>
+        <div id="test3-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 4: Visibility Checks</div>
+        <div id="test4-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 5: Zoom-Aware Scaling</div>
+        <div id="test5-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 6: Centering and Fitting Transforms</div>
+        <div id="test6-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Visual Demo: Coordinate Transformation</div>
+        <div class="visual-demo" id="visual-demo" style="width: 400px; height: 300px;">
+            <div class="demo-label" style="top: 5px; left: 5px;">Screen Space (400x300)</div>
+        </div>
+        <div id="demo-result"></div>
+    </div>
+
+    <!-- Load D3.js (required for zoomIdentity) -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <!-- Load the CoordinateTransform -->
+    <script src="../src/utils/CoordinateTransform.js"></script>
+
+    <script>
+        // Test runner
+        let testsPassed = 0;
+        let testsTotal = 0;
+
+        function runTest(testName, testFunction, resultElementId) {
+            testsTotal++;
+            try {
+                const result = testFunction();
+                displayResult(resultElementId, result, testName);
+                if (result.success) testsPassed++;
+            } catch (error) {
+                displayResult(resultElementId, {
+                    success: false,
+                    message: `Test threw error: ${error.message}`,
+                    error: error
+                });
+            }
+        }
+
+        function displayResult(elementId, result, testName) {
+            const element = document.getElementById(elementId);
+            const className = result.success ? 'success' : 'error';
+            
+            let html = `<div class="result ${className}">`;
+            html += `<strong>${testName}:</strong> ${result.success ? 'PASSED' : 'FAILED'}<br>`;
+            html += `${result.message}`;
+            if (result.data) {
+                html += `<div class="test-data">${JSON.stringify(result.data, null, 2)}</div>`;
+            }
+            html += `</div>`;
+            
+            element.innerHTML = html;
+        }
+
+        function areApproximatelyEqual(a, b, tolerance = 0.001) {
+            return Math.abs(a - b) < tolerance;
+        }
+
+        function arePointsEqual(p1, p2, tolerance = 0.001) {
+            return areApproximatelyEqual(p1.x, p2.x, tolerance) && 
+                   areApproximatelyEqual(p1.y, p2.y, tolerance);
+        }
+
+        // Test 1: Basic coordinate conversion
+        runTest('Basic Coordinate Conversion', () => {
+            const transform = new CoordinateTransform();
+            transform.updateViewport(800, 600);
+
+            // Test identity transform (no zoom, no pan)
+            const screenPoint = [400, 300]; // Center of 800x600 viewport
+            const graphPoint = transform.screenToGraph(screenPoint);
+            const backToScreen = transform.graphToScreen(graphPoint);
+
+            const isRoundTrip = areApproximatelyEqual(backToScreen[0], screenPoint[0]) && 
+                               areApproximatelyEqual(backToScreen[1], screenPoint[1]);
+
+            return {
+                success: isRoundTrip,
+                message: isRoundTrip ? 'Screen ↔ Graph conversion works correctly' : 'Round-trip conversion failed',
+                data: {
+                    original: screenPoint,
+                    toGraph: graphPoint,
+                    backToScreen: backToScreen,
+                    currentTransform: transform.getTransform()
+                }
+            };
+        }, 'test1-result');
+
+        // Test 2: Transform updates
+        runTest('Transform Updates', () => {
+            const transform = new CoordinateTransform();
+            transform.updateViewport(800, 600);
+
+            // Create a scaled and translated transform
+            const newTransform = d3.zoomIdentity.translate(100, 50).scale(2);
+            transform.updateTransform(newTransform);
+
+            const scale = transform.getScale();
+            const translation = transform.getTranslation();
+
+            const scaleCorrect = areApproximatelyEqual(scale, 2);
+            const translationCorrect = areApproximatelyEqual(translation.x, 100) && 
+                                     areApproximatelyEqual(translation.y, 50);
+
+            return {
+                success: scaleCorrect && translationCorrect,
+                message: scaleCorrect && translationCorrect ? 'Transform updates work correctly' : 'Transform update failed',
+                data: {
+                    expectedScale: 2,
+                    actualScale: scale,
+                    expectedTranslation: { x: 100, y: 50 },
+                    actualTranslation: translation
+                }
+            };
+        }, 'test2-result');
+
+        // Test 3: Distance calculations
+        runTest('Distance Calculations', () => {
+            const transform = new CoordinateTransform();
+            
+            const point1 = { x: 0, y: 0 };
+            const point2 = { x: 3, y: 4 }; // 3-4-5 triangle
+            const distance = transform.calculateDistance(point1, point2);
+            const expectedDistance = 5;
+
+            const isCorrect = areApproximatelyEqual(distance, expectedDistance);
+
+            // Test closest point finding
+            const sourcePoint = { x: 0, y: 0 };
+            const targets = [
+                { id: 'far', x: 10, y: 10 },
+                { id: 'close', x: 1, y: 1 },
+                { id: 'medium', x: 5, y: 5 }
+            ];
+
+            const closest = transform.findClosestPoint(sourcePoint, targets);
+            const closestIsCorrect = closest && closest.target.id === 'close';
+
+            return {
+                success: isCorrect && closestIsCorrect,
+                message: isCorrect && closestIsCorrect ? 'Distance calculations work correctly' : 'Distance calculation failed',
+                data: {
+                    distance: distance,
+                    expectedDistance: expectedDistance,
+                    closestTarget: closest ? closest.target.id : 'none',
+                    closestDistance: closest ? closest.distance : 'none'
+                }
+            };
+        }, 'test3-result');
+
+        // Test 4: Visibility checks
+        runTest('Visibility Checks', () => {
+            const transform = new CoordinateTransform();
+            transform.updateViewport(800, 600);
+
+            // Test with identity transform
+            const visiblePoint = { x: 400, y: 300 }; // Center of viewport
+            const hiddenPoint = { x: 1000, y: 1000 }; // Outside viewport
+
+            const visibleIsVisible = transform.isVisible(visiblePoint);
+            const hiddenIsHidden = !transform.isVisible(hiddenPoint);
+
+            // Test visible bounds
+            const bounds = transform.getVisibleBounds();
+            const boundsValid = bounds.width > 0 && bounds.height > 0;
+
+            return {
+                success: visibleIsVisible && hiddenIsHidden && boundsValid,
+                message: visibleIsVisible && hiddenIsHidden && boundsValid ? 'Visibility checks work correctly' : 'Visibility check failed',
+                data: {
+                    visiblePoint: visiblePoint,
+                    visiblePointVisible: visibleIsVisible,
+                    hiddenPoint: hiddenPoint,
+                    hiddenPointVisible: !hiddenIsHidden,
+                    visibleBounds: bounds
+                }
+            };
+        }, 'test4-result');
+
+        // Test 5: Zoom-aware scaling
+        runTest('Zoom-Aware Scaling', () => {
+            const transform = new CoordinateTransform();
+            
+            // Test at different zoom levels
+            const baseValue = 10;
+            
+            // At 2x zoom
+            transform.updateTransform(d3.zoomIdentity.scale(2));
+            const scaled2x = transform.scaleValue(baseValue);
+            const inverseScaled2x = transform.scaleValue(baseValue, true);
+            
+            // At 0.5x zoom
+            transform.updateTransform(d3.zoomIdentity.scale(0.5));
+            const scaled05x = transform.scaleValue(baseValue);
+            const inverseScaled05x = transform.scaleValue(baseValue, true);
+
+            const directScalingWorks = areApproximatelyEqual(scaled2x, 20) && 
+                                     areApproximatelyEqual(scaled05x, 5);
+            const inverseScalingWorks = areApproximatelyEqual(inverseScaled2x, 5) && 
+                                      areApproximatelyEqual(inverseScaled05x, 20);
+
+            // Test visual size scaling
+            const fontSize = transform.scaleFontSize(12, 8, 24);
+            const fontSizeValid = fontSize >= 8 && fontSize <= 24;
+
+            return {
+                success: directScalingWorks && inverseScalingWorks && fontSizeValid,
+                message: directScalingWorks && inverseScalingWorks && fontSizeValid ? 'Zoom-aware scaling works correctly' : 'Scaling failed',
+                data: {
+                    baseValue: baseValue,
+                    scaled2x: scaled2x,
+                    scaled05x: scaled05x,
+                    inverseScaled2x: inverseScaled2x,
+                    inverseScaled05x: inverseScaled05x,
+                    fontSize: fontSize
+                }
+            };
+        }, 'test5-result');
+
+        // Test 6: Centering and fitting transforms
+        runTest('Centering and Fitting Transforms', () => {
+            const transform = new CoordinateTransform();
+            transform.updateViewport(800, 600);
+
+            // Test centering transform
+            const targetPoint = { x: 100, y: 200 };
+            const centeringTransform = transform.createCenteringTransform(targetPoint, 1);
+            
+            // Apply the transform and verify the point is centered
+            transform.updateTransform(centeringTransform);
+            const screenPos = transform.graphToScreen(targetPoint);
+            const isCentered = areApproximatelyEqual(screenPos[0], 400, 1) && 
+                              areApproximatelyEqual(screenPos[1], 300, 1);
+
+            // Test fitting transform
+            const bounds = { minX: 0, maxX: 200, minY: 0, maxY: 150 };
+            const fittingTransform = transform.createFittingTransform(bounds, 0.1);
+            
+            const fittingValid = fittingTransform.k > 0 && 
+                                fittingTransform.x !== undefined && 
+                                fittingTransform.y !== undefined;
+
+            return {
+                success: isCentered && fittingValid,
+                message: isCentered && fittingValid ? 'Centering and fitting transforms work correctly' : 'Transform creation failed',
+                data: {
+                    targetPoint: targetPoint,
+                    screenPosition: screenPos,
+                    expectedCenter: [400, 300],
+                    centeringTransform: {
+                        x: centeringTransform.x,
+                        y: centeringTransform.y,
+                        k: centeringTransform.k
+                    },
+                    fittingTransform: {
+                        x: fittingTransform.x,
+                        y: fittingTransform.y,
+                        k: fittingTransform.k
+                    }
+                }
+            };
+        }, 'test6-result');
+
+        // Visual Demo
+        setTimeout(() => {
+            const demoDiv = document.getElementById('visual-demo');
+            const demoResult = document.getElementById('demo-result');
+            
+            const transform = new CoordinateTransform();
+            transform.updateViewport(400, 300);
+            
+            // Create some test points in graph space
+            const graphPoints = [
+                { x: 0, y: 0, label: 'Origin' },
+                { x: 200, y: 150, label: 'Center' },
+                { x: 400, y: 300, label: 'Corner' },
+                { x: -100, y: 100, label: 'Negative' }
+            ];
+            
+            // Convert to screen space and display
+            graphPoints.forEach((point, index) => {
+                const screenPos = transform.graphToScreen(point);
+                
+                if (screenPos[0] >= 0 && screenPos[0] <= 400 && 
+                    screenPos[1] >= 0 && screenPos[1] <= 300) {
+                    
+                    const dot = document.createElement('div');
+                    dot.className = 'demo-point';
+                    dot.style.left = screenPos[0] + 'px';
+                    dot.style.top = screenPos[1] + 'px';
+                    demoDiv.appendChild(dot);
+                    
+                    const label = document.createElement('div');
+                    label.className = 'demo-label';
+                    label.style.left = (screenPos[0] + 10) + 'px';
+                    label.style.top = (screenPos[1] - 15) + 'px';
+                    label.textContent = `${point.label} (${point.x},${point.y})`;
+                    demoDiv.appendChild(label);
+                }
+            });
+            
+            demoResult.innerHTML = `
+                <div class="result success">
+                    <strong>Visual Demo:</strong> Points converted from graph space to screen space<br>
+                    Red dots show where graph coordinates appear in the 400x300 screen viewport.
+                </div>
+            `;
+        }, 500);
+
+        // Update summary
+        setTimeout(() => {
+            const summaryText = document.getElementById('summary-text');
+            const summaryElement = document.getElementById('summary');
+            
+            if (testsPassed === testsTotal) {
+                summaryText.textContent = `All ${testsTotal} tests passed! CoordinateTransform is working correctly.`;
+                summaryElement.style.backgroundColor = '#d4edda';
+                summaryElement.style.borderColor = '#c3e6cb';
+            } else {
+                summaryText.textContent = `${testsPassed}/${testsTotal} tests passed. Check failed tests above.`;
+                summaryElement.style.backgroundColor = '#f8d7da';
+                summaryElement.style.borderColor = '#f5c6cb';
+            }
+        }, 600);
+    </script>
+</body>
+</html>

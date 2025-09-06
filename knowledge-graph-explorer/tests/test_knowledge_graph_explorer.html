@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KnowledgeGraphExplorer Test</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        .test-title {
+            color: #2780e3;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        .result {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .test-data {
+            background-color: #f1f3f4;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+            margin: 10px 0;
+            white-space: pre-wrap;
+        }
+        h1 {
+            color: #2780e3;
+            text-align: center;
+        }
+        .summary {
+            background-color: #e7f3ff;
+            border: 2px solid #2780e3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        .demo-container {
+            background: white;
+            border: 2px solid #2780e3;
+            margin: 10px 0;
+            width: 600px;
+            height: 400px;
+            position: relative;
+        }
+        .demo-controls {
+            margin: 10px 0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .demo-controls button {
+            padding: 6px 12px;
+            background-color: #2780e3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .demo-controls button:hover {
+            background-color: #1e6bc7;
+        }
+    </style>
+</head>
+<body>
+    <h1>KnowledgeGraphExplorer Integration Test</h1>
+    
+    <div class="summary" id="summary">
+        <strong>Test Summary:</strong> <span id="summary-text">Running tests...</span>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 1: Basic Initialization</div>
+        <div id="test1-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 2: Component Integration</div>
+        <div id="test2-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 3: Configuration Management</div>
+        <div id="test3-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Test 4: Public API Methods</div>
+        <div id="test4-result"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="test-title">Integration Demo</div>
+        <div class="demo-controls">
+            <button onclick="demoSetLayer('typeA')">Layer A</button>
+            <button onclick="demoSetLayer(null)">All Layers</button>
+            <button onclick="demoFocusNode('node2')">Focus Node 2</button>
+            <button onclick="demoRestart()">Restart</button>
+        </div>
+        <div class="demo-container" id="demo-container"></div>
+        <div id="demo-result"></div>
+    </div>
+
+    <!-- Load D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <!-- Load all dependencies -->
+    <script src="../src/utils/DataValidator.js"></script>
+    <script src="../src/utils/CoordinateTransform.js"></script>
+    <script src="../src/core/ForceSimulation.js"></script>
+    <script src="../src/core/InteractionManager.js"></script>
+    <script src="../src/core/VisualEffectsManager.js"></script>
+    <script src="../src/core/MiniMapManager.js"></script>
+    <script src="../src/core/KnowledgeGraphExplorer.js"></script>
+
+    <script>
+        // Test runner
+        let testsPassed = 0;
+        let testsTotal = 0;
+        let demoGraph = null;
+
+        function runTest(testName, testFunction, resultElementId) {
+            testsTotal++;
+            try {
+                const result = testFunction();
+                displayResult(resultElementId, result, testName);
+                if (result.success) testsPassed++;
+            } catch (error) {
+                displayResult(resultElementId, {
+                    success: false,
+                    message: `Test threw error: ${error.message}`,
+                    error: error
+                });
+            }
+        }
+
+        function displayResult(elementId, result, testName) {
+            const element = document.getElementById(elementId);
+            const className = result.success ? 'success' : 'error';
+            
+            let html = `<div class="result ${className}">`;
+            html += `<strong>${testName}:</strong> ${result.success ? 'PASSED' : 'FAILED'}<br>`;
+            html += `${result.message}`;
+            if (result.data) {
+                html += `<div class="test-data">${JSON.stringify(result.data, null, 2)}</div>`;
+            }
+            html += `</div>`;
+            
+            element.innerHTML = html;
+        }
+
+        // Simple test data
+        const testData = {
+            nodes: [
+                { id: 'node1', label: 'Node 1', type: 'typeA', layer: 'layerX', size: 12 },
+                { id: 'node2', label: 'Node 2', type: 'typeB', layer: 'layerY', size: 15 },
+                { id: 'node3', label: 'Node 3', type: 'typeA', layer: 'layerX', size: 10 }
+            ],
+            links: [
+                { source: 'node1', target: 'node2', strength: 0.8 },
+                { source: 'node2', target: 'node3', strength: 0.6 }
+            ]
+        };
+
+        const testConfig = {
+            width: 400,
+            height: 300,
+            nodeColors: {
+                'typeA': '#ff6b35',
+                'typeB': '#4ecdc4'
+            },
+            layers: [
+                { id: 'layerX', name: 'Layer X', color: '#ff6b35' },
+                { id: 'layerY', name: 'Layer Y', color: '#4ecdc4' }
+            ],
+            features: {
+                showMiniMap: true,
+                enableHover: true
+            }
+        };
+
+        // Test 1: Basic initialization
+        runTest('Basic Initialization', () => {
+            const container = document.createElement('div');
+            container.style.width = '400px';
+            container.style.height = '300px';
+            document.body.appendChild(container);
+
+            let graph = null;
+            let initSuccess = false;
+            
+            try {
+                graph = new KnowledgeGraphExplorer(container, testData, testConfig);
+                initSuccess = true;
+            } catch (error) {
+                initSuccess = false;
+            }
+
+            const hasContainer = graph && graph.container === container;
+            const hasSVG = graph && graph.svg !== null;
+            const hasConfig = graph && graph.config.width === 400;
+            const hasData = graph && graph.nodes.length === 3;
+
+            if (graph) graph.destroy();
+            document.body.removeChild(container);
+
+            return {
+                success: initSuccess && hasContainer && hasSVG && hasConfig && hasData,
+                message: initSuccess && hasContainer && hasSVG && hasConfig && hasData ?
+                    'KnowledgeGraphExplorer initialized successfully' :
+                    'Initialization failed',
+                data: {
+                    initSuccess,
+                    hasContainer,
+                    hasSVG,
+                    hasConfig,
+                    hasData
+                }
+            };
+        }, 'test1-result');
+
+        // Test 2: Component integration
+        runTest('Component Integration', () => {
+            const container = document.createElement('div');
+            document.body.appendChild(container);
+
+            const graph = new KnowledgeGraphExplorer(container, testData, testConfig);
+            
+            const hasCoordinateTransform = graph.components.coordinateTransform !== null;
+            const hasForceSimulation = graph.components.forceSimulation !== null;
+            const hasInteractionManager = graph.components.interactionManager !== null;
+            const hasVisualEffectsManager = graph.components.visualEffectsManager !== null;
+            const hasMiniMapManager = graph.components.miniMapManager !== null;
+
+            const state = graph.getState();
+            const stateValid = state.isInitialized && 
+                             state.nodeCount === 3 && 
+                             state.linkCount === 2;
+
+            graph.destroy();
+            document.body.removeChild(container);
+
+            return {
+                success: hasCoordinateTransform && hasForceSimulation && hasInteractionManager && 
+                        hasVisualEffectsManager && hasMiniMapManager && stateValid,
+                message: hasCoordinateTransform && hasForceSimulation && hasInteractionManager && 
+                        hasVisualEffectsManager && hasMiniMapManager && stateValid ?
+                    'All components integrated successfully' :
+                    'Component integration failed',
+                data: {
+                    components: {
+                        coordinateTransform: hasCoordinateTransform,
+                        forceSimulation: hasForceSimulation,
+                        interactionManager: hasInteractionManager,
+                        visualEffectsManager: hasVisualEffectsManager,
+                        miniMapManager: hasMiniMapManager
+                    },
+                    stateValid,
+                    state
+                }
+            };
+        }, 'test2-result');
+
+        // Test 3: Configuration management
+        runTest('Configuration Management', () => {
+            const container = document.createElement('div');
+            document.body.appendChild(container);
+
+            const graph = new KnowledgeGraphExplorer(container, testData, testConfig);
+            
+            // Test initial config
+            const hasCustomColors = graph.config.nodeColors.typeA === '#ff6b35';
+            const hasCustomLayers = graph.config.layers.length === 2;
+            const hasFeatures = graph.config.features.showMiniMap === true;
+
+            // Test config update
+            graph.updateConfig({
+                nodeColors: { typeA: '#00ff00' },
+                features: { enableHover: false }
+            });
+            
+            const configUpdated = graph.config.nodeColors.typeA === '#00ff00' &&
+                                graph.config.features.enableHover === false;
+
+            // Test node color application
+            const nodeColor = graph.getNodeColor({ type: 'typeA' });
+            const colorApplied = nodeColor === '#00ff00';
+
+            graph.destroy();
+            document.body.removeChild(container);
+
+            return {
+                success: hasCustomColors && hasCustomLayers && hasFeatures && configUpdated && colorApplied,
+                message: hasCustomColors && hasCustomLayers && hasFeatures && configUpdated && colorApplied ?
+                    'Configuration management works correctly' :
+                    'Configuration management failed',
+                data: {
+                    hasCustomColors,
+                    hasCustomLayers,
+                    hasFeatures,
+                    configUpdated,
+                    colorApplied,
+                    finalNodeColor: nodeColor
+                }
+            };
+        }, 'test3-result');
+
+        // Test 4: Public API methods
+        runTest('Public API Methods', () => {
+            const container = document.createElement('div');
+            document.body.appendChild(container);
+
+            const graph = new KnowledgeGraphExplorer(container, testData, testConfig);
+            
+            // Test event system
+            let eventReceived = false;
+            graph.on('layerChange', () => { eventReceived = true; });
+            
+            // Test layer methods
+            graph.setActiveLayer('layerX');
+            const layerSet = graph.state.currentLayer === 'layerX' && eventReceived;
+            
+            graph.showAllLayers();
+            const layerReset = graph.state.currentLayer === null;
+            
+            // Test data update
+            const newData = {
+                nodes: [{ id: 'newNode', label: 'New Node', type: 'typeA' }],
+                links: []
+            };
+            
+            let dataUpdateWorked = false;
+            try {
+                graph.updateData(newData);
+                dataUpdateWorked = graph.nodes.length === 1;
+            } catch (error) {
+                dataUpdateWorked = false;
+            }
+            
+            // Test focus method
+            let focusWorked = false;
+            try {
+                graph.focusOnNode('newNode');
+                focusWorked = true;
+            } catch (error) {
+                focusWorked = false;
+            }
+
+            graph.destroy();
+            document.body.removeChild(container);
+
+            return {
+                success: layerSet && layerReset && dataUpdateWorked && focusWorked,
+                message: layerSet && layerReset && dataUpdateWorked && focusWorked ?
+                    'Public API methods work correctly' :
+                    'Public API methods failed',
+                data: {
+                    layerSet,
+                    layerReset,
+                    dataUpdateWorked,
+                    focusWorked
+                }
+            };
+        }, 'test4-result');
+
+        // Integration Demo
+        function setupDemo() {
+            const container = document.getElementById('demo-container');
+            
+            const demoData = {
+                nodes: [
+                    { id: 'node1', label: 'Alpha', type: 'typeA', layer: 'layerX', size: 14, x: 150, y: 120 },
+                    { id: 'node2', label: 'Beta', type: 'typeB', layer: 'layerY', size: 18, x: 300, y: 180 },
+                    { id: 'node3', label: 'Gamma', type: 'typeA', layer: 'layerX', size: 12, x: 450, y: 140 },
+                    { id: 'node4', label: 'Delta', type: 'typeB', layer: 'layerY', size: 16, x: 350, y: 280 }
+                ],
+                links: [
+                    { source: 'node1', target: 'node2', strength: 0.8 },
+                    { source: 'node2', target: 'node3', strength: 0.6 },
+                    { source: 'node3', target: 'node4', strength: 0.7 },
+                    { source: 'node4', target: 'node1', strength: 0.5 }
+                ]
+            };
+
+            const demoConfig = {
+                width: 600,
+                height: 400,
+                nodeColors: {
+                    'typeA': '#ff6b35',
+                    'typeB': '#4ecdc4'
+                },
+                layers: [
+                    { id: 'layerX', name: 'Category A', color: '#ff6b35' },
+                    { id: 'layerY', name: 'Category B', color: '#4ecdc4' }
+                ],
+                features: {
+                    showMiniMap: true,
+                    enableHover: true,
+                    enableDrag: true
+                }
+            };
+
+            try {
+                demoGraph = new KnowledgeGraphExplorer(container, demoData, demoConfig);
+                
+                demoGraph.on('nodeClick', (data) => {
+                    console.log('Node clicked:', data.node.label);
+                });
+                
+                document.getElementById('demo-result').innerHTML = `
+                    <div class="result success">
+                        <strong>Integration Demo:</strong> Fully functional graph with all components working together<br>
+                        Try the layer buttons, node focusing, and interact with the graph directly.
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('demo-result').innerHTML = `
+                    <div class="result error">
+                        <strong>Demo Failed:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Demo control functions
+        function demoSetLayer(layerId) {
+            if (demoGraph) {
+                if (layerId) {
+                    demoGraph.setActiveLayer(layerId);
+                } else {
+                    demoGraph.showAllLayers();
+                }
+            }
+        }
+
+        function demoFocusNode(nodeId) {
+            if (demoGraph) {
+                demoGraph.focusOnNode(nodeId);
+            }
+        }
+
+        function demoRestart() {
+            if (demoGraph) {
+                demoGraph.restartSimulation();
+            }
+        }
+
+        // Initialize demo after tests
+        setTimeout(() => {
+            setupDemo();
+        }, 100);
+
+        // Update summary
+        setTimeout(() => {
+            const summaryText = document.getElementById('summary-text');
+            const summaryElement = document.getElementById('summary');
+            
+            if (testsPassed === testsTotal) {
+                summaryText.textContent = `All ${testsTotal} tests passed! KnowledgeGraphExplorer integration is working correctly.`;
+                summaryElement.style.backgroundColor = '#d4edda';
+                summaryElement.style.borderColor = '#c3e6cb';
+            } else {
+                summaryText.textContent = `${testsPassed}/${testsTotal} tests passed. Check failed tests above.`;
+                summaryElement.style.backgroundColor = '#f8d7da';
+                summaryElement.style.borderColor = '#f5c6cb';
+            }
+        }, 200);
+    </script>
+</body>
+</html>
