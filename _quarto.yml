@@ -26,7 +26,15 @@ website:
         href: https://www.linkedin.com/in/arunravishankar
       - icon: bluesky
         href: https://bsky.app/profile/arunravishankar.bsky.social
-
+  comments:
+    giscus:
+      repo: "arunravishankar/in-my-lightcone"
+      category: "Blog Comments"
+      mapping: "pathname"
+      reactions-enabled: true
+      input-position: "bottom"
+      theme: "light_protanopia"
+      language: "en"
 format:
   html:
     theme: cosmo

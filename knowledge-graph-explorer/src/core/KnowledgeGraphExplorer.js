@@ -425,26 +425,60 @@ class KnowledgeGraphExplorer {
       .attr('stroke-opacity', 0.6);
   }
 
+
   /**
-   * Render nodes
+   * Render nodes with experience-based styling
    */
   renderNodes() {
     const nodeSelection = this.nodeGroup
       .selectAll('.node')
       .data(this.nodes, d => d.id);
-
+  
     nodeSelection.exit().remove();
-
+  
     nodeSelection.enter()
       .append('circle')
       .attr('class', 'node')
       .attr('r', d => d.size || 10)
       .attr('fill', d => this.getNodeColor(d))
-      .attr('stroke', this.config.theme.textPrimary)
-      .attr('stroke-width', 2)
+      .attr('stroke', d => this.getNodeStrokeColor(d))
+      .attr('stroke-width', d => this.getNodeStrokeWidth(d))
       .style('cursor', 'pointer');
   }
-
+  
+  /**
+   * Get stroke color for nodes based on experience level
+   * @param {Object} node - Node object
+   * @returns {string} - Stroke color
+   */
+  getNodeStrokeColor(node) {
+    // Default to "experienced" if no experienceLevel specified
+    const experienceLevel = node.experienceLevel || 'experienced';
+    
+    if (experienceLevel === 'interested') {
+      // Lighter stroke for interested nodes
+      return this.lightenColor(this.config.theme.textPrimary, 0.5);
+    }
+    
+    // Full stroke for experienced nodes
+    return this.config.theme.textPrimary;
+  }
+  
+  /**
+   * Get stroke width for nodes based on experience level
+   * @param {Object} node - Node object
+   * @returns {number} - Stroke width
+   */
+  getNodeStrokeWidth(node) {
+    // Default to "experienced" if no experienceLevel specified
+    const experienceLevel = node.experienceLevel || 'experienced';
+    
+    if (experienceLevel === 'interested') {
+      return 1; // Thinner stroke for interested
+    }
+    
+    return 2; // Standard stroke for experienced
+  }
   /**
    * Render labels
    */
@@ -468,25 +502,78 @@ class KnowledgeGraphExplorer {
       .text(d => d.label);
   }
 
+
   /**
-   * Get node color based on configuration
+   * Get node color based on configuration, with support for experience levels
    * @param {Object} node - Node object
    * @returns {string} - Color value
    */
   getNodeColor(node) {
-    // Check for node colors by type first, then layer, then default
+    let baseColor;
+    
+    // Get base color from type, layer, or default
     if (node.type && this.config.nodeColors[node.type]) {
-      return this.config.nodeColors[node.type];
+      baseColor = this.config.nodeColors[node.type];
+    } else if (node.layer && this.config.nodeColors[node.layer]) {
+      baseColor = this.config.nodeColors[node.layer];
+    } else if (node.color) {
+      baseColor = node.color;
+    } else {
+      baseColor = this.config.theme.primaryColor;
     }
-    if (node.layer && this.config.nodeColors[node.layer]) {
-      return this.config.nodeColors[node.layer];
+    
+    // Apply experience-based opacity/saturation
+    if (node.experienceLevel) {
+      return this.adjustColorForExperience(baseColor, node.experienceLevel);
     }
-    if (node.color) {
-      return node.color;
-    }
-    return this.config.theme.primaryColor;
+    
+    return baseColor;
   }
-
+  
+  /**
+   * Adjust color based on experience level
+   * @param {string} baseColor - Base color (hex format)
+   * @param {string} experienceLevel - 'experienced' or 'interested'
+   * @returns {string} - Adjusted color
+   */
+  adjustColorForExperience(baseColor, experienceLevel) {
+    if (experienceLevel === 'interested') {
+      // Make color lighter/less saturated for interest-only
+      return this.lightenColor(baseColor, 0.4); // 40% lighter
+    }
+    
+    // For 'experienced' or any other value, return full saturation
+    return baseColor;
+  }
+  
+  /**
+   * Lighten a hex color by a given factor
+   * @param {string} color - Hex color (e.g., "#2780e3")
+   * @param {number} factor - Lightening factor (0-1, where 1 is white)
+   * @returns {string} - Lightened hex color
+   */
+  lightenColor(color, factor) {
+    // Remove # if present
+    const hex = color.replace('#', '');
+    
+    // Parse RGB values
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    
+    // Lighten each component
+    const newR = Math.round(r + (255 - r) * factor);
+    const newG = Math.round(g + (255 - g) * factor);
+    const newB = Math.round(b + (255 - b) * factor);
+    
+    // Convert back to hex
+    const toHex = (n) => {
+      const hex = n.toString(16);
+      return hex.length === 1 ? '0' + hex : hex;
+    };
+    
+    return `#${toHex(newR)}${toHex(newG)}${toHex(newB)}`;
+  }
   /**
    * Helper to get link source ID
    */

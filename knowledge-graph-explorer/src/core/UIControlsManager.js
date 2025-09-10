@@ -128,6 +128,113 @@ class UIControlsManager {
   }
 
   /**
+   * Create refresh button for resetting node positions
+   */
+  createRefreshButton() {
+    this.refreshButton = document.createElement('button');
+    this.refreshButton.className = 'kg-refresh-btn';
+    this.refreshButton.innerHTML = '🔄'; // Refresh icon
+    this.refreshButton.title = 'Reset node positions';
+    this.refreshButton.style.cssText = `
+      position: absolute;
+      top: 10px;
+      left: ${this.layerContainer ? '200px' : '10px'}; /* Adjust based on layer controls */
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 100;
+      transition: all 0.2s ease;
+    `;
+  
+    // Hover effects
+    this.refreshButton.addEventListener('mouseenter', () => {
+      this.refreshButton.style.background = '#f0f0f0';
+      this.refreshButton.style.transform = 'scale(1.05)';
+    });
+  
+    this.refreshButton.addEventListener('mouseleave', () => {
+      this.refreshButton.style.background = 'rgba(255, 255, 255, 0.95)';
+      this.refreshButton.style.transform = 'scale(1)';
+    });
+  
+    // Click handler
+    this.refreshButton.addEventListener('click', () => {
+      this.refreshNodePositions();
+    });
+  
+    this.container.appendChild(this.refreshButton);
+  }
+  
+  /**
+   * Refresh/reset node positions
+   */
+  refreshNodePositions() {
+    if (!this.graph) return;
+  
+    // Add visual feedback
+    this.refreshButton.style.transform = 'rotate(360deg)';
+    this.refreshButton.style.transition = 'transform 0.5s ease';
+  
+    // Reset the transform after animation
+    setTimeout(() => {
+      this.refreshButton.style.transform = 'scale(1)';
+      this.refreshButton.style.transition = 'all 0.2s ease';
+    }, 500);
+  
+    // Restart the simulation with higher energy
+    if (this.graph.components && this.graph.components.forceSimulation) {
+      // Clear any fixed positions
+      this.graph.nodes.forEach(node => {
+        node.fx = null;
+        node.fy = null;
+      });
+  
+      // Restart with high energy
+      this.graph.components.forceSimulation.restart(1.0);
+    }
+  
+    this.emit('refresh', { timestamp: Date.now() });
+  }
+  
+  // Modify the createUIStructure() method to include the refresh button:
+  
+  createUIStructure() {
+    // Don't restructure DOM - just add overlay controls to existing container
+    this.container.style.position = 'relative';
+    this.container.style.fontFamily = 'system-ui, -apple-system, sans-serif';
+  
+    console.log('createUIStructure called');
+    console.log('showLayerControls:', this.config.showLayerControls);
+    console.log('layers.length:', this.layers.length);
+    console.log('layers:', this.layers);
+  
+    // Create control panels as overlays
+    if (this.config.showLayerControls && this.layers.length > 0) {
+      this.createLayerControls();
+    }
+  
+    // Add refresh button
+    this.createRefreshButton();
+  
+    if (this.config.showTimeline && this.timeline.start && this.timeline.end) {
+      this.createTimelineControls();
+    }
+  
+    if (this.config.showNodeInfo) {
+      this.createInfoPanel();
+    }
+  }
+
+
+  /**
    * Create a single layer button
    */
   createLayerButton(layerId, layerName, color) {

@@ -9,8 +9,8 @@ class ForceSimulation {
       height: 600,
       
       // Force strengths
-      linkDistance: 120,
-      linkStrength: 0.3,
+      linkDistance: 80,
+      linkStrength: 0.7,
       chargeStrength: -400,
       chargeDistanceMax: 500,
       collisionRadius: 25,
