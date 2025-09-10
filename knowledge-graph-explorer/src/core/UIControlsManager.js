@@ -1,12 +1,13 @@
 /**
  * UI Controls Manager for Knowledge Graph Explorer
- * Handles timeline controls, layer buttons, info panels, and other UI elements
+ * Handles timeline controls, layer buttons, audience filtering, info panels, and other UI elements
  */
 class UIControlsManager {
   constructor(config = {}) {
     this.config = {
       showTimeline: true,
       showLayerControls: true,
+      showAudienceControls: true,
       showNodeInfo: true,
       showMiniMap: true,
       timelineHeight: 60,
@@ -21,14 +22,17 @@ class UIControlsManager {
     this.timeline = { start: 2000, end: 2025 };
     this.currentTimelinePosition = null;
     this.activeLayer = null;
+    this.activeAudience = 'all';
     this.selectedNode = null;
 
     // DOM elements
     this.uiContainer = null;
     this.timelineContainer = null;
     this.layerContainer = null;
+    this.audienceContainer = null;
     this.infoPanel = null;
     this.timelineSlider = null;
+    this.refreshButton = null;
 
     // Event handlers
     this.eventHandlers = {};
@@ -62,15 +66,18 @@ class UIControlsManager {
     this.container.style.position = 'relative';
     this.container.style.fontFamily = 'system-ui, -apple-system, sans-serif';
 
-    console.log('createUIStructure called');
-    console.log('showLayerControls:', this.config.showLayerControls);
-    console.log('layers.length:', this.layers.length);
-    console.log('layers:', this.layers);
-
     // Create control panels as overlays
     if (this.config.showLayerControls && this.layers.length > 0) {
       this.createLayerControls();
     }
+
+    // Add audience controls (bottom-right)
+    if (this.config.showAudienceControls) {
+      this.createAudienceControls();
+    }
+
+    // Add refresh button
+    this.createRefreshButton();
 
     if (this.config.showTimeline && this.timeline.start && this.timeline.end) {
       this.createTimelineControls();
@@ -85,8 +92,6 @@ class UIControlsManager {
    * Create layer control buttons
    */
   createLayerControls() {
-    console.log('Creating layer controls with layers:', this.layers);
-    console.log('Config showLayerControls:', this.config.showLayerControls);
     this.layerContainer = document.createElement('div');
     this.layerContainer.className = 'kg-layer-controls';
     this.layerContainer.style.cssText = `
@@ -183,7 +188,175 @@ class UIControlsManager {
   }
 
   /**
-   * Create timeline controls
+   * Create audience filter controls (bottom-right)
+   */
+  createAudienceControls() {
+    this.audienceContainer = document.createElement('div');
+    this.audienceContainer.className = 'kg-audience-controls';
+    this.audienceContainer.style.cssText = `
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 100;
+      max-width: 180px;
+    `;
+
+    // Title
+    const title = document.createElement('div');
+    title.textContent = 'View For';
+    title.style.cssText = `
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: #333;
+    `;
+    this.audienceContainer.appendChild(title);
+
+    // Audience filter buttons
+    const audiences = [
+      { id: 'all', name: 'All Details', color: '#666' },
+      { id: 'general', name: 'General Audience', color: '#2780e3' },
+      { id: 'technical', name: 'Technical', color: '#3fb618' },
+      { id: 'current_focus', name: 'Current Focus', color: '#ff6b35' }
+    ];
+
+    audiences.forEach(audience => {
+      const button = this.createAudienceButton(audience.id, audience.name, audience.color);
+      if (audience.id === 'all') {
+        button.classList.add('active');
+      }
+      this.audienceContainer.appendChild(button);
+    });
+
+    this.container.appendChild(this.audienceContainer);
+  }
+
+  /**
+   * Create a single audience filter button
+   */
+  createAudienceButton(audienceId, audienceName, color) {
+    const button = document.createElement('button');
+    button.className = 'kg-audience-btn';
+    button.setAttribute('data-audience', audienceId);
+    button.style.cssText = `
+      display: block;
+      width: 100%;
+      margin: 2px 0;
+      padding: 6px 8px;
+      border: 1px solid ${color};
+      background: white;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      text-align: center;
+      transition: all 0.2s ease;
+    `;
+    button.textContent = audienceName;
+
+    // Hover and active states
+    button.addEventListener('mouseenter', () => {
+      if (!button.classList.contains('active')) {
+        button.style.background = color + '20';
+      }
+    });
+
+    button.addEventListener('mouseleave', () => {
+      if (!button.classList.contains('active')) {
+        button.style.background = 'white';
+      }
+    });
+
+    button.addEventListener('click', () => {
+      this.setActiveAudience(audienceId);
+    });
+
+    return button;
+  }
+
+  /**
+   * Create refresh button for resetting node positions
+   */
+  createRefreshButton() {
+    this.refreshButton = document.createElement('button');
+    this.refreshButton.className = 'kg-refresh-btn';
+    this.refreshButton.innerHTML = '🔄'; // Refresh icon
+    this.refreshButton.title = 'Reset node positions';
+    this.refreshButton.style.cssText = `
+      position: absolute;
+      top: 10px;
+      left: ${this.layerContainer ? '200px' : '10px'}; /* Adjust based on layer controls */
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 100;
+      transition: all 0.2s ease;
+    `;
+
+    // Hover effects
+    this.refreshButton.addEventListener('mouseenter', () => {
+      this.refreshButton.style.background = '#f0f0f0';
+      this.refreshButton.style.transform = 'scale(1.05)';
+    });
+
+    this.refreshButton.addEventListener('mouseleave', () => {
+      this.refreshButton.style.background = 'rgba(255, 255, 255, 0.95)';
+      this.refreshButton.style.transform = 'scale(1)';
+    });
+
+    // Click handler
+    this.refreshButton.addEventListener('click', () => {
+      this.refreshNodePositions();
+    });
+
+    this.container.appendChild(this.refreshButton);
+  }
+
+  /**
+   * Refresh/reset node positions
+   */
+  refreshNodePositions() {
+    if (!this.graph) return;
+
+    // Add visual feedback
+    this.refreshButton.style.transform = 'rotate(360deg)';
+    this.refreshButton.style.transition = 'transform 0.5s ease';
+
+    // Reset the transform after animation
+    setTimeout(() => {
+      this.refreshButton.style.transform = 'scale(1)';
+      this.refreshButton.style.transition = 'all 0.2s ease';
+    }, 500);
+
+    // Restart the simulation with higher energy
+    if (this.graph.components && this.graph.components.forceSimulation) {
+      // Clear any fixed positions
+      this.graph.nodes.forEach(node => {
+        node.fx = null;
+        node.fy = null;
+      });
+
+      // Restart with high energy
+      this.graph.components.forceSimulation.restart(1.0);
+    }
+
+    this.emit('refresh', { timestamp: Date.now() });
+  }
+
+  /**
+   * Create timeline controls (compact version)
    */
   createTimelineControls() {
     this.timelineContainer = document.createElement('div');
@@ -196,10 +369,10 @@ class UIControlsManager {
       background: rgba(255, 255, 255, 0.95);
       border: 1px solid #ddd;
       border-radius: 6px;
-      padding: 12px 20px;
+      padding: 8px 15px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       z-index: 100;
-      min-width: 300px;
+      min-width: 250px;
     `;
 
     // Title and current year display
@@ -208,8 +381,8 @@ class UIControlsManager {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
-      font-size: 12px;
+      margin-bottom: 6px;
+      font-size: 11px;
       color: #333;
     `;
 
@@ -233,7 +406,8 @@ class UIControlsManager {
     this.timelineSlider.value = this.timeline.end;
     this.timelineSlider.style.cssText = `
       width: 100%;
-      margin: 5px 0;
+      margin: 4px 0;
+      height: 4px;
     `;
 
     // Timeline labels
@@ -241,9 +415,9 @@ class UIControlsManager {
     labels.style.cssText = `
       display: flex;
       justify-content: space-between;
-      font-size: 10px;
+      font-size: 9px;
       color: #666;
-      margin-top: 4px;
+      margin-top: 2px;
     `;
 
     const startLabel = document.createElement('span');
@@ -258,13 +432,13 @@ class UIControlsManager {
     const allYearsBtn = document.createElement('button');
     allYearsBtn.textContent = 'Show All Years';
     allYearsBtn.style.cssText = `
-      margin-top: 8px;
-      padding: 4px 8px;
+      margin-top: 6px;
+      padding: 3px 6px;
       border: 1px solid #ddd;
       background: white;
       border-radius: 3px;
       cursor: pointer;
-      font-size: 11px;
+      font-size: 10px;
       width: 100%;
     `;
 
@@ -285,7 +459,7 @@ class UIControlsManager {
   }
 
   /**
-   * Create info panel for displaying node/link details
+   * Create info panel for displaying node/link details (top-right)
    */
   createInfoPanel() {
     this.infoPanel = document.createElement('div');
@@ -352,6 +526,23 @@ class UIControlsManager {
   }
 
   /**
+   * Set active audience filter
+   */
+  setActiveAudience(audienceId) {
+    this.activeAudience = audienceId;
+    
+    // Update graph visual effects
+    if (this.graph) {
+      this.graph.setAudienceFilter(audienceId);
+    }
+
+    // Update button states
+    this.updateAudienceButtons(audienceId);
+    
+    this.emit('audienceChange', { audience: audienceId });
+  }
+
+  /**
    * Update layer button visual states
    */
   updateLayerButtons(activeLayerId) {
@@ -368,6 +559,36 @@ class UIControlsManager {
       if (isActive) {
         const color = layerId === 'all' ? '#666' : 
                      this.layers.find(l => l.id === layerId)?.color || '#666';
+        btn.style.background = color + '30';
+        btn.style.fontWeight = 'bold';
+      } else {
+        btn.style.background = 'white';
+        btn.style.fontWeight = 'normal';
+      }
+    });
+  }
+
+  /**
+   * Update audience button visual states
+   */
+  updateAudienceButtons(activeAudienceId) {
+    if (!this.audienceContainer) return;
+
+    const buttons = this.audienceContainer.querySelectorAll('.kg-audience-btn');
+    buttons.forEach(btn => {
+      const audienceId = btn.getAttribute('data-audience');
+      const isActive = audienceId === activeAudienceId;
+      
+      btn.classList.toggle('active', isActive);
+      
+      if (isActive) {
+        const audiences = {
+          all: '#666',
+          general: '#2780e3',
+          technical: '#3fb618',
+          current_focus: '#ff6b35'
+        };
+        const color = audiences[audienceId] || '#666';
         btn.style.background = color + '30';
         btn.style.fontWeight = 'bold';
       } else {
@@ -407,12 +628,7 @@ class UIControlsManager {
    * Show node information in the info panel
    */
   showNodeInfo(node) {
-    console.log('showNodeInfo called with:', node);
-  
-    if (!this.infoPanel) {
-      console.error('Info panel not found!');
-      return;
-    }
+    if (!this.infoPanel) return;
 
     this.selectedNode = node;
   
@@ -446,7 +662,8 @@ class UIControlsManager {
 
     if (node.timespan) {
       const timespan = document.createElement('div');
-      timespan.textContent = `${node.timespan.start} - ${node.timespan.end || 'present'}`;
+      const endText = node.timespan.end ? node.timespan.end : 'current';
+      timespan.textContent = `${node.timespan.start} - ${endText}`;
       details.appendChild(timespan);
     }
 
@@ -495,7 +712,6 @@ class UIControlsManager {
     this.infoPanel.appendChild(relatedSection);
   
     this.infoPanel.style.display = 'block';
-    console.log('Info panel should now be visible');
   }
 
   /**
@@ -589,10 +805,6 @@ class UIControlsManager {
     // Use the graph's focusOnNode method if available
     if (typeof this.graph.focusOnNode === 'function') {
       this.graph.focusOnNode(node.id);
-    } else {
-      // Fallback: trigger a navigation event
-      console.log('Panning to node:', node.label);
-      // You could implement custom panning logic here if needed
     }
   }
 
@@ -612,6 +824,7 @@ class UIControlsManager {
   getState() {
     return {
       activeLayer: this.activeLayer,
+      activeAudience: this.activeAudience,
       currentTimelinePosition: this.currentTimelinePosition,
       selectedNode: this.selectedNode ? this.selectedNode.id : null,
       layerCount: this.layers.length

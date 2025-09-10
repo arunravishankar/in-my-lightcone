@@ -1,6 +1,6 @@
 /**
  * Visual Effects Manager for Knowledge Graph Explorer
- * Handles 3D-style hover effects, layer transitions, and visual state management
+ * Handles 3D-style hover effects, layer transitions, audience filtering, and visual state management
  */
 class VisualEffectsManager {
   constructor(config = {}) {
@@ -12,6 +12,11 @@ class VisualEffectsManager {
       
       // Layer effect settings
       layerTransitionDuration: 400,
+      
+      // Audience effect settings
+      audienceTransitionDuration: 300,
+      audienceBlurAmount: 2,
+      audienceOpacityReduced: 0.3,
       
       // Distance-based scaling
       distanceScaling: {
@@ -29,7 +34,7 @@ class VisualEffectsManager {
           distance2: 0.5,
           distanceOther: 0.3
         },
-        disconnectedNodes: 0.2
+        disconnectedNodes: 0.5  // Changed from 0.2 to 0.5 for less dramatic zoom out
       },
       
       // Theme settings
@@ -50,7 +55,9 @@ class VisualEffectsManager {
     this.links = [];
     this.nodeDistances = new Map();
     this.isInLayerMode = false;
+    this.isInAudienceMode = false;
     this.currentLayer = null;
+    this.currentAudience = 'all';
     this.hoveredNode = null;
 
     // DOM element references
@@ -144,7 +151,7 @@ class VisualEffectsManager {
    * @param {Object} mousePosition - Mouse position in graph coordinates
    */
   applyContinuousHoverEffects(centerNode, centerDistance, mousePosition) {
-    if (this.isInLayerMode) return;
+    if (this.isInLayerMode || this.isInAudienceMode) return;
 
     const nodeEffects = this.nodes.map(node => {
       let scaleFactor, opacityFactor;
@@ -193,12 +200,102 @@ class VisualEffectsManager {
    * Reset all hover effects to normal state
    */
   resetHoverEffects() {
-    if (this.isInLayerMode) {
-      // Don't reset if in layer mode - layer effects take precedence
+    if (this.isInLayerMode || this.isInAudienceMode) {
+      // Don't reset if in layer or audience mode - other effects take precedence
       return;
     }
 
     this.resetToNormalState();
+  }
+
+  /**
+   * Apply audience-based visual effects (blur non-relevant nodes)
+   * @param {string} audienceId - Current audience filter
+   * @param {Array} nodes - Array of node objects
+   */
+  applyAudienceEffects(audienceId, nodes) {
+    this.currentAudience = audienceId;
+    this.isInAudienceMode = audienceId !== 'all';
+    
+    if (!this.nodeElements) return;
+    
+    if (audienceId === 'all') {
+      // Remove all audience filtering
+      this.nodeElements
+        .transition()
+        .duration(this.config.audienceTransitionDuration)
+        .style('filter', 'none')
+        .style('opacity', this.config.theme.defaultOpacity);
+      
+      // Reset links as well
+      if (this.linkElements) {
+        this.linkElements
+          .transition()
+          .duration(this.config.audienceTransitionDuration)
+          .style('filter', 'none')
+          .style('opacity', this.config.theme.dimmedOpacity);
+      }
+      
+      this.isInAudienceMode = false;
+      return;
+    }
+    
+    // Apply blur and opacity effects based on audience relevance
+    this.nodeElements
+      .transition()
+      .duration(this.config.audienceTransitionDuration)
+      .style('filter', d => {
+        const nodeAudience = d.audience || ['general'];
+        return nodeAudience.includes(audienceId) ? 'none' : `blur(${this.config.audienceBlurAmount}px)`;
+      })
+      .style('opacity', d => {
+        const nodeAudience = d.audience || ['general'];
+        return nodeAudience.includes(audienceId) ? this.config.theme.defaultOpacity : this.config.audienceOpacityReduced;
+      });
+    
+    // Also apply effects to links based on their connected nodes
+    if (this.linkElements) {
+      this.linkElements
+        .transition()
+        .duration(this.config.audienceTransitionDuration)
+        .style('filter', d => {
+          const sourceId = typeof d.source === 'object' ? d.source.id : d.source;
+          const targetId = typeof d.target === 'object' ? d.target.id : d.target;
+          
+          const sourceNode = nodes.find(n => n.id === sourceId);
+          const targetNode = nodes.find(n => n.id === targetId);
+          
+          const sourceAudience = sourceNode?.audience || ['general'];
+          const targetAudience = targetNode?.audience || ['general'];
+          
+          const sourceRelevant = sourceAudience.includes(audienceId);
+          const targetRelevant = targetAudience.includes(audienceId);
+          
+          // Blur if both nodes are not relevant to current audience
+          return (sourceRelevant || targetRelevant) ? 'none' : `blur(${this.config.audienceBlurAmount}px)`;
+        })
+        .style('opacity', d => {
+          const sourceId = typeof d.source === 'object' ? d.source.id : d.source;
+          const targetId = typeof d.target === 'object' ? d.target.id : d.target;
+          
+          const sourceNode = nodes.find(n => n.id === sourceId);
+          const targetNode = nodes.find(n => n.id === targetId);
+          
+          const sourceAudience = sourceNode?.audience || ['general'];
+          const targetAudience = targetNode?.audience || ['general'];
+          
+          const sourceRelevant = sourceAudience.includes(audienceId);
+          const targetRelevant = targetAudience.includes(audienceId);
+          
+          if (sourceRelevant && targetRelevant) {
+            return this.config.theme.dimmedOpacity;
+          } else if (sourceRelevant || targetRelevant) {
+            return this.config.theme.dimmedOpacity * 0.7;
+          } else {
+            return this.config.audienceOpacityReduced * 0.5;
+          }
+        });
+    }
   }
 
   /**
@@ -211,7 +308,8 @@ class VisualEffectsManager {
         .duration(200)
         .ease(d3.easeQuadOut)
         .attr('r', d => d.size || 10)
-        .attr('opacity', this.config.theme.defaultOpacity);
+        .attr('opacity', this.config.theme.defaultOpacity)
+        .style('filter', 'none');
     }
     
     if (this.labelElements) {
@@ -229,7 +327,8 @@ class VisualEffectsManager {
         .duration(200)
         .ease(d3.easeQuadOut)
         .attr('opacity', this.config.theme.dimmedOpacity)
-        .attr('stroke-width', d => Math.sqrt(d.strength || 0.5) * this.config.theme.baseStrokeWidth);
+        .attr('stroke-width', d => Math.sqrt(d.strength || 0.5) * this.config.theme.baseStrokeWidth)
+        .style('filter', 'none');
     }
   }
 
@@ -242,7 +341,10 @@ class VisualEffectsManager {
     this.isInLayerMode = activeLayer !== null;
     
     if (!this.isInLayerMode) {
-      this.resetToNormalState();
+      // If no audience mode is active, reset to normal state
+      if (!this.isInAudienceMode) {
+        this.resetToNormalState();
+      }
       return;
     }
 
@@ -553,7 +655,9 @@ class VisualEffectsManager {
   getState() {
     return {
       isInLayerMode: this.isInLayerMode,
+      isInAudienceMode: this.isInAudienceMode,
       currentLayer: this.currentLayer,
+      currentAudience: this.currentAudience,
       hoveredNode: this.hoveredNode ? this.hoveredNode.id : null,
       nodeCount: this.nodes.length,
       linkCount: this.links.length,
@@ -578,7 +682,9 @@ class VisualEffectsManager {
     this.links = [];
     this.hoveredNode = null;
     this.currentLayer = null;
+    this.currentAudience = 'all';
     this.isInLayerMode = false;
+    this.isInAudienceMode = false;
   }
 }
 

@@ -31,6 +31,7 @@ class KnowledgeGraphExplorer {
     // State management
     this.state = {
       currentLayer: null,
+      currentAudience: 'all',
       isTimelineActive: false,
       currentTimelinePosition: null,
       isInitialized: false
@@ -145,11 +146,12 @@ class KnowledgeGraphExplorer {
       
       // Force simulation settings
       simulation: {
-        linkDistance: 120,
-        linkStrength: 0.3,
-        chargeStrength: -400,
-        chargeDistanceMax: 500,
-        collisionRadius: 25
+        linkDistance: 80,      // Reduced for compactness
+        linkStrength: 0.5,     // Increased for stronger connections
+        chargeStrength: -250,  // Reduced for less repulsion
+        chargeDistanceMax: 300, // Shorter repulsion range
+        collisionRadius: 15,   // Smaller collision radius
+        centerStrength: 1.5    // Stronger center pull
       },
       
       // Visual effects settings
@@ -426,23 +428,126 @@ class KnowledgeGraphExplorer {
   }
 
   /**
-   * Render nodes
+   * Render nodes with experience-based styling
    */
   renderNodes() {
     const nodeSelection = this.nodeGroup
       .selectAll('.node')
       .data(this.nodes, d => d.id);
-
+  
     nodeSelection.exit().remove();
-
+  
     nodeSelection.enter()
       .append('circle')
       .attr('class', 'node')
       .attr('r', d => d.size || 10)
       .attr('fill', d => this.getNodeColor(d))
-      .attr('stroke', this.config.theme.textPrimary)
-      .attr('stroke-width', 2)
+      .attr('stroke', d => this.getNodeStrokeColor(d))
+      .attr('stroke-width', d => this.getNodeStrokeWidth(d))
       .style('cursor', 'pointer');
+  }
+  
+  /**
+   * Get node color based on configuration, with support for experience levels
+   * @param {Object} node - Node object
+   * @returns {string} - Color value
+   */
+  getNodeColor(node) {
+    let baseColor;
+    
+    // Get base color from type, layer, or default
+    if (node.type && this.config.nodeColors[node.type]) {
+      baseColor = this.config.nodeColors[node.type];
+    } else if (node.layer && this.config.nodeColors[node.layer]) {
+      baseColor = this.config.nodeColors[node.layer];
+    } else if (node.color) {
+      baseColor = node.color;
+    } else {
+      baseColor = this.config.theme.primaryColor;
+    }
+    
+    // Default to "experienced" if no experienceLevel specified
+    const experienceLevel = node.experienceLevel || 'experienced';
+    return this.adjustColorForExperience(baseColor, experienceLevel);
+  }
+  
+  /**
+   * Adjust color based on experience level
+   * @param {string} baseColor - Base color (hex format)
+   * @param {string} experienceLevel - 'experienced' or 'interested'
+   * @returns {string} - Adjusted color
+   */
+  adjustColorForExperience(baseColor, experienceLevel) {
+    if (experienceLevel === 'interested') {
+      // Make color lighter/less saturated for interest-only
+      return this.lightenColor(baseColor, 0.4); // 40% lighter
+    }
+    
+    // For 'experienced' or any other value, return full saturation
+    return baseColor;
+  }
+  
+  /**
+   * Lighten a hex color by a given factor
+   * @param {string} color - Hex color (e.g., "#2780e3")
+   * @param {number} factor - Lightening factor (0-1, where 1 is white)
+   * @returns {string} - Lightened hex color
+   */
+  lightenColor(color, factor) {
+    // Remove # if present
+    const hex = color.replace('#', '');
+    
+    // Parse RGB values
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    
+    // Lighten each component
+    const newR = Math.round(r + (255 - r) * factor);
+    const newG = Math.round(g + (255 - g) * factor);
+    const newB = Math.round(b + (255 - b) * factor);
+    
+    // Convert back to hex
+    const toHex = (n) => {
+      const hex = n.toString(16);
+      return hex.length === 1 ? '0' + hex : hex;
+    };
+    
+    return `#${toHex(newR)}${toHex(newG)}${toHex(newB)}`;
+  }
+
+  /**
+   * Get stroke color for nodes based on experience level
+   * @param {Object} node - Node object
+   * @returns {string} - Stroke color
+   */
+  getNodeStrokeColor(node) {
+    // Default to "experienced" if no experienceLevel specified
+    const experienceLevel = node.experienceLevel || 'experienced';
+    
+    if (experienceLevel === 'interested') {
+      // Lighter stroke for interested nodes
+      return this.lightenColor(this.config.theme.textPrimary, 0.5);
+    }
+    
+    // Full stroke for experienced nodes
+    return this.config.theme.textPrimary;
+  }
+  
+  /**
+   * Get stroke width for nodes based on experience level
+   * @param {Object} node - Node object
+   * @returns {number} - Stroke width
+   */
+  getNodeStrokeWidth(node) {
+    // Default to "experienced" if no experienceLevel specified
+    const experienceLevel = node.experienceLevel || 'experienced';
+    
+    if (experienceLevel === 'interested') {
+      return 1; // Thinner stroke for interested
+    }
+    
+    return 2; // Standard stroke for experienced
   }
 
   /**
@@ -466,25 +571,6 @@ class KnowledgeGraphExplorer {
       .attr('pointer-events', 'none')
       .style('user-select', 'none')
       .text(d => d.label);
-  }
-
-  /**
-   * Get node color based on configuration
-   * @param {Object} node - Node object
-   * @returns {string} - Color value
-   */
-  getNodeColor(node) {
-    // Check for node colors by type first, then layer, then default
-    if (node.type && this.config.nodeColors[node.type]) {
-      return this.config.nodeColors[node.type];
-    }
-    if (node.layer && this.config.nodeColors[node.layer]) {
-      return this.config.nodeColors[node.layer];
-    }
-    if (node.color) {
-      return node.color;
-    }
-    return this.config.theme.primaryColor;
   }
 
   /**
@@ -525,10 +611,65 @@ class KnowledgeGraphExplorer {
   }
 
   /**
+   * Initialize node positions based on layer grid layout
+   */
+  initializeLayerBasedPositions() {
+    // 3x3 grid layout
+    const gridSize = 3;
+    const cellWidth = this.config.width / gridSize;
+    const cellHeight = this.config.height / gridSize;
+    
+    // Fill order: (1,2), (2,1), (2,3), (3,2), (2,2), (1,1), (3,3), (1,3), (3,1)
+    // Convert to 0-based indexing: (0,1), (1,0), (1,2), (2,1), (1,1), (0,0), (2,2), (0,2), (2,0)
+    const fillOrder = [
+      [0, 1], [1, 0], [1, 2], [2, 1], [1, 1], [0, 0], [2, 2], [0, 2], [2, 0]
+    ];
+    
+    // Get unique layers
+    const uniqueLayers = [...new Set(this.nodes.map(node => node.layer))];
+    
+    // Assign each layer to a grid position
+    const layerToGridPosition = new Map();
+    uniqueLayers.forEach((layer, index) => {
+      if (index < fillOrder.length) {
+        layerToGridPosition.set(layer, fillOrder[index]);
+      } else {
+        // Fallback for extra layers - use modulo to wrap around
+        layerToGridPosition.set(layer, fillOrder[index % fillOrder.length]);
+      }
+    });
+    
+    // Position nodes within their assigned grid cells
+    this.nodes.forEach(node => {
+      const gridPos = layerToGridPosition.get(node.layer);
+      if (gridPos) {
+        const [gridX, gridY] = gridPos;
+        
+        // Calculate cell boundaries
+        const cellLeft = gridX * cellWidth;
+        const cellTop = gridY * cellHeight;
+        
+        // Add padding within cells to avoid edges
+        const padding = Math.min(cellWidth, cellHeight) * 0.1;
+        
+        // Random position within the cell (with padding)
+        node.x = cellLeft + padding + Math.random() * (cellWidth - 2 * padding);
+        node.y = cellTop + padding + Math.random() * (cellHeight - 2 * padding);
+      } else {
+        // Fallback to center if no layer assigned
+        node.x = this.config.width / 2 + (Math.random() - 0.5) * 100;
+        node.y = this.config.height / 2 + (Math.random() - 0.5) * 100;
+      }
+    });
+  }
+
+  /**
    * Start the force simulation
    */
   startSimulation() {
     if (this.components.forceSimulation) {
+      // Initialize positions before starting simulation
+      this.initializeLayerBasedPositions();
       this.components.forceSimulation.updateData(this.nodes, this.links);
     }
   }
@@ -554,6 +695,46 @@ class KnowledgeGraphExplorer {
   // ====== PUBLIC API METHODS ======
 
   /**
+   * Set audience filter
+   * @param {string} audienceId - 'all', 'general', 'technical', or 'current_focus'
+   */
+  setAudienceFilter(audienceId) {
+    this.state.currentAudience = audienceId;
+    
+    if (this.components.visualEffectsManager) {
+      this.components.visualEffectsManager.applyAudienceEffects(audienceId, this.nodes);
+    }
+    
+    this.updateLabelsForAudience(audienceId);
+    
+    this.emit('audienceChange', { audience: audienceId });
+  }
+
+  /**
+   * Update label visibility based on audience and layer
+   * @param {string} audienceId - Current audience filter
+   */
+  updateLabelsForAudience(audienceId) {
+    if (!this.labelGroup) return;
+    
+    this.labelGroup.selectAll('.label')
+      .style('opacity', d => {
+        // Hide labels for subnodes when "All Layers" is active and no specific layer is selected
+        if (this.state.currentLayer === null && d.subnode) {
+          return 0;
+        }
+        
+        // Show/hide based on audience filter
+        if (audienceId === 'all') {
+          return 1;
+        }
+        
+        const nodeAudience = d.audience || ['general'];
+        return nodeAudience.includes(audienceId) ? 1 : 0;
+      });
+  }
+
+  /**
    * Set active layer
    * @param {string|null} layerId - Layer ID or null for all layers
    */
@@ -567,6 +748,9 @@ class KnowledgeGraphExplorer {
     if (this.components.interactionManager) {
       this.components.interactionManager.updateLayerMode(layerId !== null);
     }
+    
+    // Update labels based on subnode visibility and current audience
+    this.updateLabelsForAudience(this.state.currentAudience);
     
     this.emit('layerChange', { layer: layerId });
   }

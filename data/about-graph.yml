@@ -1,314 +1,751 @@
 metadata:
   title: "Arun's Academic & Professional Journey"
-  description: "From quantum foundations to data science - a wandering path across continents and disciplines"
+  description: "A knowledge graph mapping my education, research, industry experience, and key influences"
   timeline:
     start: 2009
     end: 2025
 
 layers:
-  - id: "education"
-    name: "Education"
+  - id: "physics"
+    name: "Physics & Theory"
     color: "#2780e3"
-  - id: "research"
-    name: "Research"
+  - id: "mathematical_methods"
+    name: "Mathematical Methods"
     color: "#3fb618"
-  - id: "industry"
-    name: "Industry"
+  - id: "data_science"
+    name: "Data Science & AI"
     color: "#ffdd3c"
-  - id: "current"
-    name: "Current Focus"
+  - id: "economics"
+    name: "Economics"
+    color: "#ff6b35"
+  - id: "applications"
+    name: "Applications"
     color: "#ff0039"
-  - id: "geographic"
-    name: "Geographic"
+  - id: "personal"
+    name: "Personal Journey"
     color: "#613d7c"
+  - id: "other"
+    name: "Other"
+    color: "#868e96"
 
 nodes:
-  # Education nodes
-  - id: "bits_undergrad"
-    label: "BITS Hyderabad"
-    type: "education"
-    layer: "education"
-    size: 15
-    timespan: {start: 2009, end: 2014}
-    description: "MSc in Physics & Bachelors in Pharmacy at Birla Institute of Technology and Sciences, Hyderabad. Where the physics journey began."
-    
-  - id: "lmu_thesis"
-    label: "LMU Munich"
-    type: "education" 
-    layer: "education"
-    size: 12
-    timespan: {start: 2013, end: 2014}
-    description: "Visiting student for Master's thesis at Ludwig Maximilians University. First deep dive into quantum foundations with Detlef Dürr's group."
-    
-  - id: "arizona_phd"
-    label: "University of Arizona"
-    type: "education"
-    layer: "education"
-    size: 18
-    timespan: {start: 2015, end: 2021}
-    description: "PhD in Physics focusing on black hole physics. Learned to sit with hard problems for months, then suddenly see the path forward."
-    
-  - id: "data_incubator"
-    label: "Data Incubator"
-    type: "education"
-    layer: "education"
+  # Physics & Theory
+  - id: "magnetic_monopoles"
+    label: "Magnetic Monopoles"
+    layer: "physics"
+    size: 3
+    timespan: {start: 2011, end: 2012}
+    audience: ["technical"]
+    subnode: true
+    description: "The first original question I asked and tried to follow through - Maxwell's equations are asymmetric since there are no magnetic monopoles. What would the mathematical theory look like if we posit their existence, and what would the consequences be? As it turned out, I realized this was a very old question Dirac had already asked."
+
+  - id: "quantum_foundations"
+    label: "Quantum Foundations"
+    layer: "physics"
     size: 10
-    timespan: {start: 2021, end: 2021}
-    description: "Data Science Fellowship. Bridge between academia and industry, learning to work with messy, real-world data."
-    
-  - id: "stanford_ai"
-    label: "Stanford AI Program"
-    type: "education"
-    layer: "current"
-    size: 14
-    timespan: {start: 2024, end: 2025}
-    description: "AI Graduate Certificate. Current exploration into game theory, reinforcement learning, and economics intersection."
+    timespan: {start: 2012, end: 2014}
+    audience: ["general", "technical"]
+    subnode: true
+    description: "I got intrigued by the non-local nature of quantum mechanics and the measurement problem, which led me to explore interpretations of QM, and in particular Bohmian mechanics."
 
-  # Research focus areas
-  - id: "bohmian_mechanics"
-    label: "Bohmian Mechanics"
-    type: "research"
-    layer: "research"
-    size: 14
-    timespan: {start: 2013, end: 2015}
-    description: "Research with Detlef Dürr on quantum foundations. Bottom-up approach to fundamental theory with ontological descriptions of nature."
-    
-  - id: "black_hole_physics"
-    label: "Black Hole Physics"
-    type: "research"
-    layer: "research"
-    size: 16
-    timespan: {start: 2015, end: 2021}
-    description: "PhD research on black holes. Started with self-force problems, ended up deep in black hole physics. Published work on theoretical aspects."
-    
-  - id: "data_science_methods"
-    label: "Data Science & ML"
-    type: "research"
-    layer: "research"
-    size: 15
-    timespan: {start: 2021, end: 2025}
-    description: "Transition from exact solutions to thinking in distributions and probabilities. Programming opens up new types of questions."
-    
-  - id: "ai_game_theory"
-    label: "AI & Game Theory"
-    type: "research"
-    layer: "current"
-    size: 12
-    timespan: {start: 2024, end: 2025}
-    description: "Current obsession: intersection of game theory, reinforcement learning, and economics. Where bottom-up and top-down thinking play nice."
-
-  # Industry experience
-  - id: "rover"
-    label: "Rover"
-    type: "industry"
-    layer: "industry"
-    size: 16
-    timespan: {start: 2021, end: 2024}
-    description: "Data Scientist II & III in Seattle. First position outside academia working with amazing people. Everything clicked differently - from fundamental dynamics to practical insights from messy data."
-    
-  - id: "turno"
-    label: "Turno"
-    type: "industry"
-    layer: "current"
-    size: 12
-    timespan: {start: 2024, end: 2025}
-    description: "Data Scientist consultant in Vancouver. Another 2-sided marketplace (apparently I have a type). Applying AI and game theory to real-world problems."
-
-  # Geographic/life nodes
-  - id: "india"
-    label: "India"
-    type: "geographic"
-    layer: "geographic"
-    size: 12
-    timespan: {start: 2009, end: 2013}
-    description: "Home base in Hyderabad. Where curiosity about quantum foundations first sparked."
-    
-  - id: "munich"
-    label: "Munich"
-    type: "geographic"
-    layer: "geographic"
-    size: 10
-    timespan: {start: 2013, end: 2014}
-    description: "First international experience. Immersion in rigorous quantum foundations research with Dürr's group."
-    
-  - id: "tucson"
-    label: "Tucson"
-    type: "geographic"
-    layer: "geographic"
-    size: 14
-    timespan: {start: 2015, end: 2021}
-    description: "PhD years in Arizona. Intense in unexpected ways. Learned patience with hard problems and developed appreciation for mathematics itself."
-    
-  - id: "seattle"
-    label: "Seattle"
-    type: "geographic"
-    layer: "geographic"
-    size: 12
-    timespan: {start: 2021, end: 2024}
-    description: "Move motivated by Schnucki and love for gloomy, drizzly weather and beautiful outdoors. Industry transition and new perspectives."
-    
-  - id: "vancouver"
-    label: "Vancouver"
-    type: "geographic"
-    layer: "current"
-    size: 10
-    timespan: {start: 2024, end: 2025}
-    description: "Current home base. Long-term immigration stability. Continuing the journey in AI and game theory."
-
-  # Key people/influences
   - id: "detlef_durr"
     label: "Detlef Dürr"
-    type: "research"
-    layer: "research"
-    size: 8
-    timespan: {start: 2013, end: 2014}
-    description: "Late mentor at LMU Munich. His research group was full of inquisitive people who deeply cared about their work. Foundational influence on approach to physics."
-    
+    layer: "physics"
+    size: 13
+    timespan: {start: 2012, end: 2014}
+    audience: ["general", "technical"]
+    subnode: false
+    description: "My advisor in Munich who, in many ways, shaped my weltbild. I learnt much more than just physics from him; humility, curiosity about the world, and a deep sense of care for the people he interacted with."
+
+  - id: "renormalization"
+    label: "Renormalization & UV Problem"
+    layer: "physics"
+    size: 3
+    timespan: {start: 2013, end: 2016}
+    audience: ["technical"]
+    subnode: true
+    description: "I first encountered the problem of renormalization in classical electrodynamics, which led me to explore the broader issue of infinities in QFT and the renormalization group. Understanding Wheeler and Feynman's absorber theory was another key step in shaping the style of thought/work where arriving at an elegant and complete mathematical framework for already empirically describable phenomena was the focus."
+
+  - id: "self_force"
+    label: "Self Force Problem"
+    layer: "physics"
+    size: 14
+    timespan: {start: 2015, end: 2018}
+    audience: ["technical"]
+    subnode: true
+    description: "Given my overarching interest in the UV problem, I was naturally drawn to the self-force problem in GR, which is a classical analogue of the renormalization problem in QFT. This was what took me to Sam Gralla at the University of Arizona for my PhD."
+
+  - id: "black_hole_stability" 
+    label: "Black Hole Stability"
+    layer: "physics"
+    size: 16
+    timespan: {start: 2016, end: 2021}
+    audience: ["general", "technical"]
+    subnode: false
+    description: "PhD research proving that extremal black holes exhibit a peculiar horizon instability where field derivatives grow at late times precisely on the horizon, despite the fields themselves decaying. Discovered this instability in planar black holes and connected it to null geodesics that orbit near the horizon, providing physical insight into how perturbations get trapped near extremal horizons."
+
+  - id: "btz_black_hole"
+    label: "BTZ Black Hole"
+    layer: "physics"
+    size: 13
+    timespan: {start: 2017, end: 2019}
+    audience: ["technical"]
+    subnode: true
+    description: "Three-dimensional black hole solution in AdS space, simpler model for studying black hole physics."
+
+  - id: "aretakis_instability"
+    label: "Aretakis Instability"
+    layer: "physics"
+    size: 14
+    timespan: {start: 2018, end: 2021}
+    audience: ["technical"]
+    subnode: true
+    description: "Specific type of instability at extremal black hole horizons, focus of my PhD dissertation."
+
   - id: "sam_gralla"
     label: "Sam Gralla"
-    type: "research" 
-    layer: "research"
-    size: 8
+    layer: "physics"
+    size: 12
     timespan: {start: 2015, end: 2021}
-    description: "PhD advisor at University of Arizona. Initially planned to work on self-force problem, but research evolved into broader black hole physics."
-    
+    audience: ["general", "technical"]
+    subnode: false
+    description: "PhD advisor who guided my transition from self-force to black hole stability research."
+
+  - id: "ads_cft"
+    label: "AdS/CFT Correspondence"
+    layer: "physics"
+    size: 11
+    timespan: {start: 2016, end: 2018}
+    audience: ["technical"]
+    subnode: true
+    experienceLevel: "interested"
+    description: "Holographic duality between gravity theories and conformal field theories."
+
+  - id: "phase_transitions"
+    label: "Phase Transitions & Criticality"
+    layer: "physics"
+    size: 13
+    timespan: {start: 2014, end: 2017}
+    audience: ["technical"]
+    subnode: false
+    description: "Universal behavior near critical points, scaling laws, and renormalization group methods."
+
+  - id: "standard_model"
+    label: "Standard Model"
+    layer: "physics"
+    size: 12
+    timespan: {start: 2011, end: 2015}
+    audience: ["technical"]
+    subnode: true
+    description: "Framework describing electromagnetic, weak, and strong nuclear interactions."
+
+  - id: "effective_field_theory"
+    label: "Effective Field Theories"
+    layer: "physics"
+    size: 13
+    timespan: {start: 2015, end: 2018}
+    audience: ["technical"]
+    subnode: true
+    description: "Systematic approach to physics at different energy scales, crucial for black hole perturbation theory."
+
+  - id: "bottom_up_approach"
+    label: "Bottom-Up Approach"
+    layer: "physics"
+    size: 15
+    timespan: {start: 2013}
+    audience: ["general", "technical", "current_focus"]
+    subnode: false
+    description: "Building understanding from fundamental principles and microscopic dynamics."
+
+  - id: "top_down_approach"
+    label: "Top-Down Approach"
+    layer: "physics"
+    size: 14
+    timespan: {start: 2020}
+    audience: ["general", "technical", "current_focus"]
+    subnode: false
+    description: "Starting from observed phenomena and working backwards to underlying mechanisms."
+
+  - id: "philosophy_physics"
+    label: "Philosophy of Physics"
+    layer: "physics"
+    size: 11
+    timespan: {start: 2013, end: 2018}
+    audience: ["general", "technical"]
+    subnode: false
+    experienceLevel: "interested"
+    description: "Ontological and epistemological questions about the nature of physical reality."
+
+  - id: "publications"
+    label: "Physics Publications"
+    layer: "physics"
+    size: 12
+    timespan: {start: 2018, end: 2021}
+    audience: ["technical"]
+    subnode: false
+    description: "Research publications on black hole instabilities and gravitational physics."
+
+  # Mathematical Methods
+  - id: "perturbation_theory"
+    label: "Perturbation Theory"
+    layer: "mathematical_methods"
+    size: 15
+    timespan: {start: 2015, end: 2021}
+    audience: ["technical"]
+    subnode: false
+    description: "Systematic method for finding approximate solutions to problems that cannot be solved exactly."
+
+  - id: "complex_analysis"
+    label: "Complex Analysis"
+    layer: "mathematical_methods"
+    size: 14
+    timespan: {start: 2012, end: 2018}
+    audience: ["technical"]
+    subnode: false
+    description: "Theory of functions of complex variables, essential for advanced physics calculations."
+
+  - id: "special_functions"
+    label: "Special Functions & ODEs"
+    layer: "mathematical_methods"
+    size: 13
+    timespan: {start: 2014, end: 2019}
+    audience: ["technical"]
+    subnode: false
+    description: "Hypergeometric functions, Bessel functions, and differential equation techniques."
+
+  - id: "fourier_transforms"
+    label: "Fourier & Laplace Transforms"
+    layer: "mathematical_methods"
+    size: 14
+    timespan: {start: 2011}
+    audience: ["technical"]
+    description: "Frequency domain analysis and integral transforms, useful across physics and data science."
+
+  - id: "game_theory"
+    label: "Game Theory"
+    layer: "mathematical_methods"
+    size: 16
+    timespan: {start: 2022}
+    audience: ["general", "technical", "current_focus"]
+    description: "Mathematical framework for strategic decision-making and interaction between rational agents."
+
+  - id: "statistics_decision"
+    label: "Statistics & Decision Science"
+    layer: "mathematical_methods"
+    size: 15
+    timespan: {start: 2020}
+    audience: ["technical", "current_focus"]
+    description: "Mathematical foundation for reasoning under uncertainty and making optimal decisions."
+
+  - id: "bayesian_statistics"
+    label: "Bayesian Statistics"
+    layer: "mathematical_methods"
+    size: 14
+    timespan: {start: 2021}
+    audience: ["technical", "current_focus"]
+    description: "Probabilistic approach to inference that updates beliefs based on evidence."
+
+  # Data Science & AI
+  - id: "data_incubator"
+    label: "The Data Incubator"
+    layer: "data_science"
+    size: 13
+    timespan: {start: 2021, end: 2021}
+    audience: ["general", "technical"]
+    description: "Intensive data science fellowship program that facilitated my transition from academia to industry."
+
+  - id: "isai_ragam"
+    label: "Isai - Ragam Identification"
+    layer: "data_science"
+    size: 11
+    timespan: {start: 2021, end: 2021}
+    audience: ["technical"]
+    description: "Capstone project using machine learning to identify Indian classical music scales from audio."
+
+  - id: "rover"
+    label: "Rover"
+    layer: "data_science"
+    size: 16
+    timespan: {start: 2021, end: 2024}
+    audience: ["general", "technical"]
+    description: "First industry role as data scientist at the pet services marketplace, working on matching and pricing."
+
+  - id: "markov_chains"
+    label: "Markov Chain Models"
+    layer: "data_science"
+    size: 12
+    timespan: {start: 2022, end: 2024}
+    audience: ["technical"]
+    description: "Stochastic processes for modeling sequential data and user behavior patterns."
+
+  - id: "time_series"
+    label: "Time Series Forecasting"
+    layer: "data_science"
+    size: 14
+    timespan: {start: 2021}
+    audience: ["technical", "current_focus"]
+    description: "Predicting future values based on historical patterns, crucial for demand forecasting."
+
+  - id: "supply_demand"
+    label: "Supply-Demand Balance"
+    layer: "data_science"
+    size: 15
+    timespan: {start: 2021}
+    audience: ["general", "technical", "current_focus"]
+    description: "Modeling marketplace dynamics and optimizing for balanced two-sided markets."
+
+  - id: "geospatial_data"
+    label: "Geospatial Data"
+    layer: "data_science"
+    size: 13
+    timespan: {start: 2021}
+    audience: ["technical", "current_focus"]
+    description: "Location-based analytics and spatial modeling for marketplace optimization."
+
+  - id: "experimentation"
+    label: "Experimentation"
+    layer: "data_science"
+    size: 15
+    timespan: {start: 2021}
+    audience: ["general", "technical", "current_focus"]
+    description: "A/B testing, causal inference, and experimental design for product decisions."
+
+  - id: "recommendation_system"
+    label: "Recommendation Systems"
+    layer: "data_science"
+    size: 14
+    timespan: {start: 2022, end: 2024}
+    audience: ["technical"]
+    description: "Algorithms for matching users with relevant content or services in marketplaces."
+
+  - id: "ml_production"
+    label: "Machine Learning in Production"
+    layer: "data_science"
+    size: 15
+    timespan: {start: 2021}
+    audience: ["technical", "current_focus"]
+    description: "Deploying, monitoring, and maintaining ML models in real-world systems."
+
+  - id: "agent_based_modeling"
+    label: "Agent Based Modelling"
+    layer: "data_science"
+    size: 12
+    timespan: {start: 2023}
+    audience: ["technical", "current_focus"]
+    description: "Simulating complex systems by modeling individual agents and their interactions."
+
+  - id: "data_engineering"
+    label: "Data Engineering"
+    layer: "data_science"
+    size: 14
+    timespan: {start: 2021}
+    audience: ["technical", "current_focus"]
+    description: "Building and maintaining data pipelines, ETL processes, and data infrastructure."
+
+  - id: "strategy_modeling"
+    label: "Strategy & Financial Modelling"
+    layer: "data_science"
+    size: 13
+    timespan: {start: 2022}
+    audience: ["technical", "current_focus"]
+    description: "Quantitative approaches to business strategy and financial decision-making."
+
+  - id: "turno"
+    label: "Turno"
+    layer: "data_science"
+    size: 15
+    timespan: {start: 2024}
+    audience: ["general", "current_focus"]
+    description: "Current role at parking marketplace, applying ML and game theory to pricing and optimization."
+
+  - id: "stanford_ai"
+    label: "Stanford AI Certificate"
+    layer: "data_science"
+    size: 14
+    timespan: {start: 2024}
+    audience: ["general", "current_focus"]
+    description: "Graduate-level program covering advanced AI topics and current research frontiers."
+
+  - id: "large_language_models"
+    label: "Large Language Models"
+    layer: "data_science"
+    size: 16
+    timespan: {start: 2023}
+    audience: ["general", "technical", "current_focus"]
+    description: "Understanding and applying transformer-based language models for various tasks."
+
+  - id: "semantic_search"
+    label: "Semantic Search"
+    layer: "data_science"
+    size: 12
+    timespan: {start: 2024}
+    audience: ["technical", "current_focus"]
+    description: "Vector embeddings and similarity search for content understanding and retrieval."
+
+  - id: "reinforcement_learning"
+    label: "Reinforcement Learning"
+    layer: "data_science"
+    size: 15
+    timespan: {start: 2024}
+    audience: ["technical", "current_focus"]
+    description: "Learning optimal policies through interaction with environments, relevant to game theory."
+
+  - id: "fullstack_datascientist"
+    label: "Full-stack Data Scientist"
+    layer: "data_science"
+    size: 14
+    timespan: {start: 2021}
+    audience: ["general", "technical", "current_focus"]
+    description: "End-to-end ownership from problem formulation to model deployment and business impact."
+
+  - id: "data_tools"
+    label: "Data Tools"
+    layer: "data_science"
+    size: 13
+    timespan: {start: 2021}
+    audience: ["technical"]
+    description: "Python, R, SQL, Spark, and other tools for data manipulation and analysis."
+
+  - id: "ml_tools"
+    label: "ML Tools"
+    layer: "data_science"
+    size: 13
+    timespan: {start: 2021}
+    audience: ["technical"]
+    description: "Scikit-learn, TensorFlow, PyTorch, and MLOps tools for model development."
+
+  # Economics
+  - id: "price_elasticity"
+    label: "Price Elasticity"
+    layer: "economics"
+    size: 14
+    timespan: {start: 2022}
+    audience: ["technical", "current_focus"]
+    description: "Understanding how demand responds to price changes in marketplace settings."
+
+  - id: "auctions"
+    label: "Auctions & Auction Design"
+    layer: "economics"
+    size: 13
+    timespan: {start: 2023}
+    audience: ["technical", "current_focus"]
+    description: "Mechanism design for optimal allocation and revenue in competitive environments."
+
+  # Applications
+  - id: "organ_on_chip"
+    label: "Organ on a Chip"
+    layer: "applications"
+    size: 12
+    timespan: {start: 2024}
+    audience: ["general", "current_focus"]
+    experienceLevel: "interested"
+    description: "Microfluidic devices that model human organ functions for drug testing."
+
+  - id: "drug_development"
+    label: "Drug Development"
+    layer: "applications"
+    size: 13
+    timespan: {start: 2024}
+    audience: ["general", "current_focus"]
+    experienceLevel: "interested"
+    description: "Pharmaceutical research and development processes where ML can accelerate discovery."
+
+  - id: "quantum_computing"
+    label: "Quantum Computing"
+    layer: "applications"
+    size: 11
+    timespan: {start: 2023}
+    audience: ["technical", "current_focus"]
+    experienceLevel: "interested"
+    description: "Computational paradigm leveraging quantum mechanical phenomena."
+
+  - id: "medical_devices"
+    label: "Medical Devices"
+    layer: "applications"
+    size: 10
+    timespan: {start: 2024}
+    audience: ["current_focus"]
+    experienceLevel: "interested"
+    description: "Healthcare technology and diagnostic equipment development."
+
+  - id: "molecular_dynamics"
+    label: "Molecular Dynamics"
+    layer: "applications"
+    size: 12
+    timespan: {start: 2024}
+    audience: ["technical", "current_focus"]
+    experienceLevel: "interested"
+    description: "Computational simulation of molecular systems for drug discovery and materials science."
+
+  - id: "nuclear_fusion"
+    label: "Nuclear Fusion"
+    layer: "applications"
+    size: 14
+    timespan: {start: 2023}
+    audience: ["general", "technical", "current_focus"]
+    experienceLevel: "interested"
+    description: "Clean energy technology where physics and ML intersect for plasma control."
+
+  - id: "marketplaces"
+    label: "Marketplaces"
+    layer: "applications"
+    size: 16
+    timespan: {start: 2021}
+    audience: ["general", "technical", "current_focus"]
+    description: "Two-sided platforms that connect buyers and sellers, requiring algorithmic matching and pricing."
+
+  - id: "gaming"
+    label: "Gaming"
+    layer: "applications"
+    size: 10
+    timespan: {start: 2023}
+    audience: ["current_focus"]
+    experienceLevel: "interested"
+    description: "Interactive entertainment industry where ML enhances player experience and game design."
+
+  - id: "climate_tech"
+    label: "Climate Tech"
+    layer: "applications"
+    size: 12
+    timespan: {start: 2023}
+    audience: ["general", "current_focus"]
+    experienceLevel: "interested"
+    description: "Technology solutions for climate change mitigation and adaptation."
+
+  # Personal
+  - id: "chennai"
+    label: "Chennai"
+    layer: "personal"
+    size: 10
+    timespan: {start: 2009, end: 2009}
+    audience: ["general"]
+    description: "Birthplace in Tamil Nadu, India, where the journey began."
+
+  - id: "bits_hyderabad"
+    label: "BITS Hyderabad"
+    layer: "personal"
+    size: 15
+    timespan: {start: 2009, end: 2014}
+    audience: ["general", "technical"]
+    description: "MSc in Physics & Bachelors in Pharmacy at Birla Institute of Technology and Sciences."
+
+  - id: "lmu_munich"
+    label: "LMU, Munich"
+    layer: "personal"
+    size: 14
+    timespan: {start: 2013, end: 2014}
+    audience: ["general", "technical"]
+    description: "Master's thesis year in Germany, working on quantum foundations with Detlef Dürr."
+
+  - id: "tucson_arizona"
+    label: "Tucson, AZ"
+    layer: "personal"
+    size: 16
+    timespan: {start: 2015, end: 2021}
+    audience: ["general", "technical"]
+    description: "PhD years at University of Arizona, transition from self-force to black hole physics."
+
+  - id: "seattle"
+    label: "Seattle, WA"
+    layer: "personal"
+    size: 15
+    timespan: {start: 2021, end: 2024}
+    audience: ["general", "technical"]
+    description: "First industry position at Rover, learning data science in the Pacific Northwest."
+
+  - id: "vancouver"
+    label: "Vancouver, BC"
+    layer: "personal"
+    size: 14
+    timespan: {start: 2024}
+    audience: ["general", "current_focus"]
+    description: "Current home in Canada, working at Turno and pursuing Stanford AI certificate."
+
   - id: "schnucki"
     label: "Schnucki"
-    type: "geographic"
-    layer: "geographic"
-    size: 6
-    timespan: {start: 2020, end: 2025}
-    description: "Brown-eyed companion with infinite capacity for love. Her need for freedom to run around influenced major life decisions including move to Seattle."
+    layer: "personal"
+    size: 13
+    timespan: {start: 2018}
+    audience: ["general"]
+    description: "My dog whose need for outdoor freedom influenced the move to Seattle."
+
+  - id: "vegan"
+    label: "Vegan"
+    layer: "personal"
+    size: 11
+    timespan: {start: 2016}
+    audience: ["general"]
+    description: "Plant-based lifestyle that aligns with interest in alternatives to animal testing."
+
+  - id: "animal_testing_alternatives"
+    label: "Alternatives to Animal Testing"
+    layer: "personal"
+    size: 12
+    timespan: {start: 2022}
+    audience: ["general", "current_focus"]
+    experienceLevel: "interested"
+    description: "Personal interest in developing humane alternatives for research and drug development."
+
+  # Other
+  - id: "pharmacy"
+    label: "Pharmacy"
+    layer: "other"
+    size: 11
+    timespan: {start: 2009, end: 2014}
+    audience: ["general", "technical"]
+    description: "Undergraduate degree in pharmaceutical sciences, providing background in drug development."
 
 links:
-  # Educational progression
-  - source: "bits_undergrad"
-    target: "lmu_thesis"
-    strength: 0.9
-    description: "Physics degree led to research opportunity in Munich"
-    
-  - source: "lmu_thesis"
-    target: "arizona_phd"
-    strength: 0.8
-    description: "Quantum foundations work opened path to PhD studies"
-    
-  - source: "arizona_phd"
-    target: "data_incubator"
+  # Physics foundational connections
+  - source: "bits_hyderabad"
+    target: "quantum_foundations"
     strength: 0.7
-    description: "Transition from academia to data science"
-    
+  - source: "quantum_foundations"
+    target: "detlef_durr"
+    strength: 0.9
+  - source: "detlef_durr"
+    target: "lmu_munich"
+    strength: 0.9
+  - source: "quantum_foundations"
+    target: "philosophy_physics"
+    strength: 0.6
+  - source: "detlef_durr"
+    target: "bottom_up_approach"
+    strength: 0.8
+
+  # Transition to general relativity and black holes
+  - source: "lmu_munich"
+    target: "tucson_arizona"
+    strength: 0.7
+  - source: "self_force"
+    target: "sam_gralla"
+    strength: 0.8
+  - source: "sam_gralla"
+    target: "tucson_arizona"
+    strength: 0.9
+  - source: "self_force"
+    target: "black_hole_stability"
+    strength: 0.7
+  - source: "black_hole_stability"
+    target: "btz_black_hole"
+    strength: 0.6
+  - source: "black_hole_stability"
+    target: "aretakis_instability"
+    strength: 0.8
+  - source: "aretakis_instability"
+    target: "publications"
+    strength: 0.9
+
+  # Mathematical methods connections
+  - source: "perturbation_theory"
+    target: "black_hole_stability"
+    strength: 0.8
+  - source: "complex_analysis"
+    target: "special_functions"
+    strength: 0.7
+  - source: "fourier_transforms"
+    target: "time_series"
+    strength: 0.6
+  - source: "bayesian_statistics"
+    target: "statistics_decision"
+    strength: 0.8
+  - source: "game_theory"
+    target: "reinforcement_learning"
+    strength: 0.7
+  - source: "game_theory"
+    target: "auctions"
+    strength: 0.8
+
+  # Transition to data science
+  - source: "tucson_arizona"
+    target: "data_incubator"
+    strength: 0.6
+  - source: "data_incubator"
+    target: "isai_ragam"
+    strength: 0.9
   - source: "data_incubator"
     target: "rover"
-    strength: 0.9
-    description: "Fellowship led directly to first industry position"
-    
+    strength: 0.8
   - source: "rover"
-    target: "stanford_ai"
-    strength: 0.6
-    description: "Industry experience motivated deeper AI education"
-
-  # Research evolution
-  - source: "bits_undergrad"
-    target: "bohmian_mechanics"
-    strength: 0.7
-    description: "Physics foundation enabled quantum foundations research"
-    
-  - source: "bohmian_mechanics"
-    target: "black_hole_physics"
-    strength: 0.6
-    description: "Bottom-up thinking approach carried forward"
-    
-  - source: "black_hole_physics"
-    target: "data_science_methods"
-    strength: 0.5
-    description: "From exact solutions to probabilistic thinking"
-    
-  - source: "data_science_methods"
-    target: "ai_game_theory"
-    strength: 0.8
-    description: "Evolution into AI and game theory intersection"
-
-  # Geographic and institutional connections
-  - source: "india"
-    target: "munich"
-    strength: 0.8
-    description: "First international move for research"
-    
-  - source: "munich"
-    target: "tucson"
-    strength: 0.7
-    description: "PhD opportunity brought move to Arizona"
-    
-  - source: "tucson"
     target: "seattle"
     strength: 0.9
-    description: "Schnucki and industry opportunity motivated Seattle move"
-    
+  - source: "schnucki"
+    target: "seattle"
+    strength: 0.7
+
+  # Data science skill development
+  - source: "rover"
+    target: "supply_demand"
+    strength: 0.9
+  - source: "rover"
+    target: "recommendation_system"
+    strength: 0.8
+  - source: "rover"
+    target: "geospatial_data"
+    strength: 0.7
+  - source: "rover"
+    target: "experimentation"
+    strength: 0.8
+  - source: "rover"
+    target: "ml_production"
+    strength: 0.8
+  - source: "supply_demand"
+    target: "marketplaces"
+    strength: 0.9
+  - source: "marketplaces"
+    target: "turno"
+    strength: 0.8
+
+  # Current interests and applications
   - source: "seattle"
     target: "vancouver"
     strength: 0.8
-    description: "Immigration stability and new opportunities"
-
-  # Mentor relationships
-  - source: "detlef_durr"
-    target: "bohmian_mechanics"
-    strength: 0.9
-    description: "Direct research supervision and mentorship"
-    
-  - source: "detlef_durr"
-    target: "lmu_thesis"
-    strength: 0.9
-    description: "Thesis advisor relationship"
-    
-  - source: "sam_gralla"
-    target: "black_hole_physics"
-    strength: 0.9
-    description: "PhD supervision and research guidance"
-    
-  - source: "sam_gralla"
-    target: "arizona_phd"
-    strength: 0.9
-    description: "Doctoral advisor relationship"
-
-  # Personal influence
-  - source: "schnucki"
-    target: "seattle"
-    strength: 0.8
-    description: "Her needs influenced major life decisions"
-    
-  - source: "schnucki"
-    target: "vancouver"
-    strength: 0.6
-    description: "Continued consideration in location choices"
-
-  # Industry connections
-  - source: "rover"
+  - source: "vancouver"
     target: "turno"
-    strength: 0.7
-    description: "Experience with 2-sided marketplaces carried forward"
-    
-  - source: "rover"
-    target: "data_science_methods"
+    strength: 0.9
+  - source: "vancouver"
+    target: "stanford_ai"
     strength: 0.8
-    description: "Practical application of data science techniques"
-    
   - source: "turno"
-    target: "ai_game_theory"
+    target: "game_theory"
     strength: 0.8
-    description: "Current application of AI and game theory concepts"
+  - source: "stanford_ai"
+    target: "large_language_models"
+    strength: 0.8
+  - source: "stanford_ai"
+    target: "reinforcement_learning"
+    strength: 0.8
 
-  # Cross-domain connections
-  - source: "black_hole_physics"
-    target: "rover"
+  # Application area connections
+  - source: "pharmacy"
+    target: "drug_development"
+    strength: 0.6
+  - source: "vegan"
+    target: "animal_testing_alternatives"
+    strength: 0.8
+  - source: "animal_testing_alternatives"
+    target: "organ_on_chip"
+    strength: 0.7
+  - source: "quantum_foundations"
+    target: "quantum_computing"
+    strength: 0.6
+
+  # Cross-cutting methodological connections
+  - source: "bottom_up_approach"
+    target: "agent_based_modeling"
+    strength: 0.7
+  - source: "top_down_approach"
+    target: "statistics_decision"
+    strength: 0.6
+  - source: "effective_field_theory"
+    target: "ml_production"
     strength: 0.4
-    description: "Problem-solving skills transferred to industry"
-    
-  - source: "bohmian_mechanics"
-    target: "ai_game_theory"
+  - source: "phase_transitions"
+    target: "price_elasticity"
     strength: 0.5
-    description: "Bottom-up thinking approach continues in current work"
-    
-  - source: "arizona_phd"
-    target: "vancouver"
-    strength: 0.3
-    description: "PhD experience contributed to immigration path"
+  - source: "data_tools"
+    target: "ml_tools"
+    strength: 0.8
+  - source: "fullstack_datascientist"
+    target: "strategy_modeling"
+    strength: 0.7
