@@ -254,7 +254,7 @@ class MiniMapManager {
 
     const linkSelection = this.linkGroup
       .selectAll('line')
-      .data(this.links, d => `${this.getLinkSourceId(d)}-${this.getLinkTargetId(d)}`);
+      .data(this.links, d => d.id || `${d.source}-${d.target}`);
 
     linkSelection.exit().remove();
 
@@ -264,10 +264,22 @@ class MiniMapManager {
       .attr('stroke-width', this.config.linkStrokeWidth)
       .attr('stroke-opacity', this.config.linkOpacity)
       .merge(linkSelection)
-      .attr('x1', d => this.offsetX + this.getLinkSourceNode(d).x * this.scale)
-      .attr('y1', d => this.offsetY + this.getLinkSourceNode(d).y * this.scale)
-      .attr('x2', d => this.offsetX + this.getLinkTargetNode(d).x * this.scale)
-      .attr('y2', d => this.offsetY + this.getLinkTargetNode(d).y * this.scale);
+      .attr('x1', d => {
+        const sourceNode = this.nodes.find(n => n.id === (typeof d.source === 'object' ? d.source.id : d.source));
+        return this.offsetX + (sourceNode ? sourceNode.x : 0) * this.scale;
+      })
+      .attr('y1', d => {
+        const sourceNode = this.nodes.find(n => n.id === (typeof d.source === 'object' ? d.source.id : d.source));
+        return this.offsetY + (sourceNode ? sourceNode.y : 0) * this.scale;
+      })
+      .attr('x2', d => {
+        const targetNode = this.nodes.find(n => n.id === (typeof d.target === 'object' ? d.target.id : d.target));
+        return this.offsetX + (targetNode ? targetNode.x : 0) * this.scale;
+      })
+      .attr('y2', d => {
+        const targetNode = this.nodes.find(n => n.id === (typeof d.target === 'object' ? d.target.id : d.target));
+        return this.offsetY + (targetNode ? targetNode.y : 0) * this.scale;
+      });
   }
 
   /**
@@ -322,44 +334,6 @@ class MiniMapManager {
     };
     
     return colorMap[node.type] || colorMap[node.layer] || this.config.borderColor;
-  }
-
-  /**
-   * Helper to get link source ID
-   * @param {Object} link - Link object
-   * @returns {string} - Source node ID
-   */
-  getLinkSourceId(link) {
-    return typeof link.source === 'object' ? link.source.id : link.source;
-  }
-
-  /**
-   * Helper to get link target ID
-   * @param {Object} link - Link object
-   * @returns {string} - Target node ID
-   */
-  getLinkTargetId(link) {
-    return typeof link.target === 'object' ? link.target.id : link.target;
-  }
-
-  /**
-   * Helper to get link source node
-   * @param {Object} link - Link object
-   * @returns {Object} - Source node object
-   */
-  getLinkSourceNode(link) {
-    const sourceId = this.getLinkSourceId(link);
-    return this.nodes.find(n => n.id === sourceId) || { x: 0, y: 0 };
-  }
-
-  /**
-   * Helper to get link target node
-   * @param {Object} link - Link object
-   * @returns {Object} - Target node object
-   */
-  getLinkTargetNode(link) {
-    const targetId = this.getLinkTargetId(link);
-    return this.nodes.find(n => n.id === targetId) || { x: 0, y: 0 };
   }
 
   /**

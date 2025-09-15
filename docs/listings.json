@@ -7,10 +7,10 @@
     ]
   },
   {
-    "listing": "/index.html",
+    "listing": "/resources.html",
     "items": [
-      "/posts/post-with-code/index.html",
-      "/posts/welcome/index.html"
+      "/resources/ml/neural-networks-intro.html",
+      "/resources/physics/quantum-mechanics-basics.html"
     ]
   },
   {
@@ -20,10 +20,10 @@
     ]
   },
   {
-    "listing": "/resources.html",
+    "listing": "/index.html",
     "items": [
-      "/resources/ml/neural-networks-intro.html",
-      "/resources/physics/quantum-mechanics-basics.html"
+      "/posts/post-with-code/index.html",
+      "/posts/welcome/index.html"
     ]
   }
 ]

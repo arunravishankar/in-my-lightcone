@@ -7,46 +7,74 @@
     "text": "Post With Code\n\n\n\nnews\n\ncode\n\nanalysis\n\n\n\n\n\n\n\n\n\nSep 3, 2025\n\n\nHarlow Malloc\n\n\n\n\n\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nAug 31, 2025\n\n\nTristan O’Malley\n\n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "ramblings/2025-09-03-thoughts-on-ai.html",
-    "href": "ramblings/2025-09-03-thoughts-on-ai.html",
-    "title": "Thoughts on AI development",
+    "objectID": "resources.html",
+    "href": "resources.html",
+    "title": "Resources",
     "section": "",
-    "text": "The fascinating thing about AI development isn’t just the technical breakthroughs - it’s how quickly our baseline assumptions about “impossible” keep shifting.\nOriginally posted on Bluesky"
+    "text": "Resources I’ve found valuable, automatically organized by category.\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nDescription\n\n\n\nDate\n\n\n\n\n\n\n\n\nNeural Networks Introduction\n\n\nComprehensive guide to understanding neural networks from first principles\n\n\nJan 15, 2024\n\n\n\n\n\n\nNo matching items\n\n\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nDescription\n\n\n\nDate\n\n\n\n\n\n\n\n\nQuantum Mechanics Fundamentals\n\n\nInteractive course on quantum mechanics principles\n\n\nJan 10, 2024\n\n\n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
+    "objectID": "resources.html#machine-learning-ai",
+    "href": "resources.html#machine-learning-ai",
+    "title": "Resources",
+    "section": "",
+    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nDescription\n\n\n\nDate\n\n\n\n\n\n\n\n\nNeural Networks Introduction\n\n\nComprehensive guide to understanding neural networks from first principles\n\n\nJan 15, 2024\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "resources.html#physics-mathematics",
+    "href": "resources.html#physics-mathematics",
+    "title": "Resources",
+    "section": "",
+    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nDescription\n\n\n\nDate\n\n\n\n\n\n\n\n\nQuantum Mechanics Fundamentals\n\n\nInteractive course on quantum mechanics principles\n\n\nJan 10, 2024\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "Arun's Knowledge Graph",
+    "section": "",
+    "text": "Loading graph..."
+  },
+  {
+    "objectID": "about.html#the-journey",
+    "href": "about.html#the-journey",
+    "title": "Arun's Knowledge Graph",
+    "section": "The Journey",
+    "text": "The Journey\nCuriosity about the quantum foundations took me from India to Munich, where I worked with the late Detlef Dürr on Bohmian mechanics. His research group was full of people who were inquisitive, and deeply cared about the work they did. This was where I started looking at systems with the bottom-up approach — figuring out how to formulate a theory that ontologically describes how nature works at a fundamental level, with the constraints of having to describe known phenomena.\nI went to Tucson planning to work with Sam Gralla on the self-force problem, but ended up getting sucked into black hole physics instead. The PhD years in Arizona were intense in ways I didn’t expect. I got really good at sitting with hard problems for months without making progress, then suddenly seeing the path forward. Somewhere along the way, I also started caring about the math itself, not just what it could tell me about black holes.\nThen Schnucki showed up with those brown eyes and infinite capacity for love, and suddenly being with her in a place where she could run around freely became a priority. Seattle called — I’m a sucker for gloomy, drizzly weather and the beautiful outdoors. I was fortunate to find my first position outside academia at Rover, working with genuinely amazing people, and everything clicked differently. Instead of “What fundamental dynamics make this happen?” I started asking “What can we actually figure out from messy, real-world data?”. I went from exact solutions and clean equations to thinking in distributions and probabilities. Turns out that adding programming to your toolkit allows you to ask questions that you’d never even think of asking if you didn’t have those techniques under your belt.\nLong-term immigration stability brought me to Vancouver in 2024. Now I’m doing Stanford’s AI program while consulting for Turno (another 2-sided marketplace, because apparently I have a type). These days I’m obsessed with where game theory, reinforcement learning, and economics overlap — it’s this sweet spot where bottom-up and top-down thinking actually play nice together. And yeah, like everyone else, I’m trying to figure out what to do with large language models."
+  },
+  {
+    "objectID": "about.html#education",
+    "href": "about.html#education",
+    "title": "Arun's Knowledge Graph",
+    "section": "Education",
+    "text": "Education\nStanford University | Remote\nAI Graduate Certificate | Sep 2024 - present\nThe Data Incubator | Remote\nData Science Fellowship | Feb 2021 - May 2021\nUniversity of Arizona | Tucson, AZ\nPhD in Physics | Aug 2015 - Jul 2021\nLudwig Maximilians University | Munich, DE\nVisiting student for Master’s thesis | Aug 2013 - Jul 2014\nBirla Institute of Technology and Sciences | Hyderabad, India\nMSc in Physics & Bachelors in Pharmacy | Aug 2009 - Jul 2014"
+  },
+  {
+    "objectID": "about.html#experience",
+    "href": "about.html#experience",
+    "title": "Arun's Knowledge Graph",
+    "section": "Experience",
+    "text": "Experience\nTurno | Vancouver, BC\nData Scientist | Sep 2024 - present\nRover | Seattle, WA\nData Scientist II & III | Sep 2021 - Sep 2024\nIf you’re interested in more specifics of what I’ve done professionally, you can find more details on my Resume and on LinkedIn."
+  },
+  {
+    "objectID": "about.html#interactive-exploration",
+    "href": "about.html#interactive-exploration",
+    "title": "Arun's Knowledge Graph",
+    "section": "Interactive Exploration",
+    "text": "Interactive Exploration\nThe graph above shows the interconnected nature of my journey - you can:\n\nHover over nodes to see the 3D distance-based effects\nClick nodes for detailed descriptions\nUse the layer controls to focus on specific aspects (Education, Research, Industry, Current Focus, Geographic)\nNavigate the timeline to see how things evolved over time\nUse the minimap to quickly jump to different areas\n\nEach connection represents how one experience led to or influenced another. The stronger the connection, the more direct the influence. You’ll notice that geographic moves often coincided with major career transitions, and that the bottom-up thinking approach from quantum foundations continues to influence my current work in AI and game theory.\nThe questions keep changing, but I’m still just as curious about complex systems — whether they’re quantum foundations, black holes, markets, or whatever’s next."
+  },
+  {
+    "objectID": "ToDo.html",
+    "href": "ToDo.html",
     "title": "In My Lightcone",
     "section": "",
-    "text": "I document the things I’m learning here, mostly for my own reference. My curiosity jumps around a lot, so this ends up being a pretty eclectic mix of topics.\nThe name comes from physics — a lightcone contains all events that can influence you and what you can influence. This blog is basically my intellectual lightcone: the ideas I’m grappling with and the questions that won’t leave me alone."
+    "text": "Clean up the codebase\nAllow for system to decide on light vs dark theme\nEnsure auto deploy on the custom domain when a PR is merged onto main\nFinish the description of each node\nDecide what node needs to be in the Overview section\nRecenter the screen at the same zoom level to the center of mass of the nodes that are in the view selection.\nEnsure that texts do not overlap - this can be done by making sure nodes move around a bit in the y axis such that nearby nodes don’t have overlapping y axis coordinates\nAdd my photo on the home page also.\nEdit the contents of the About page."
   },
   {
-    "objectID": "index.html#welcome-to-in-my-lightcone",
-    "href": "index.html#welcome-to-in-my-lightcone",
+    "objectID": "ToDo.html#to-do",
+    "href": "ToDo.html#to-do",
     "title": "In My Lightcone",
     "section": "",
-    "text": "I document the things I’m learning here, mostly for my own reference. My curiosity jumps around a lot, so this ends up being a pretty eclectic mix of topics.\nThe name comes from physics — a lightcone contains all events that can influence you and what you can influence. This blog is basically my intellectual lightcone: the ideas I’m grappling with and the questions that won’t leave me alone."
-  },
-  {
-    "objectID": "index.html#what-im-figuring-out",
-    "href": "index.html#what-im-figuring-out",
-    "title": "In My Lightcone",
-    "section": "What I’m figuring out",
-    "text": "What I’m figuring out\nRight now I’m deep in a bunch of different areas that probably don’t seem related but somehow all scratch the same itch:\nOptimal play in games - Understanding how to find the best strategies across different types of games: deterministic vs stochastic, complete vs incomplete information. This will involve learning game theory fundamentals, depending on the game structure.\nPrice discovery and auction design - How do individuals behave with limited information and cognitive biases in auctions? How does auction design influence whether the final transaction value reflects actual value? This pulls me into mechanism design, behavioral economics, and understanding how market structure affects outcomes.\nRecommendation systems - I’m particularly curious about how these systems create user bubbles and whether there are ways to resolve this inherent property without destroying the user experience.\nExperimentation - Bayesian approaches in experimentation and when they’re a useful addition to your toolkit as a data scientist.\nMemory in LLMs - Knowledge graphs, graph databases, and ways to store and retrieve memory for AI agents in a cheap, quick and efficient way. I want to learn about semantic search, knowledge graphs, and other memory architectures.\nThese topics will definitely shift over time. That’s kind of the point."
-  },
-  {
-    "objectID": "index.html#why-write-publicly",
-    "href": "index.html#why-write-publicly",
-    "title": "In My Lightcone",
-    "section": "Why write publicly?",
-    "text": "Why write publicly?\nPartly because writing forces me to actually understand things instead of just thinking I do. Working in industry forces you to be quick and efficient in your work which has it’s own merits. But you don’t get a lot of time to grind slowly. I want to use this blog to bring back those muscles that took years of training to develop. But also because I’m hoping to find people who are curious about similar stuff. If you’re working on any of these problems, or if something I write reminds you of something completely different that you’re thinking about, I’d love to hear from you. Maybe you’re part of the pack I’m looking for.\nEmail: arunravishankar@gmail.com | LinkedIn: linkedin.com/in/arunravishankar"
-  },
-  {
-    "objectID": "index.html#recent-posts",
-    "href": "index.html#recent-posts",
-    "title": "In My Lightcone",
-    "section": "Recent Posts",
-    "text": "Recent Posts\nLatest thoughts and explorations:\nView all posts →"
+    "text": "Clean up the codebase\nAllow for system to decide on light vs dark theme\nEnsure auto deploy on the custom domain when a PR is merged onto main\nFinish the description of each node\nDecide what node needs to be in the Overview section\nRecenter the screen at the same zoom level to the center of mass of the nodes that are in the view selection.\nEnsure that texts do not overlap - this can be done by making sure nodes move around a bit in the y axis such that nearby nodes don’t have overlapping y axis coordinates\nAdd my photo on the home page also.\nEdit the contents of the About page."
   },
   {
     "objectID": "resources/ml/neural-networks-intro.html",
@@ -84,59 +112,122 @@
     "text": "Quantum Mechanics Fundamentals\nLink to resource\nEssential resource for understanding quantum mechanical principles."
   },
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "In My Lightcone",
     "section": "",
-    "text": "I get excited about figuring things out, which has taken me on a rather wandering path across continents and disciplines.\nIf we’re going by standard buckets, I’d call myself a theoretical physicist-turned-data scientist, but my interests are all over the place, so I’d rather not be stuck with that label."
+    "text": "I document the things I’m learning here, mostly for my own reference. My curiosity jumps around a lot, so this ends up being a pretty eclectic mix of topics.\nThe name comes from physics — a lightcone contains all events that can influence you and what you can influence. This blog is basically my intellectual lightcone: the ideas I’m grappling with and the questions that won’t leave me alone."
   },
   {
-    "objectID": "about.html#the-journey",
-    "href": "about.html#the-journey",
-    "title": "About",
-    "section": "The Journey",
-    "text": "The Journey\nCuriosity about the quantum foundations took me from India to Munich, where I worked with the late Detlef Dürr on Bohmian mechanics. His research group was full of people who were inquisitive, and deeply cared about the work they did. This was where I started looking at systems with the bottom-up approach — figuring out how to formulate a theory that ontologically describes how nature works at a fundamental level, with the constraints of having to describe known phenomena.\nI went to Tucson planning to work with Sam Gralla on the self-force problem, but ended up getting sucked into black hole physics instead. The PhD years in Arizona were intense in ways I didn’t expect. I got really good at sitting with hard problems for months without making progress, then suddenly seeing the path forward. Somewhere along the way, I also started caring about the math itself, not just what it could tell me about black holes.\nThen Schnucki showed up with those brown eyes and infinite capacity for love, and suddenly being with her in a place where she could run around freely became a priority. Seattle called — I’m a sucker for gloomy, drizzly weather and the beautiful outdoors. I was fortunate to find my first position outside academia at Rover, working with genuinely amazing people, and everything clicked differently. Instead of “What fundamental dynamics make this happen?” I started asking “What can we actually figure out from messy, real-world data?”. I went from exact solutions and clean equations to thinking in distributions and probabilities. Turns out that adding programming to your toolkit allows you to ask questions that you’d never even think of asking if you didn’t have those techniques under your belt.\nLong-term immigration stability brought me to Vancouver in 2024. Now I’m doing Stanford’s AI program while consulting for Turno (another 2-sided marketplace, because apparently I have a type). These days I’m obsessed with where game theory, reinforcement learning, and economics overlap — it’s this sweet spot where bottom-up and top-down thinking actually play nice together. And yeah, like everyone else, I’m trying to figure out what to do with large language models."
-  },
-  {
-    "objectID": "about.html#education",
-    "href": "about.html#education",
-    "title": "About",
-    "section": "Education",
-    "text": "Education\nStanford University | Remote\nAI Graduate Certificate | Sep 2024 - present\nThe Data Incubator | Remote\nData Science Fellowship | Feb 2021 - May 2021\nUniversity of Arizona | Tucson, AZ\nPhD in Physics | Aug 2015 - Jul 2021\nLudwig Maximilians University | Munich, DE\nVisiting student for Master’s thesis | Aug 2013 - Jul 2014\nBirla Institute of Technology and Sciences | Hyderabad, India\nMSc in Physics & Bachelors in Pharmacy | Aug 2009 - Jul 2014"
-  },
-  {
-    "objectID": "about.html#experience",
-    "href": "about.html#experience",
-    "title": "About",
-    "section": "Experience",
-    "text": "Experience\nTurno | Vancouver, BC\nData Scientist | Sep 2024 - present\nRover | Seattle, WA\nData Scientist II & III | Sep 2021 - Sep 2024\nIf you’re interested in more specifics of what I’ve done professionally, you can find more details on my Resume and on LinkedIn."
-  },
-  {
-    "objectID": "about.html#interactive-exploration",
-    "href": "about.html#interactive-exploration",
-    "title": "About",
-    "section": "Interactive Exploration",
-    "text": "Interactive Exploration\nThe graph above shows the interconnected nature of my journey - you can:\n\nHover over nodes to see the 3D distance-based effects\nClick nodes for detailed descriptions\nUse the layer controls to focus on specific aspects (Education, Research, Industry, Current Focus, Geographic)\nNavigate the timeline to see how things evolved over time\nUse the minimap to quickly jump to different areas\n\nEach connection represents how one experience led to or influenced another. The stronger the connection, the more direct the influence. You’ll notice that geographic moves often coincided with major career transitions, and that the bottom-up thinking approach from quantum foundations continues to influence my current work in AI and game theory.\nThe questions keep changing, but I’m still just as curious about complex systems — whether they’re quantum foundations, black holes, markets, or whatever’s next."
-  },
-  {
-    "objectID": "resources.html",
-    "href": "resources.html",
-    "title": "Resources",
+    "objectID": "index.html#welcome-to-in-my-lightcone",
+    "href": "index.html#welcome-to-in-my-lightcone",
+    "title": "In My Lightcone",
     "section": "",
-    "text": "Resources I’ve found valuable, automatically organized by category.\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nDescription\n\n\n\nDate\n\n\n\n\n\n\n\n\nNeural Networks Introduction\n\n\nComprehensive guide to understanding neural networks from first principles\n\n\nJan 15, 2024\n\n\n\n\n\n\nNo matching items\n\n\n\n\n\n\n   \n    \n    \n      Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nDescription\n\n\n\nDate\n\n\n\n\n\n\n\n\nQuantum Mechanics Fundamentals\n\n\nInteractive course on quantum mechanics principles\n\n\nJan 10, 2024\n\n\n\n\n\n\nNo matching items"
+    "text": "I document the things I’m learning here, mostly for my own reference. My curiosity jumps around a lot, so this ends up being a pretty eclectic mix of topics.\nThe name comes from physics — a lightcone contains all events that can influence you and what you can influence. This blog is basically my intellectual lightcone: the ideas I’m grappling with and the questions that won’t leave me alone."
   },
   {
-    "objectID": "resources.html#machine-learning-ai",
-    "href": "resources.html#machine-learning-ai",
-    "title": "Resources",
-    "section": "",
-    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nDescription\n\n\n\nDate\n\n\n\n\n\n\n\n\nNeural Networks Introduction\n\n\nComprehensive guide to understanding neural networks from first principles\n\n\nJan 15, 2024\n\n\n\n\n\n\nNo matching items"
+    "objectID": "index.html#what-im-figuring-out",
+    "href": "index.html#what-im-figuring-out",
+    "title": "In My Lightcone",
+    "section": "What I’m figuring out",
+    "text": "What I’m figuring out\nRight now I’m deep in a bunch of different areas that probably don’t seem related but somehow all scratch the same itch:\nOptimal play in games - Understanding how to find the best strategies across different types of games: deterministic vs stochastic, complete vs incomplete information. This will involve learning game theory fundamentals, depending on the game structure.\nPrice discovery and auction design - How do individuals behave with limited information and cognitive biases in auctions? How does auction design influence whether the final transaction value reflects actual value? This pulls me into mechanism design, behavioral economics, and understanding how market structure affects outcomes.\nRecommendation systems - I’m particularly curious about how these systems create user bubbles and whether there are ways to resolve this inherent property without destroying the user experience.\nExperimentation - Bayesian approaches in experimentation and when they’re a useful addition to your toolkit as a data scientist.\nMemory in LLMs - Knowledge graphs, graph databases, and ways to store and retrieve memory for AI agents in a cheap, quick and efficient way. I want to learn about semantic search, knowledge graphs, and other memory architectures.\nThese topics will definitely shift over time. That’s kind of the point."
   },
   {
-    "objectID": "resources.html#physics-mathematics",
-    "href": "resources.html#physics-mathematics",
-    "title": "Resources",
+    "objectID": "index.html#why-write-publicly",
+    "href": "index.html#why-write-publicly",
+    "title": "In My Lightcone",
+    "section": "Why write publicly?",
+    "text": "Why write publicly?\nPartly because writing forces me to actually understand things instead of just thinking I do. Working in industry forces you to be quick and efficient in your work which has it’s own merits. But you don’t get a lot of time to grind slowly. I want to use this blog to bring back those muscles that took years of training to develop. But also because I’m hoping to find people who are curious about similar stuff. If you’re working on any of these problems, or if something I write reminds you of something completely different that you’re thinking about, I’d love to hear from you. Maybe you’re part of the pack I’m looking for.\nEmail: arunravishankar@gmail.com | LinkedIn: linkedin.com/in/arunravishankar"
+  },
+  {
+    "objectID": "index.html#recent-posts",
+    "href": "index.html#recent-posts",
+    "title": "In My Lightcone",
+    "section": "Recent Posts",
+    "text": "Recent Posts\nLatest thoughts and explorations:\nView all posts →"
+  },
+  {
+    "objectID": "ramblings/2025-09-03-thoughts-on-ai.html",
+    "href": "ramblings/2025-09-03-thoughts-on-ai.html",
+    "title": "Thoughts on AI development",
     "section": "",
-    "text": "Order By\n      Default\n      \n        Date - Oldest\n      \n      \n        Date - Newest\n      \n      \n        Title\n      \n    \n  \n    \n      \n      \n    \n\n\n\n\n\n\nTitle\n\n\n\nDescription\n\n\n\nDate\n\n\n\n\n\n\n\n\nQuantum Mechanics Fundamentals\n\n\nInteractive course on quantum mechanics principles\n\n\nJan 10, 2024\n\n\n\n\n\n\nNo matching items"
+    "text": "The fascinating thing about AI development isn’t just the technical breakthroughs - it’s how quickly our baseline assumptions about “impossible” keep shifting.\nOriginally posted on Bluesky"
+  },
+  {
+    "objectID": "CLAUDE.html",
+    "href": "CLAUDE.html",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.\n\n\nThis is a personal blog/website built with Quarto that combines: - Academic writing and research documentation - Interactive knowledge graph visualization - Python-based data processing tools - Static site generation for GitHub Pages deployment\nThe site explores ideas across physics, data science, and AI, featuring an integrated knowledge graph that visualizes the author’s academic and professional journey.\n\n\n\n\n\n# Development server with live reload\nquarto preview\n\n# Build entire site (outputs to docs/ for GitHub Pages)\nquarto render\n\n# Clean build artifacts\nquarto clean\n\n# Render specific file\nquarto render about.qmd\n\n# Check Quarto installation\nquarto check\n\n\n\n# Run Python tests\npytest python/tests/ -v\npytest python/tests/test_core_wrapper.py -v\n\n# Run specific test for debugging\npython python/tests/test_core_wrapper.py\n\n\n\n# Development server for JS components\ncd knowledge-graph-explorer && npm run dev\n\n# The JS library has no build step currently - uses direct file includes\n\n\n\n\n\n\nThe project combines three main components:\n\nQuarto Website (/ root) - Static site generator for blog/academic content\nKnowledge Graph Explorer (knowledge-graph-explorer/) - JavaScript library for interactive graph visualization\nPython Knowledge Graph Wrapper (python/) - Python interface for generating knowledge graphs from YAML data\n\n\n\n\nData Flow:\nYAML data (data/about-graph.yml)\n    ↓\nPython wrapper (python/knowledge_graph/core.py)\n    ↓\nJavaScript visualization (knowledge-graph-explorer/src/)\n    ↓\nEmbedded in Quarto pages (about.qmd)\nFile Relationships: - data/about-graph.yml contains structured graph data with metadata, layers, nodes - python/knowledge_graph/core.py processes YAML → HTML with embedded JavaScript - knowledge-graph-explorer/src/core/KnowledgeGraphExplorer.js is the main visualization engine - Integration happens through generated HTML that includes the full JavaScript library\n\n\n\n├── _quarto.yml                 # Main site configuration\n├── docs/                       # Generated site (GitHub Pages output)\n├── posts/                      # Blog posts in date-folder structure\n├── python/\n│   ├── knowledge_graph/        # Python wrapper for graph generation\n│   └── tests/                  # Python tests\n├── knowledge-graph-explorer/\n│   ├── src/\n│   │   ├── core/              # Main visualization classes\n│   │   ├── utils/             # Helper utilities\n│   │   └── themes/            # Visual themes\n│   └── package.json           # Minimal Node.js config\n├── data/\n│   └── about-graph.yml        # Graph data source\n└── *.qmd                      # Quarto pages (index, about, blog, etc.)\n\n\n\n\n\n\n\nBlog posts: Create in posts/YYYY-MM-DD-title/index.qmd format\nStandalone pages: Create as page-name.qmd in root\nPython notebooks: Use .ipynb format, add YAML metadata as raw cell\nKnowledge graph data: Edit data/about-graph.yml following existing node/link structure\n\n\n\n\nThe Python wrapper (KnowledgeGraphPython) bridges YAML data and JavaScript visualization:\n\nData Loading: KnowledgeGraphPython.from_yaml(\"data/about-graph.yml\")\nConfiguration: Merges default settings with YAML metadata section\nHTML Generation: generate_html() embeds full JavaScript library + data\nQuarto Integration: Use generate_for_quarto() for embedding in .qmd files\n\n\n\n\nThe knowledge graph explorer uses a modular class-based structure: - KnowledgeGraphExplorer - Main coordinator class - ForceSimulation - D3.js physics simulation management - InteractionManager - User input handling (drag, zoom, hover) - VisualEffectsManager - Animations and visual feedback - MiniMapManager - Minimap/overview functionality - UIControlsManager - Timeline, layers, and control panels\n\n\n\n\n\n\n\nLocation: python/tests/test_core_wrapper.py\nCoverage: Data validation, HTML generation, configuration merging\nRun with: pytest python/tests/ -v\n\n\n\n\nTest the full workflow:\n# Test YAML → Python → HTML → JavaScript integration\ngraph = KnowledgeGraphPython.from_yaml(\"data/about-graph.yml\")\nhtml = graph.generate_html(\"test-output.html\")\n# Open test-output.html in browser to verify rendering\n\n\n\n\n\n\n\nDefines navigation, theme, output directory (docs/)\nSets site URL and metadata\nConfigures HTML format and CSS\n\n\n\n\nmetadata:          # Timeline and graph-level settings\nlayers:            # Visual layers with colors\nnodes:             # Graph nodes with properties (id, label, layer, timespan, etc.)\n\n\n\nContains comprehensive defaults for graph appearance, simulation physics, and UI features that merge with YAML metadata.\n\n\n\n\nThe site deploys to GitHub Pages automatically: 1. quarto render builds to docs/ directory 2. Commit and push to main branch 3. GitHub Pages serves from docs/ folder 4. Site available at configured URL in _quarto.yml\n\n\n\n\nQuarto - Static site generation and academic publishing\nD3.js (CDN) - Data visualization and force simulation\nPython - YAML processing, data validation, HTML generation\npytest - Python testing framework\nGitHub Pages - Static site hosting\n\n\n\n\n\nThe knowledge graph JavaScript library is included directly (no build step)\nPython wrapper handles all data processing and validation\nYAML structure in data/about-graph.yml should follow existing node/layer patterns\nTest Python changes with pytest python/tests/ -v before rendering\nUse quarto preview for live development of content\nJavaScript changes require browser refresh (no hot reload)"
+  },
+  {
+    "objectID": "CLAUDE.html#project-overview",
+    "href": "CLAUDE.html#project-overview",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "This is a personal blog/website built with Quarto that combines: - Academic writing and research documentation - Interactive knowledge graph visualization - Python-based data processing tools - Static site generation for GitHub Pages deployment\nThe site explores ideas across physics, data science, and AI, featuring an integrated knowledge graph that visualizes the author’s academic and professional journey."
+  },
+  {
+    "objectID": "CLAUDE.html#core-commands",
+    "href": "CLAUDE.html#core-commands",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "# Development server with live reload\nquarto preview\n\n# Build entire site (outputs to docs/ for GitHub Pages)\nquarto render\n\n# Clean build artifacts\nquarto clean\n\n# Render specific file\nquarto render about.qmd\n\n# Check Quarto installation\nquarto check\n\n\n\n# Run Python tests\npytest python/tests/ -v\npytest python/tests/test_core_wrapper.py -v\n\n# Run specific test for debugging\npython python/tests/test_core_wrapper.py\n\n\n\n# Development server for JS components\ncd knowledge-graph-explorer && npm run dev\n\n# The JS library has no build step currently - uses direct file includes"
+  },
+  {
+    "objectID": "CLAUDE.html#architecture",
+    "href": "CLAUDE.html#architecture",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "The project combines three main components:\n\nQuarto Website (/ root) - Static site generator for blog/academic content\nKnowledge Graph Explorer (knowledge-graph-explorer/) - JavaScript library for interactive graph visualization\nPython Knowledge Graph Wrapper (python/) - Python interface for generating knowledge graphs from YAML data\n\n\n\n\nData Flow:\nYAML data (data/about-graph.yml)\n    ↓\nPython wrapper (python/knowledge_graph/core.py)\n    ↓\nJavaScript visualization (knowledge-graph-explorer/src/)\n    ↓\nEmbedded in Quarto pages (about.qmd)\nFile Relationships: - data/about-graph.yml contains structured graph data with metadata, layers, nodes - python/knowledge_graph/core.py processes YAML → HTML with embedded JavaScript - knowledge-graph-explorer/src/core/KnowledgeGraphExplorer.js is the main visualization engine - Integration happens through generated HTML that includes the full JavaScript library\n\n\n\n├── _quarto.yml                 # Main site configuration\n├── docs/                       # Generated site (GitHub Pages output)\n├── posts/                      # Blog posts in date-folder structure\n├── python/\n│   ├── knowledge_graph/        # Python wrapper for graph generation\n│   └── tests/                  # Python tests\n├── knowledge-graph-explorer/\n│   ├── src/\n│   │   ├── core/              # Main visualization classes\n│   │   ├── utils/             # Helper utilities\n│   │   └── themes/            # Visual themes\n│   └── package.json           # Minimal Node.js config\n├── data/\n│   └── about-graph.yml        # Graph data source\n└── *.qmd                      # Quarto pages (index, about, blog, etc.)"
+  },
+  {
+    "objectID": "CLAUDE.html#development-patterns",
+    "href": "CLAUDE.html#development-patterns",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "Blog posts: Create in posts/YYYY-MM-DD-title/index.qmd format\nStandalone pages: Create as page-name.qmd in root\nPython notebooks: Use .ipynb format, add YAML metadata as raw cell\nKnowledge graph data: Edit data/about-graph.yml following existing node/link structure\n\n\n\n\nThe Python wrapper (KnowledgeGraphPython) bridges YAML data and JavaScript visualization:\n\nData Loading: KnowledgeGraphPython.from_yaml(\"data/about-graph.yml\")\nConfiguration: Merges default settings with YAML metadata section\nHTML Generation: generate_html() embeds full JavaScript library + data\nQuarto Integration: Use generate_for_quarto() for embedding in .qmd files\n\n\n\n\nThe knowledge graph explorer uses a modular class-based structure: - KnowledgeGraphExplorer - Main coordinator class - ForceSimulation - D3.js physics simulation management - InteractionManager - User input handling (drag, zoom, hover) - VisualEffectsManager - Animations and visual feedback - MiniMapManager - Minimap/overview functionality - UIControlsManager - Timeline, layers, and control panels"
+  },
+  {
+    "objectID": "CLAUDE.html#testing",
+    "href": "CLAUDE.html#testing",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "Location: python/tests/test_core_wrapper.py\nCoverage: Data validation, HTML generation, configuration merging\nRun with: pytest python/tests/ -v\n\n\n\n\nTest the full workflow:\n# Test YAML → Python → HTML → JavaScript integration\ngraph = KnowledgeGraphPython.from_yaml(\"data/about-graph.yml\")\nhtml = graph.generate_html(\"test-output.html\")\n# Open test-output.html in browser to verify rendering"
+  },
+  {
+    "objectID": "CLAUDE.html#configuration-files",
+    "href": "CLAUDE.html#configuration-files",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "Defines navigation, theme, output directory (docs/)\nSets site URL and metadata\nConfigures HTML format and CSS\n\n\n\n\nmetadata:          # Timeline and graph-level settings\nlayers:            # Visual layers with colors\nnodes:             # Graph nodes with properties (id, label, layer, timespan, etc.)\n\n\n\nContains comprehensive defaults for graph appearance, simulation physics, and UI features that merge with YAML metadata."
+  },
+  {
+    "objectID": "CLAUDE.html#deployment",
+    "href": "CLAUDE.html#deployment",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "The site deploys to GitHub Pages automatically: 1. quarto render builds to docs/ directory 2. Commit and push to main branch 3. GitHub Pages serves from docs/ folder 4. Site available at configured URL in _quarto.yml"
+  },
+  {
+    "objectID": "CLAUDE.html#key-dependencies",
+    "href": "CLAUDE.html#key-dependencies",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "Quarto - Static site generation and academic publishing\nD3.js (CDN) - Data visualization and force simulation\nPython - YAML processing, data validation, HTML generation\npytest - Python testing framework\nGitHub Pages - Static site hosting"
+  },
+  {
+    "objectID": "CLAUDE.html#notes-for-development",
+    "href": "CLAUDE.html#notes-for-development",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "The knowledge graph JavaScript library is included directly (no build step)\nPython wrapper handles all data processing and validation\nYAML structure in data/about-graph.yml should follow existing node/layer patterns\nTest Python changes with pytest python/tests/ -v before rendering\nUse quarto preview for live development of content\nJavaScript changes require browser refresh (no hot reload)"
+  },
+  {
+    "objectID": "about.html#about-me",
+    "href": "about.html#about-me",
+    "title": "Arun's Knowledge Graph",
+    "section": "About Me",
+    "text": "About Me\nI get excited about figuring things out, which has taken me on a rather wandering path across continents and disciplines.\nIf we’re going by standard buckets, I’d call myself a theoretical physicist-turned-data scientist, but my interests are all over the place, so I’d rather not be stuck with that label.\n\nConnect with me: Bluesky • LinkedIn • GitHub • Email"
   }
 ]

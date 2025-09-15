@@ -43,6 +43,13 @@ class DataValidator {
       this.validateLink(link, index, nodeIds);
     });
 
+    // Validate parent_node references
+    data.nodes.forEach((node, index) => {
+      if (node.parent_node && node.parent_node !== null && !nodeIds.has(node.parent_node)) {
+        this.errors.push(`Node ${index} (${node.id}): parent_node '${node.parent_node}' does not exist`);
+      }
+    });
+
     return this.getValidationResult();
   }
 
@@ -75,8 +82,8 @@ class DataValidator {
       this.errors.push(`${nodeRef} (${node.id}): Missing required field 'label'`);
     }
 
-    if (!node.type) {
-      this.warnings.push(`${nodeRef} (${node.id}): Missing 'type' field, will use default`);
+    if (!node.type && !node.layer) {
+      this.warnings.push(`${nodeRef} (${node.id}): Missing both 'type' and 'layer' fields, will use defaults`);
     }
 
     if (!node.layer) {
@@ -98,6 +105,39 @@ class DataValidator {
 
     if (node.position && (!node.position.x || !node.position.y)) {
       this.warnings.push(`${nodeRef} (${node.id}): 'position' should have both x and y coordinates`);
+    }
+
+    // Validate experience level
+    if (node.experienceLevel && !['experienced', 'interested'].includes(node.experienceLevel)) {
+      this.warnings.push(`${nodeRef} (${node.id}): 'experienceLevel' should be 'experienced' or 'interested'`);
+    }
+
+    // Validate audience field
+    if (node.audience) {
+      const validAudiences = ['general', 'technical', 'current'];
+      if (Array.isArray(node.audience)) {
+        node.audience.forEach(aud => {
+          if (!validAudiences.includes(aud)) {
+            this.warnings.push(`${nodeRef} (${node.id}): Invalid audience '${aud}', should be one of: ${validAudiences.join(', ')}`);
+          }
+        });
+      } else if (typeof node.audience === 'string') {
+        if (!validAudiences.includes(node.audience)) {
+          this.warnings.push(`${nodeRef} (${node.id}): Invalid audience '${node.audience}', should be one of: ${validAudiences.join(', ')}`);
+        }
+      } else {
+        this.errors.push(`${nodeRef} (${node.id}): 'audience' must be a string or array of strings`);
+      }
+    }
+
+    // Validate parent_node reference
+    if (node.parent_node && typeof node.parent_node !== 'string') {
+      this.errors.push(`${nodeRef} (${node.id}): 'parent_node' must be a string node ID`);
+    }
+
+    // Validate subnode field
+    if (node.subnode && typeof node.subnode !== 'boolean') {
+      this.errors.push(`${nodeRef} (${node.id}): 'subnode' must be a boolean value`);
     }
   }
 
