@@ -284,10 +284,11 @@ class KnowledgeGraphPython:
         js_files = [
             "utils/CoordinateTransform.js",
             "utils/DataValidator.js",
-            "core/ForceSimulation.js", 
+            "core/ForceSimulation.js",
             "core/InteractionManager.js",
             "core/VisualEffectsManager.js",
             "core/MiniMapManager.js",
+            "core/LabelLayoutManager.js",
             "core/UIControlsManager.js",
             "core/KnowledgeGraphExplorer.js"
         ]

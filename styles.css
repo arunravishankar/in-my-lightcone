@@ -157,8 +157,8 @@ body.nav-fixed {
     margin: 0 auto;
 }
 
-/* Title Overlay Styling */
-.kg-title-overlay {
+/* Hero Introduction Overlay Styling */
+.kg-hero-intro {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -168,15 +168,36 @@ body.nav-fixed {
     pointer-events: none;
     opacity: 0; /* Start invisible for fade-in */
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.kg-title-overlay h1 {
+.kg-hero-intro img {
+    display: block;
+    margin: 0 auto 1.5rem auto;
+}
+
+.kg-hero-intro h1 {
     font-size: 3rem;
     font-weight: 300;
     color: #495057;
-    margin: 0;
+    margin: 0 0 1rem 0;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     letter-spacing: 0.5px;
+}
+
+.kg-hero-intro p {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #666;
+    margin: 0;
+    max-width: 500px;
+    line-height: 1.5;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 /* About Content Section */
@@ -222,8 +243,24 @@ body.nav-fixed {
 
 /* Responsive design */
 @media (max-width: 768px) {
-    .kg-title-overlay h1 {
+    .kg-hero-intro {
+        padding: 1.5rem;
+        margin: 0 1rem;
+        max-width: calc(100vw - 2rem);
+    }
+
+    .kg-hero-intro h1 {
         font-size: 2rem;
+    }
+
+    .kg-hero-intro p {
+        font-size: 1rem;
+    }
+
+    .kg-hero-intro img {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 1rem;
     }
 
     .about-content-section {
@@ -242,8 +279,21 @@ body.nav-fixed {
 }
 
 @media (max-width: 480px) {
-    .kg-title-overlay h1 {
+    .kg-hero-intro {
+        padding: 1rem;
+    }
+
+    .kg-hero-intro h1 {
         font-size: 1.5rem;
+    }
+
+    .kg-hero-intro p {
+        font-size: 0.9rem;
+    }
+
+    .kg-hero-intro img {
+        width: 80px;
+        height: 80px;
     }
 
     .hero-section {

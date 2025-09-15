@@ -25,7 +25,8 @@ class KnowledgeGraphExplorer {
       forceSimulation: null,
       interactionManager: null,
       visualEffectsManager: null,
-      miniMapManager: null
+      miniMapManager: null,
+      labelLayoutManager: null
     };
 
     // State management
@@ -174,7 +175,20 @@ class KnowledgeGraphExplorer {
         enableHover: true,
         enableDrag: true,
         enableLayerMode: true,
-        clickToNavigate: true
+        clickToNavigate: true,
+        smartLabelPositioning: true
+      },
+
+      // Label positioning configuration
+      labelLayout: {
+        enabled: true,
+        preferredPositions: ['bottom', 'right', 'top', 'left'],
+        maxDistance: 50,
+        minDistance: 15,
+        padding: 8,
+        collisionIterations: 3,
+        positioningIterations: 2,
+        transitionDuration: 200
       },
       
       // Interaction settings
@@ -250,10 +264,10 @@ class KnowledgeGraphExplorer {
     this.render();
     this.startSimulation();
 
-    // Apply initial audience filter to show current focus view by default
-    this.setAudienceFilter('current_focus');
-
     this.state.isInitialized = true;
+
+    // Apply initial audience filter after initialization to show current focus view by default
+    this.setAudienceFilter('current_focus');
 
     this.emit('initialized', { config: this.config, state: this.state });
   }
@@ -328,6 +342,13 @@ class KnowledgeGraphExplorer {
         ...this.config.miniMap,
         backgroundColor: this.config.theme.surfaceColor + 'E6',
         borderColor: this.config.theme.primaryColor
+      });
+    }
+
+    // Initialize label layout manager if smart positioning is enabled
+    if (this.config.features.smartLabelPositioning) {
+      this.components.labelLayoutManager = new LabelLayoutManager({
+        ...this.config.labelLayout
       });
     }
 
@@ -432,6 +453,11 @@ class KnowledgeGraphExplorer {
       };
       this.components.uiControlsManager.initialize(this.container, this, graphData);
     }
+
+    // Label Layout Manager initialization
+    if (this.components.labelLayoutManager) {
+      // Will be initialized after rendering when label elements are available
+    }
   }
 
   /**
@@ -442,9 +468,9 @@ class KnowledgeGraphExplorer {
     if (!this.labelGroup) return;
 
     // Define base text size and constraints for screen appearance
-    const baseTextSize = 12;    // Base font size in pixels at 1.0 zoom
+    const baseTextSize = 14;    // Base font size in pixels at 1.0 zoom
     const minScreenSize = 10;   // Minimum visual size on screen (pixels)
-    const maxScreenSize = 20;   // Maximum visual size on screen (pixels)
+    const maxScreenSize = 24;   // Maximum visual size on screen (pixels)
 
     // Calculate text size to maintain consistent screen appearance
     // Scale inversely with zoom so text appears constant size on screen
@@ -457,6 +483,11 @@ class KnowledgeGraphExplorer {
     // Apply the text size to all labels
     this.labelGroup.selectAll('.label')
       .style('font-size', `${constrainedSize}px`);
+
+    // Update label layout manager with new zoom scale
+    if (this.components.labelLayoutManager) {
+      this.components.labelLayoutManager.updateZoomScale(zoomScale);
+    }
   }
 
   /**
@@ -513,6 +544,10 @@ class KnowledgeGraphExplorer {
       this.components.visualEffectsManager.nodeElements = elements.nodes;
       this.components.visualEffectsManager.linkElements = elements.links;
       this.components.visualEffectsManager.labelElements = elements.labels;
+    }
+
+    if (this.components.labelLayoutManager) {
+      this.components.labelLayoutManager.initialize(this.nodes, elements.labels);
     }
   }
 
@@ -678,6 +713,7 @@ class KnowledgeGraphExplorer {
       .attr('fill', this.config.theme.textPrimary)
       .attr('pointer-events', 'none')
       .style('user-select', 'none')
+      .style('opacity', 0) // Start invisible
       .text(d => d.label);
   }
 
@@ -695,9 +731,15 @@ class KnowledgeGraphExplorer {
       .attr('cx', d => d.x)
       .attr('cy', d => d.y);
 
-    this.labelGroup.selectAll('.label')
-      .attr('x', d => d.x)
-      .attr('y', d => d.y + (d.size || 10) + 18);
+    // Update label positions - use smart layout only when a node is selected, otherwise use default positioning
+    if (this.components.labelLayoutManager && this.config.features.smartLabelPositioning && this.state.selectedNode) {
+      this.components.labelLayoutManager.updateData(this.nodes, this.labelGroup.selectAll('.label'));
+    } else {
+      // Default label positioning (below nodes)
+      this.labelGroup.selectAll('.label')
+        .attr('x', d => d.x)
+        .attr('y', d => d.y + (d.size || 10) + 18);
+    }
 
     if (this.components.miniMapManager) {
       this.components.miniMapManager.render();
@@ -1246,6 +1288,14 @@ class KnowledgeGraphExplorer {
 
     // Update label visibility to show related nodes
     this.updateLabelsForAudience(this.state.currentAudience);
+
+    // Trigger smart label positioning if a node is selected
+    if (node && this.components.labelLayoutManager && this.config.features.smartLabelPositioning) {
+      // Give a small delay to let the label visibility updates complete
+      setTimeout(() => {
+        this.components.labelLayoutManager.updateData(this.nodes, this.labelGroup.selectAll('.label'));
+      }, 50);
+    }
   }
 
   /**

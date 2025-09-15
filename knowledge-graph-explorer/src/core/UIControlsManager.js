@@ -473,8 +473,8 @@ class UIControlsManager {
       padding: 15px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       z-index: 100;
-      max-width: 220px;
-      max-height: 350px;
+      max-width: 280px;
+      height: calc(100% - 200px);
       overflow-y: auto;
       overflow-x: hidden;
       display: none;
@@ -704,13 +704,36 @@ class UIControlsManager {
     `;
     closeBtn.addEventListener('click', () => this.hideInfo());
 
+    // Create scrollable content area
+    const scrollableContent = document.createElement('div');
+    scrollableContent.style.cssText = `
+      max-height: 320px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      padding-right: 5px;
+    `;
+
+    // Add title, time/layer details, then description to scrollable area
+    scrollableContent.appendChild(title);
+    scrollableContent.appendChild(details);
+    scrollableContent.appendChild(description);
+
+    // Create fixed related section at bottom
+    const fixedRelatedSection = document.createElement('div');
+    fixedRelatedSection.style.cssText = `
+      border-top: 2px solid #ddd;
+      padding-top: 8px;
+      background: rgba(255, 255, 255, 0.98);
+      position: sticky;
+      bottom: 0;
+    `;
+    fixedRelatedSection.appendChild(relatedSection);
+
     // Clear and populate
     this.infoPanel.innerHTML = '';
     this.infoPanel.appendChild(closeBtn);
-    this.infoPanel.appendChild(title);
-    this.infoPanel.appendChild(description);
-    this.infoPanel.appendChild(details);
-    this.infoPanel.appendChild(relatedSection);
+    this.infoPanel.appendChild(scrollableContent);
+    this.infoPanel.appendChild(fixedRelatedSection);
   
     this.infoPanel.style.display = 'block';
   }

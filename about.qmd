@@ -24,9 +24,9 @@ from knowledge_graph.core import KnowledgeGraphPython
 # Load the graph data with hero configuration
 graph = KnowledgeGraphPython.from_yaml('data/about-graph.yml')
 
-# Configure for hero display (full width, 80% viewport height)
+# Configure for hero display (full width, 75% viewport height)
 graph.config['width'] = 1200  # Will be overridden by CSS in hero mode
-graph.config['height'] = '80vh'  # 80% of viewport height
+graph.config['height'] = '75vh'  # 75% of viewport height
 graph.config['hero_mode'] = True
 graph.config['title_overlay'] = "Arun's Knowledge Graph"
 
@@ -44,17 +44,31 @@ print('''
 document.addEventListener('DOMContentLoaded', function() {
     setTimeout(function() {
         const wrapper = document.querySelector('.kg-hero-wrapper');
-        if (wrapper && !document.querySelector('.kg-title-overlay h1')) {
-            // Create overlay with fade-in animation
+        if (wrapper && !document.querySelector('.kg-hero-intro')) {
+            // Create enhanced overlay with photo, name, and description
             const overlay = document.createElement('div');
-            overlay.className = 'kg-title-overlay';
+            overlay.className = 'kg-hero-intro';
             overlay.style.cssText = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); z-index: 100; text-align: center; pointer-events: none; opacity: 0; transition: opacity 0.8s ease-out, transform 0.8s ease-out;';
 
-            const title = document.createElement('h1');
-            title.textContent = "Arun\'s Knowledge Graph";
-            title.style.cssText = 'font-size: 3rem; font-weight: 300; color: #495057; margin: 0; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); letter-spacing: 0.5px;';
+            // Profile picture
+            const profileImg = document.createElement('img');
+            profileImg.src = 'profile.jpg';
+            profileImg.alt = 'Arun Ravishankar';
+            profileImg.style.cssText = 'width: 300px; height: 300px; border-radius: 50%; object-fit: cover; margin-bottom: 1.5rem; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); border: 3px solid rgba(255, 255, 255, 0.9);';
 
-            overlay.appendChild(title);
+            // Name
+            const name = document.createElement('h1');
+            name.textContent = "Arun Ravishankar";
+            name.style.cssText = 'font-size: 3rem; font-weight: 300; color: #495057; margin: 0 0 1rem 0; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); letter-spacing: 0.5px;';
+
+            // Description/invitation
+            const description = document.createElement('p');
+            description.textContent = "Explore this interactive knowledge graph to discover my journey across physics, data science, and AI";
+            description.style.cssText = 'font-size: 1.2rem; font-weight: 400; color: #666; margin: 0; max-width: 500px; line-height: 1.5; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);';
+
+            overlay.appendChild(profileImg);
+            overlay.appendChild(name);
+            overlay.appendChild(description);
             wrapper.appendChild(overlay);
 
             // Fade in the title with scale effect after a delay

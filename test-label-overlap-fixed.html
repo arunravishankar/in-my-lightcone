@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Knowledge Graph Explorer - Label Overlap Test</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 20px;
+    }
+    .graph-container {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .controls {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .controls button {
+      margin: 5px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      background: #2780e3;
+      color: white;
+      cursor: pointer;
+    }
+    .controls button:hover {
+      background: #1e6bc9;
+    }
+    .controls button.active {
+      background: #28a745;
+    }
+    .info {
+      background: #e3f2fd;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Knowledge Graph Explorer</h1>
+    <p class="subtitle">Testing Smart Label Positioning (Overlap Prevention)</p>
+
+    <div class="info">
+      <strong>Test Features:</strong>
+      <ul>
+        <li>Smart label positioning prevents text overlap</li>
+        <li>Labels intelligently position around nodes (bottom → right → top → left priority)</li>
+        <li>Collision detection with configurable padding</li>
+        <li>Smooth animations during repositioning</li>
+      </ul>
+    </div>
+
+    <div class="controls">
+      <button id="toggleSmartPositioning" class="active">Smart Positioning: ON</button>
+      <button id="addNodes">Add More Nodes</button>
+      <button id="resetGraph">Reset Graph</button>
+    </div>
+
+    <div class="graph-container">
+      <div id="knowledge-graph"></div>
+    </div>
+  </div>
+
+  <script src="knowledge-graph-explorer/dist/knowledge-graph.js"></script>
+
+  <script>
+    // Create test data with nodes close together (likely to overlap)
+    function createTestData() {
+      return {
+        layers: [
+          { id: 'technology', name: 'Technology', color: '#2780e3' },
+          { id: 'research', name: 'Research', color: '#3fb618' },
+          { id: 'education', name: 'Education', color: '#ffdd3c' }
+        ],
+        nodes: [
+          {
+            id: 'node1',
+            label: 'Machine Learning',
+            layer: 'technology',
+            audience: ['current_focus'],
+            size: 12
+          },
+          {
+            id: 'node2',
+            label: 'Deep Learning Networks',
+            layer: 'technology',
+            audience: ['current_focus'],
+            size: 10,
+            parent_node: 'node1'
+          },
+          {
+            id: 'node3',
+            label: 'Computer Vision',
+            layer: 'technology',
+            audience: ['current_focus'],
+            size: 11,
+            parent_node: 'node1'
+          },
+          {
+            id: 'node4',
+            label: 'Natural Language Processing with Transformers',
+            layer: 'research',
+            audience: ['current_focus'],
+            size: 13,
+            parent_node: 'node1'
+          },
+          {
+            id: 'node5',
+            label: 'Reinforcement Learning for Robotics',
+            layer: 'research',
+            audience: ['current_focus'],
+            size: 9,
+            parent_node: 'node2'
+          },
+          {
+            id: 'node6',
+            label: 'AI Ethics and Fairness Research',
+            layer: 'education',
+            audience: ['current_focus'],
+            size: 10,
+            parent_node: 'node4'
+          },
+          {
+            id: 'node7',
+            label: 'Data Science Methods',
+            layer: 'technology',
+            audience: ['current_focus'],
+            size: 8
+          },
+          {
+            id: 'node8',
+            label: 'Statistical Analysis and Modeling',
+            layer: 'research',
+            audience: ['current_focus'],
+            size: 7,
+            parent_node: 'node7'
+          }
+        ]
+      };
+    }
+
+    // Initialize the graph
+    let graphData = createTestData();
+    let smartPositioning = true;
+
+    const config = {
+      width: 800,
+      height: 600,
+      features: {
+        smartLabelPositioning: true,
+        showMiniMap: false
+      },
+      labelLayout: {
+        enabled: true,
+        preferredPositions: ['bottom', 'right', 'top', 'left'],
+        maxDistance: 60,
+        minDistance: 18,
+        padding: 10,
+        transitionDuration: 300
+      },
+      nodeColors: {
+        'technology': '#2780e3',
+        'research': '#3fb618',
+        'education': '#ffdd3c'
+      }
+    };
+
+    const graph = new KnowledgeGraphExplorer('#knowledge-graph', graphData, config);
+
+    // Controls
+    const toggleButton = document.getElementById('toggleSmartPositioning');
+    const addNodesButton = document.getElementById('addNodes');
+    const resetButton = document.getElementById('resetGraph');
+
+    toggleButton.addEventListener('click', () => {
+      smartPositioning = !smartPositioning;
+
+      graph.updateConfig({
+        features: { smartLabelPositioning: smartPositioning }
+      });
+
+      toggleButton.textContent = `Smart Positioning: ${smartPositioning ? 'ON' : 'OFF'}`;
+      toggleButton.className = smartPositioning ? 'active' : '';
+    });
+
+    addNodesButton.addEventListener('click', () => {
+      const nodeCount = graphData.nodes.length;
+      const newNodes = [
+        {
+          id: `node${nodeCount + 1}`,
+          label: `Dynamic Node ${nodeCount + 1}`,
+          layer: 'technology',
+          audience: ['current_focus'],
+          size: 8 + Math.random() * 4,
+          parent_node: graphData.nodes[Math.floor(Math.random() * graphData.nodes.length)].id
+        },
+        {
+          id: `node${nodeCount + 2}`,
+          label: `Interactive Element ${nodeCount + 2}`,
+          layer: 'research',
+          audience: ['current_focus'],
+          size: 8 + Math.random() * 4,
+          parent_node: graphData.nodes[Math.floor(Math.random() * graphData.nodes.length)].id
+        }
+      ];
+
+      graphData.nodes.push(...newNodes);
+      graph.updateData(graphData);
+    });
+
+    resetButton.addEventListener('click', () => {
+      graphData = createTestData();
+      graph.updateData(graphData);
+    });
+
+    // Add some logging to test the label layout manager
+    graph.on('initialized', () => {
+      console.log('Graph initialized with smart label positioning');
+
+      if (graph.components.labelLayoutManager) {
+        console.log('Label Layout Manager Stats:', graph.components.labelLayoutManager.getStats());
+      }
+    });
+
+    // Log updates
+    graph.on('dataUpdate', () => {
+      console.log('Graph data updated');
+
+      if (graph.components.labelLayoutManager) {
+        setTimeout(() => {
+          console.log('Label Layout Manager Stats:', graph.components.labelLayoutManager.getStats());
+        }, 500);
+      }
+    });
+  </script>
+</body>
+</html>
