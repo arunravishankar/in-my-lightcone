@@ -1,29 +1,15 @@
 ---
-title: "About"
+title: ""
 jupyter: python3
-image: profile.jpg
-about:
-  template: jolla
-  links:
-    - icon: bluesky
-      text: Bluesky
-      href: https://bsky.app/profile/arunravishankar.bsky.social
-    - icon: linkedin
-      text: LinkedIn
-      href: https://www.linkedin.com/in/arunravishankar/
-    - icon: github
-      text: Github
-      href: https://github.com/arunravishankar
-    - icon: gmail
-      text: Gmail
-      href: mailto:arunravishankar@gmail.com
 ---
 
-I get excited about figuring things out, which has taken me on a rather wandering path across continents and disciplines.
+<style>
+#title-block-header {
+    display: none !important;
+}
+</style>
 
-If we're going by standard buckets, I'd call myself a theoretical physicist-turned-data scientist, 
-but my interests are all over the place, so I'd rather not be stuck with that label.
-
+:::: {.hero-section}
 ```{python}
 #| echo: false
 #| warning: false
@@ -35,8 +21,14 @@ sys.path.append('python')
 # Direct import to avoid __init__.py issues
 from knowledge_graph.core import KnowledgeGraphPython
 
-# Load the graph data and display
+# Load the graph data with hero configuration
 graph = KnowledgeGraphPython.from_yaml('data/about-graph.yml')
+
+# Configure for hero display (full width, 80% viewport height)
+graph.config['width'] = 1200  # Will be overridden by CSS in hero mode
+graph.config['height'] = '80vh'  # 80% of viewport height
+graph.config['hero_mode'] = True
+graph.config['title_overlay'] = "Arun's Knowledge Graph"
 
 # Generate and print the HTML directly for Quarto
 html_output = graph.generate_for_quarto()
@@ -44,8 +36,105 @@ html_output = graph.generate_for_quarto()
 # Print with proper HTML markers for Quarto
 print("```{=html}")
 print(html_output)
+
+# Manually add the title overlay with proper interactions and fade-in
+print('''
+<script>
+// Manually add title overlay after graph loads
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        const wrapper = document.querySelector('.kg-hero-wrapper');
+        if (wrapper && !document.querySelector('.kg-title-overlay h1')) {
+            // Create overlay with fade-in animation
+            const overlay = document.createElement('div');
+            overlay.className = 'kg-title-overlay';
+            overlay.style.cssText = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); z-index: 100; text-align: center; pointer-events: none; opacity: 0; transition: opacity 0.8s ease-out, transform 0.8s ease-out;';
+
+            const title = document.createElement('h1');
+            title.textContent = "Arun\'s Knowledge Graph";
+            title.style.cssText = 'font-size: 3rem; font-weight: 300; color: #495057; margin: 0; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); letter-spacing: 0.5px;';
+
+            overlay.appendChild(title);
+            wrapper.appendChild(overlay);
+
+            // Fade in the title with scale effect after a delay
+            setTimeout(() => {
+                overlay.style.opacity = '1';
+                overlay.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 500);
+
+            // Setup interaction detection to hide title
+            let titleHidden = false;
+            const container = wrapper.querySelector('[id^="kg_"]');
+
+            function hideTitleOverlay() {
+                if (!titleHidden && overlay) {
+                    titleHidden = true;
+                    overlay.style.opacity = '0';
+                    setTimeout(() => {
+                        if (overlay.parentNode) {
+                            overlay.parentNode.removeChild(overlay);
+                        }
+                    }, 800);
+                }
+            }
+
+            if (container) {
+                // Hide on meaningful interactions
+                container.addEventListener('click', hideTitleOverlay);
+                container.addEventListener('touchstart', hideTitleOverlay);
+                container.addEventListener('wheel', hideTitleOverlay);
+
+                // Hide on drag
+                let isDragging = false;
+                container.addEventListener('mousedown', () => {
+                    isDragging = false;
+                });
+                container.addEventListener('mousemove', (e) => {
+                    if (e.buttons > 0) {
+                        if (!isDragging) {
+                            isDragging = true;
+                            hideTitleOverlay();
+                        }
+                    }
+                });
+            }
+
+            // Also try to hook into the graph instance if available
+            setTimeout(() => {
+                const graphInstance = window[wrapper.id.replace('_wrapper', '')];
+                if (graphInstance && graphInstance.on) {
+                    graphInstance.on('nodeClick', hideTitleOverlay);
+                    graphInstance.on('zoom', hideTitleOverlay);
+                    graphInstance.on('audienceChange', hideTitleOverlay);
+                }
+            }, 2000);
+        }
+    }, 1000);
+});
+</script>
+''')
 print("```")
 ```
+::::
+
+:::: {.about-content-section}
+
+## About Me
+
+I get excited about figuring things out, which has taken me on a rather wandering path across continents and disciplines.
+
+If we're going by standard buckets, I'd call myself a theoretical physicist-turned-data scientist,
+but my interests are all over the place, so I'd rather not be stuck with that label.
+
+:::: {.social-links}
+Connect with me:
+[Bluesky](https://bsky.app/profile/arunravishankar.bsky.social) •
+[LinkedIn](https://www.linkedin.com/in/arunravishankar/) •
+[GitHub](https://github.com/arunravishankar) •
+[Email](mailto:arunravishankar@gmail.com)
+::::
+
 
 ## The Journey
 
@@ -113,3 +202,5 @@ The graph above shows the interconnected nature of my journey - you can:
 Each connection represents how one experience led to or influenced another. The stronger the connection, the more direct the influence. You'll notice that geographic moves often coincided with major career transitions, and that the bottom-up thinking approach from quantum foundations continues to influence my current work in AI and game theory.
 
 The questions keep changing, but I'm still just as curious about complex systems — whether they're quantum foundations, black holes, markets, or whatever's next.
+
+::::

@@ -22,7 +22,7 @@ class UIControlsManager {
     this.timeline = { start: 2000, end: 2025 };
     this.currentTimelinePosition = null;
     this.activeLayer = null;
-    this.activeAudience = 'all';
+    this.activeAudience = 'current_focus';
     this.selectedNode = null;
 
     // DOM elements
@@ -219,7 +219,6 @@ class UIControlsManager {
 
     // Audience filter buttons
     const audiences = [
-      { id: 'all', name: 'All Details', color: '#666' },
       { id: 'general', name: 'General Audience', color: '#2780e3' },
       { id: 'technical', name: 'Technical', color: '#3fb618' },
       { id: 'current_focus', name: 'Current Focus', color: '#ff6b35' }
@@ -227,7 +226,7 @@ class UIControlsManager {
 
     audiences.forEach(audience => {
       const button = this.createAudienceButton(audience.id, audience.name, audience.color);
-      if (audience.id === 'all') {
+      if (audience.id === 'current_focus') {
         button.classList.add('active');
       }
       this.audienceContainer.appendChild(button);
@@ -474,7 +473,10 @@ class UIControlsManager {
       padding: 15px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       z-index: 100;
-      max-width: 250px;
+      max-width: 220px;
+      max-height: 350px;
+      overflow-y: auto;
+      overflow-x: hidden;
       display: none;
       pointer-events: auto;
     `;
@@ -583,7 +585,6 @@ class UIControlsManager {
       
       if (isActive) {
         const audiences = {
-          all: '#666',
           general: '#2780e3',
           technical: '#3fb618',
           current_focus: '#ff6b35'
@@ -718,14 +719,18 @@ class UIControlsManager {
    * Create the "Related To" section showing connected nodes
    */
   createRelatedNodesSection(node) {
-    // Find all links connected to this node
+    // Find all links connected to this node (both as parent and child)
     const connectedLinks = this.graph.links.filter(link => {
       const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
       const targetId = typeof link.target === 'object' ? link.target.id : link.target;
       return sourceId === node.id || targetId === node.id;
     });
 
-    if (connectedLinks.length === 0) {
+    // Also find direct parent/child relationships
+    const children = this.graph.nodes.filter(n => n.parent_node === node.id);
+    const parent = node.parent_node ? this.graph.nodes.find(n => n.id === node.parent_node) : null;
+
+    if (connectedLinks.length === 0 && children.length === 0 && !parent) {
       return document.createElement('div'); // Return empty div if no connections
     }
 
@@ -746,54 +751,107 @@ class UIControlsManager {
     `;
     section.appendChild(title);
 
-    // Create clickable links for each connected node
+    // Add parent node
+    if (parent) {
+      this.addRelatedNodeLink(section, parent, 'parent');
+    }
+
+    // Add child nodes
+    children.forEach(child => {
+      this.addRelatedNodeLink(section, child, 'child');
+    });
+
+    // Add other connected nodes from links
     connectedLinks.forEach(link => {
       const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
       const targetId = typeof link.target === 'object' ? link.target.id : link.target;
-    
-      // Get the connected node (not the current node)
+      
       const connectedNodeId = sourceId === node.id ? targetId : sourceId;
       const connectedNode = this.graph.nodes.find(n => n.id === connectedNodeId);
-    
-      if (connectedNode) {
-        const nodeLink = document.createElement('div');
-        nodeLink.style.cssText = `
-          display: inline-block;
-          margin: 2px 4px 2px 0;
-          padding: 3px 8px;
-          background: #f0f0f0;
-          border: 1px solid #ddd;
-          border-radius: 12px;
-          font-size: 10px;
-          cursor: pointer;
-          transition: background-color 0.2s ease;
-        `;
-        nodeLink.textContent = connectedNode.label;
       
-        // Hover effects
-        nodeLink.addEventListener('mouseenter', () => {
-          nodeLink.style.backgroundColor = '#e0e0e0';
-        });
-      
-        nodeLink.addEventListener('mouseleave', () => {
-          nodeLink.style.backgroundColor = '#f0f0f0';
-        });
-      
-        // Click to navigate to the connected node
-        nodeLink.addEventListener('click', () => {
-          this.panToNode(connectedNode);
-          this.hideInfo(); // Hide current info panel
-          // Show info for the new node after a short delay
-          setTimeout(() => {
-            this.showNodeInfo(connectedNode);
-          }, 300);
-        });
-      
-        section.appendChild(nodeLink);
+      if (connectedNode && connectedNode !== parent && !children.includes(connectedNode)) {
+        this.addRelatedNodeLink(section, connectedNode, 'related');
       }
     });
 
     return section;
+  }
+
+  /**
+   * Add a related node link to the related nodes section
+   * @param {HTMLElement} container - The container to add the link to
+   * @param {Object} node - The related node
+   * @param {string} relationship - The relationship type ('parent', 'child', 'related')
+   */
+  addRelatedNodeLink(container, node, relationship) {
+    const link = document.createElement('div');
+    link.style.cssText = `
+      display: flex;
+      align-items: center;
+      margin: 2px 0;
+      padding: 2px 4px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 11px;
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      transition: background-color 0.2s;
+    `;
+
+    // Get layer info for color
+    const layerInfo = this.layers.find(l => l.id === node.layer);
+    const layerColor = layerInfo?.color || '#666';
+
+    // Create color indicator
+    const colorDot = document.createElement('div');
+    colorDot.style.cssText = `
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: ${layerColor};
+      margin-right: 6px;
+      flex-shrink: 0;
+    `;
+
+    // Create text content
+    const text = document.createElement('span');
+    text.style.cssText = `
+      color: #333;
+      font-size: 10px;
+      line-height: 1.2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    `;
+
+    // Add relationship prefix
+    let prefix = '';
+    switch (relationship) {
+      case 'parent': prefix = '↑ '; break;
+      case 'child': prefix = '↓ '; break;
+      default: prefix = '→ '; break;
+    }
+
+    text.textContent = prefix + node.label;
+
+    link.appendChild(colorDot);
+    link.appendChild(text);
+
+    // Add hover effects
+    link.addEventListener('mouseenter', () => {
+      link.style.backgroundColor = '#e9ecef';
+    });
+
+    link.addEventListener('mouseleave', () => {
+      link.style.backgroundColor = '#f8f9fa';
+    });
+
+    // Add click handler to focus on related node
+    link.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.panToNode(node);
+    });
+
+    container.appendChild(link);
   }
 
   /**

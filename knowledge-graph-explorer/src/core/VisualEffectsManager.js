@@ -57,8 +57,10 @@ class VisualEffectsManager {
     this.isInLayerMode = false;
     this.isInAudienceMode = false;
     this.currentLayer = null;
-    this.currentAudience = 'all';
+    this.currentAudience = 'current_focus';
     this.hoveredNode = null;
+    this.selectedNode = null;
+    this.selectedNodeRelated = new Set();
 
     // DOM element references
     this.nodeElements = null;
@@ -209,93 +211,59 @@ class VisualEffectsManager {
   }
 
   /**
+   * Set selected node information for visual effects
+   * @param {Object|null} selectedNode - Selected node or null
+   * @param {Set} selectedNodeRelated - Set of related node IDs
+   */
+  setSelectedNode(selectedNode, selectedNodeRelated) {
+    this.selectedNode = selectedNode;
+    this.selectedNodeRelated = selectedNodeRelated || new Set();
+  }
+
+  /**
    * Apply audience-based visual effects (blur non-relevant nodes)
    * @param {string} audienceId - Current audience filter
    * @param {Array} nodes - Array of node objects
    */
   applyAudienceEffects(audienceId, nodes) {
     this.currentAudience = audienceId;
-    this.isInAudienceMode = audienceId !== 'all';
-    
+    this.isInAudienceMode = true;
+
     if (!this.nodeElements) return;
-    
-    if (audienceId === 'all') {
-      // Remove all audience filtering
-      this.nodeElements
-        .transition()
-        .duration(this.config.audienceTransitionDuration)
-        .style('filter', 'none')
-        .style('opacity', this.config.theme.defaultOpacity);
-      
-      // Reset links as well
-      if (this.linkElements) {
-        this.linkElements
-          .transition()
-          .duration(this.config.audienceTransitionDuration)
-          .style('filter', 'none')
-          .style('opacity', this.config.theme.dimmedOpacity);
-      }
-      
-      this.isInAudienceMode = false;
-      return;
-    }
     
     // Apply blur and opacity effects based on audience relevance
     this.nodeElements
       .transition()
       .duration(this.config.audienceTransitionDuration)
       .style('filter', d => {
-        const nodeAudience = d.audience || ['general'];
+        // If this node is related to the selected node, never blur it
+        if (this.selectedNode && this.selectedNodeRelated.has(d.id)) {
+          return 'none';
+        }
+
+        // Handle audience as array or string
+        let nodeAudience = d.audience || ['general'];
+        if (typeof nodeAudience === 'string') {
+          nodeAudience = [nodeAudience];
+        }
         return nodeAudience.includes(audienceId) ? 'none' : `blur(${this.config.audienceBlurAmount}px)`;
       })
       .style('opacity', d => {
-        const nodeAudience = d.audience || ['general'];
+        // If this node is related to the selected node, full opacity
+        if (this.selectedNode && this.selectedNodeRelated.has(d.id)) {
+          return this.config.theme.defaultOpacity;
+        }
+
+        // Handle audience as array or string
+        let nodeAudience = d.audience || ['general'];
+        if (typeof nodeAudience === 'string') {
+          nodeAudience = [nodeAudience];
+        }
         return nodeAudience.includes(audienceId) ? this.config.theme.defaultOpacity : this.config.audienceOpacityReduced;
       });
     
-    // Also apply effects to links based on their connected nodes
-    if (this.linkElements) {
-      this.linkElements
-        .transition()
-        .duration(this.config.audienceTransitionDuration)
-        .style('filter', d => {
-          const sourceId = typeof d.source === 'object' ? d.source.id : d.source;
-          const targetId = typeof d.target === 'object' ? d.target.id : d.target;
-          
-          const sourceNode = nodes.find(n => n.id === sourceId);
-          const targetNode = nodes.find(n => n.id === targetId);
-          
-          const sourceAudience = sourceNode?.audience || ['general'];
-          const targetAudience = targetNode?.audience || ['general'];
-          
-          const sourceRelevant = sourceAudience.includes(audienceId);
-          const targetRelevant = targetAudience.includes(audienceId);
-          
-          // Blur if both nodes are not relevant to current audience
-          return (sourceRelevant || targetRelevant) ? 'none' : `blur(${this.config.audienceBlurAmount}px)`;
-        })
-        .style('opacity', d => {
-          const sourceId = typeof d.source === 'object' ? d.source.id : d.source;
-          const targetId = typeof d.target === 'object' ? d.target.id : d.target;
-          
-          const sourceNode = nodes.find(n => n.id === sourceId);
-          const targetNode = nodes.find(n => n.id === targetId);
-          
-          const sourceAudience = sourceNode?.audience || ['general'];
-          const targetAudience = targetNode?.audience || ['general'];
-          
-          const sourceRelevant = sourceAudience.includes(audienceId);
-          const targetRelevant = targetAudience.includes(audienceId);
-          
-          if (sourceRelevant && targetRelevant) {
-            return this.config.theme.dimmedOpacity;
-          } else if (sourceRelevant || targetRelevant) {
-            return this.config.theme.dimmedOpacity * 0.7;
-          } else {
-            return this.config.audienceOpacityReduced * 0.5;
-          }
-        });
-    }
+    // Link visibility is now managed by KnowledgeGraphExplorer.updateLinkVisibility()
+    // based on label visibility rather than audience relevance
   }
 
   /**
@@ -682,7 +650,7 @@ class VisualEffectsManager {
     this.links = [];
     this.hoveredNode = null;
     this.currentLayer = null;
-    this.currentAudience = 'all';
+    this.currentAudience = 'current_focus';
     this.isInLayerMode = false;
     this.isInAudienceMode = false;
   }

@@ -162,6 +162,10 @@ class InteractionManager {
 
     // Get mouse position in graph coordinates
     const mousePos = this.coordinateTransform.eventToGraph(event, this.svgElement.node());
+
+    // Emit dock hover effects for the main graph
+    this.emit('dockHover', { mousePosition: mousePos });
+
     this.updateContinuousHoverEffects(mousePos);
   }
 
@@ -170,6 +174,9 @@ class InteractionManager {
    * @param {Event} event - Mouse event
    */
   handleMouseLeave(event) {
+    // Reset dock hover effects
+    this.emit('dockHoverReset');
+
     this.resetHoverEffects();
     if (this.isDragging) {
       this.endDrag();
@@ -234,7 +241,7 @@ class InteractionManager {
    */
   handleNodeClick(event, node) {
     const currentTime = Date.now();
-    const isDoubleClick = (currentTime - this.lastClickTime < this.config.doubleClickDelay) && 
+    const isDoubleClick = (currentTime - this.lastClickTime < this.config.doubleClickDelay) &&
                          (this.lastClickNode === node);
 
     if (isDoubleClick) {

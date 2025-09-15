@@ -31,14 +31,23 @@ class KnowledgeGraphPython:
         # Generate unique ID for this graph instance
         self.graph_id = f"kg_{uuid.uuid4().hex[:8]}"
         
-        # Path configuration
-        self.js_lib_path = "knowledge-graph-explorer/src/"
+        # Path configuration - handle both root and python subdirectory
+        if os.path.exists("knowledge-graph-explorer/src/"):
+            self.js_lib_path = "knowledge-graph-explorer/src/"
+        elif os.path.exists("../knowledge-graph-explorer/src/"):
+            self.js_lib_path = "../knowledge-graph-explorer/src/"
+        else:
+            # Try absolute path relative to this file
+            current_dir = Path(__file__).parent.parent.parent
+            self.js_lib_path = str(current_dir / "knowledge-graph-explorer" / "src")
         
     def _merge_default_config(self, user_config: Dict[str, Any]) -> Dict[str, Any]:
         """Merge user configuration with sensible defaults."""
         default_config = {
             "width": 900,
             "height": 600,
+            "hero_mode": False,
+            "title_overlay": None,
             "theme": {
                 "primaryColor": "#2780e3",
                 "secondaryColor": "#3fb618", 
@@ -153,8 +162,11 @@ class KnowledgeGraphPython:
         # Extract nodes and links
         self.data = {
             "nodes": raw_data.get('nodes', []),
-            "links": raw_data.get('links', [])
+            "links": [] # Will be generated from parent relationships
         }
+
+        # Generate links from parent_node relationships
+        self._generate_links_from_parents()
         
         # Auto-calculate timeline if not specified
         if self.config['timeline']['start'] is None or self.config['timeline']['end'] is None:
@@ -164,7 +176,22 @@ class KnowledgeGraphPython:
         self._validate_data()
         
         self.is_loaded = True
-    
+
+    def _generate_links_from_parents(self) -> None:
+        """Generate links from parent_node relationships in nodes."""
+        for node in self.data['nodes']:
+            if node.get('parent_node') and node['parent_node'] is not None:
+                # Check if parent node exists
+                parent_exists = any(n['id'] == node['parent_node'] for n in self.data['nodes'])
+                if parent_exists:
+                    link = {
+                        "source": node['parent_node'],
+                        "target": node['id'],
+                        "strength": 0.5,  # Default strength
+                        "id": f"{node['parent_node']}-{node['id']}"
+                    }
+                    self.data['links'].append(link)
+
     def _auto_calculate_timeline(self) -> None:
         """Auto-calculate timeline range from node data."""
         years = []
@@ -206,11 +233,17 @@ class KnowledgeGraphPython:
                 raise ValueError(f"Link {i} is missing required 'source' field")
             if 'target' not in link:
                 raise ValueError(f"Link {i} is missing required 'target' field")
-            
+
             if link['source'] not in node_ids:
                 raise ValueError(f"Link {i} references unknown source node: {link['source']}")
             if link['target'] not in node_ids:
                 raise ValueError(f"Link {i} references unknown target node: {link['target']}")
+
+        # Check that all parent_node references are valid
+        for i, node in enumerate(self.data['nodes']):
+            if node.get('parent_node') and node['parent_node'] is not None:
+                if node['parent_node'] not in node_ids:
+                    raise ValueError(f"Node {i} ('{node['id']}') references unknown parent_node: {node['parent_node']}")
     
     def generate_html(self, output_path: Optional[Union[str, Path]] = None, 
                      standalone: bool = True) -> str:
@@ -285,11 +318,40 @@ class KnowledgeGraphPython:
         data_b64 = base64.b64encode(data_json.encode('utf-8')).decode('ascii')
         config_b64 = base64.b64encode(config_json.encode('utf-8')).decode('ascii')
         
+        # Configure wrapper styles based on hero mode
+        if self.config.get('hero_mode', False):
+            # Handle viewport height or pixel height
+            height = self.config['height']
+            if isinstance(height, str) and ('vh' in height or 'vw' in height or '%' in height):
+                height_style = height
+            else:
+                height_style = f"{height}px"
+
+            wrapper_style = f"position: relative; width: 100%; height: {height_style}; margin: 0;"
+            container_style = "width: 100%; height: 100%; border: none; background-color: #f9f9f9;"
+            wrapper_class = "kg-hero-wrapper"
+        else:
+            wrapper_style = "position: relative; width: {}px; height: {}px; margin: 0 auto;".format(
+                self.config['width'], self.config['height'])
+            container_style = "width: 100%; height: 100%; border: 1px solid #ccc; background-color: #f9f9f9;"
+            wrapper_class = "kg-wrapper"
+
+        # Add title overlay if specified
+        title_overlay_html = ""
+        if self.config.get('title_overlay'):
+            import html
+            escaped_title = html.escape(self.config['title_overlay'])
+            title_overlay_html = f'''
+            <div class="kg-title-overlay" id="{self.graph_id}_title_overlay">
+                <h1>{escaped_title}</h1>
+            </div>'''
+
         html_body = f"""
-        <div id="{self.graph_id}_wrapper" style="position: relative; width: {self.config['width']}px; height: {self.config['height']}px; margin: 0 auto;">
-            <div id="{self.graph_id}" style="width: 100%; height: 100%; border: 1px solid #ccc; background-color: #f9f9f9;">
+        <div id="{self.graph_id}_wrapper" class="{wrapper_class}" style="{wrapper_style}">
+            <div id="{self.graph_id}" style="{container_style}">
                 <div style="padding: 20px; text-align: center; color: #666;">Loading graph...</div>
             </div>
+            {title_overlay_html}
         </div>
 
         <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -306,17 +368,25 @@ class KnowledgeGraphPython:
                 const configStr = atob('{config_b64}');
                 const data = JSON.parse(dataStr);
                 const config = JSON.parse(configStr);
-                
+
                 const container = document.getElementById('{self.graph_id}');
                 const wrapper = document.getElementById('{self.graph_id}_wrapper');
                 container.innerHTML = ''; // Clear loading message
+
+                // Fix dimensions for hero mode - convert viewport units to pixels
+                if (config.hero_mode) {{
+                    const rect = wrapper.getBoundingClientRect();
+                    config.width = rect.width;
+                    config.height = rect.height;
+                    console.log(`Hero mode dimensions: ${{config.width}} x ${{config.height}}`);
+                }}
                 
                 console.log('Creating KnowledgeGraphExplorer...');
                 const graph = new KnowledgeGraphExplorer(container, data, config);
                 window.{self.graph_id} = graph;
                 
                 console.log('Graph created, adding UI controls to wrapper...');
-                
+
                 // Add UI controls to the wrapper, not the graph container
                 setTimeout(() => {{
                     try {{
@@ -333,6 +403,47 @@ class KnowledgeGraphPython:
                         console.error('UI Controls failed:', uiError);
                     }}
                 }}, 500);
+
+                // Setup title overlay interaction detection if present
+                const titleOverlay = document.getElementById('{self.graph_id}_title_overlay');
+                if (titleOverlay) {{
+                    let titleHidden = false;
+
+                    function hideTitleOverlay() {{
+                        if (!titleHidden) {{
+                            titleHidden = true;
+                            titleOverlay.style.transition = 'opacity 0.8s ease-out';
+                            titleOverlay.style.opacity = '0';
+                            setTimeout(() => {{
+                                titleOverlay.style.display = 'none';
+                            }}, 800);
+                        }}
+                    }}
+
+                    // Only hide title on meaningful graph interactions
+                    container.addEventListener('click', hideTitleOverlay);
+                    container.addEventListener('touchstart', hideTitleOverlay);
+                    container.addEventListener('wheel', hideTitleOverlay); // For zoom
+
+                    // Hide on graph interaction events (not passive events like mousemove)
+                    graph.on('zoom', hideTitleOverlay);
+                    graph.on('nodeClick', hideTitleOverlay);
+                    graph.on('audienceChange', hideTitleOverlay);
+
+                    // Hide on drag start (meaningful interaction)
+                    let isDragging = false;
+                    container.addEventListener('mousedown', () => {{
+                        isDragging = false;
+                    }});
+                    container.addEventListener('mousemove', (e) => {{
+                        if (e.buttons > 0) {{ // Mouse button is pressed during move
+                            if (!isDragging) {{
+                                isDragging = true;
+                                hideTitleOverlay();
+                            }}
+                        }}
+                    }});
+                }}
                 
                 console.log('Graph initialized successfully');
             }} catch (error) {{
