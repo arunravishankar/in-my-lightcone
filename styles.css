@@ -1,7 +1,14 @@
-/* css styles */
-/* Yellow Theme Overrides for Simplex */
-
+/*-- scss:defaults --*/
 /* Primary Yellow Colors */
+$yellow-primary: #ffdd3c;
+$yellow-secondary: #ffea61;
+$yellow-light: #fff8d7;
+$yellow-dark: #e6c635;
+
+/*-- scss:rules --*/
+/* CSS styles and Yellow Theme Overrides */
+
+/* CSS Variables for JavaScript access */
 :root {
   --yellow-primary: #ffdd3c;
   --yellow-secondary: #ffea61;
@@ -11,62 +18,62 @@
 
 /* Navigation and Header Styling */
 .navbar-brand {
-  color: var(--yellow-primary) !important;
+  color: $yellow-primary !important;
 }
 
 .navbar-nav .nav-link:hover {
-  color: var(--yellow-primary) !important;
+  color: $yellow-primary !important;
 }
 
 /* Link Colors */
 a {
-  color: var(--yellow-dark);
+  color: $yellow-dark;
 }
 
 a:hover {
-  color: var(--yellow-primary);
+  color: $yellow-primary;
 }
 
 /* Highlight and Accent Colors */
 .btn-primary {
-  background-color: var(--yellow-primary);
-  border-color: var(--yellow-primary);
+  background-color: $yellow-primary;
+  border-color: $yellow-primary;
   color: #000;
 }
 
 .btn-primary:hover {
-  background-color: var(--yellow-dark);
-  border-color: var(--yellow-dark);
+  background-color: $yellow-dark;
+  border-color: $yellow-dark;
   color: #000;
 }
 
 /* Table of Contents */
 .sidebar-navigation .sidebar-item a.active {
-  color: var(--yellow-primary) !important;
+  color: $yellow-primary !important;
 }
 
 /* Code blocks accent */
 .sourceCode {
-  border-left: 3px solid var(--yellow-secondary);
+  border-left: 3px solid $yellow-secondary;
 }
 
 /* Blockquotes */
 blockquote {
-  border-left: 4px solid var(--yellow-primary);
-  background-color: var(--yellow-light);
+  border-left: 4px solid $yellow-primary;
+  background-color: $yellow-light;
   padding: 1rem;
 }
 
 /* Headers with subtle yellow accent */
 h1, h2 {
-  border-bottom-color: var(--yellow-secondary);
+  border-bottom-color: $yellow-secondary;
 }
 
 /* Focus states for accessibility */
 .nav-link:focus,
 .btn:focus,
 a:focus {
-  box-shadow: 0 0 0 2px var(--yellow-secondary);
+  box-shadow: 0 0 0 2px $yellow-secondary;
 }
 
 /* Navigation bar styling */
@@ -84,12 +91,12 @@ a:focus {
 }
 
 .navbar-brand {
-    color: #ffdd3c !important; /* Keeps your yellow brand color */
+    color: $yellow-primary !important; /* Keeps your yellow brand color */
 }
 
 /* Hover effects for navigation links */
 .navbar-nav .nav-link:hover {
-    color: #ffdd3c !important; /* Yellow on hover */
+    color: $yellow-primary !important; /* Yellow on hover */
 }
 
 /* Hide title block header on about page */
@@ -212,18 +219,18 @@ body.nav-fixed {
     padding: 1.5rem;
     background-color: #f8f9fa;
     border-radius: 8px;
-    border-left: 4px solid var(--yellow-primary);
+    border-left: 4px solid $yellow-primary;
 }
 
 .social-links a {
-    color: var(--yellow-dark);
+    color: $yellow-dark;
     text-decoration: none;
     font-weight: 500;
     margin: 0 0.5rem;
 }
 
 .social-links a:hover {
-    color: var(--yellow-primary);
+    color: $yellow-primary;
     background-color: #666666;
     padding: 2px 6px;
     border-radius: 4px;
@@ -304,7 +311,7 @@ body.nav-fixed {
 /* Timeline styling enhancement */
 .about-content h2 {
     color: #666666;
-    border-bottom: 2px solid #ffdd3c;
+    border-bottom: 2px solid $yellow-primary;
     padding-bottom: 0.5rem;
     margin-top: 2rem;
 }
@@ -317,7 +324,7 @@ body.nav-fixed {
 }
 
 .about-content a:hover {
-    color: #ffdd3c;
+    color: $yellow-primary;
     background-color: #666666;
     padding: 2px 4px;
     border-radius: 3px;

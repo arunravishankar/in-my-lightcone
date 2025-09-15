@@ -370,6 +370,55 @@ class KnowledgeGraphPython:
                 const data = JSON.parse(dataStr);
                 const config = JSON.parse(configStr);
 
+                // Apply Quarto dark mode theme if active
+                function applyQuartoTheme() {{
+                    const isDarkMode = document.documentElement.classList.contains('quarto-dark');
+
+                    if (isDarkMode) {{
+                        // Dark mode theme
+                        config.theme = {{
+                            ...config.theme,
+                            backgroundColor: '#1f1f1f',
+                            surfaceColor: '#262626',
+                            textPrimary: '#e9ecef',
+                            textSecondary: '#adb5bd',
+                            textMuted: '#6c757d',
+                            borderColor: '#404040',
+                            mutedColor: '#6c757d'
+                        }};
+
+                        // Update hero section background if in hero mode
+                        if (config.hero_mode) {{
+                            const heroSection = document.querySelector('.hero-section');
+                            if (heroSection) {{
+                                heroSection.style.background = '#1f1f1f';
+                            }}
+                        }}
+                    }} else {{
+                        // Light mode theme (default)
+                        config.theme = {{
+                            ...config.theme,
+                            backgroundColor: '#ffffff',
+                            surfaceColor: '#f8f9fa',
+                            textPrimary: '#212529',
+                            textSecondary: '#495057',
+                            textMuted: '#868e96',
+                            borderColor: '#dee2e6',
+                            mutedColor: '#868e96'
+                        }};
+
+                        // Update hero section background if in hero mode
+                        if (config.hero_mode) {{
+                            const heroSection = document.querySelector('.hero-section');
+                            if (heroSection) {{
+                                heroSection.style.background = '#f9f9f9';
+                            }}
+                        }}
+                    }}
+                }}
+
+                applyQuartoTheme();
+
                 const container = document.getElementById('{self.graph_id}');
                 const wrapper = document.getElementById('{self.graph_id}_wrapper');
                 container.innerHTML = ''; // Clear loading message
@@ -404,6 +453,22 @@ class KnowledgeGraphPython:
                         console.error('UI Controls failed:', uiError);
                     }}
                 }}, 500);
+
+                // Listen for Quarto theme changes and update graph accordingly
+                const observer = new MutationObserver((mutations) => {{
+                    mutations.forEach((mutation) => {{
+                        if (mutation.attributeName === 'class' && mutation.target === document.documentElement) {{
+                            applyQuartoTheme();
+                            if (graph && graph.updateConfig) {{
+                                graph.updateConfig({{ theme: config.theme }});
+                            }}
+                        }}
+                    }});
+                }});
+                observer.observe(document.documentElement, {{
+                    attributes: true,
+                    attributeFilter: ['class']
+                }});
 
                 // Setup title overlay interaction detection if present
                 const titleOverlay = document.getElementById('{self.graph_id}_title_overlay');

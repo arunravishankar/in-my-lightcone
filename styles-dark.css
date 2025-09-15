@@ -1,0 +1,604 @@
+/* Dark Theme Styles for In My Lightcone */
+/* This file contains dark theme overrides that work with Quarto's native dark mode */
+
+/*-- scss:defaults --*/
+/* SCSS Variables for Dark Theme */
+$yellow-primary: #ffdd3c;
+$yellow-secondary: #ffea61;
+$yellow-light: #2d2a1f;
+$yellow-dark: #e6c635;
+$bg-primary: #1a1a1a;
+$bg-secondary: #2d2d2d;
+$text-primary: #e9ecef;
+$text-secondary: #adb5bd;
+$border-color: #404040;
+$surface-color: #262626;
+
+/*-- scss:rules --*/
+
+/* Navigation bar dark styling */
+.navbar {
+    background-color: #0f0f0f !important;
+}
+
+.navbar-nav .nav-link {
+    color: #e9ecef !important;
+}
+
+.navbar-brand {
+    color: #ffdd3c !important;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #ffdd3c !important;
+}
+
+/* Hero Section for Knowledge Graph - Dark Mode */
+.hero-section {
+    background: #1f1f1f !important;
+}
+
+/* Hero Introduction Overlay - Dark Mode */
+.kg-hero-intro {
+    background: rgba(29, 29, 29, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.kg-hero-intro h1 {
+    color: #e9ecef;
+}
+
+.kg-hero-intro p {
+    color: #adb5bd;
+}
+
+/* Content Areas - Dark Mode */
+.about-content-section {
+    background-color: #1a1a1a;
+    color: #e9ecef;
+}
+
+/* Headers - Dark Mode */
+h1, h2, h3, h4, h5, h6 {
+    color: #e9ecef;
+}
+
+.about-content h2 {
+    color: #e9ecef;
+    border-bottom-color: #ffdd3c;
+}
+
+/* Links - Dark Mode */
+a {
+    color: #ffea61; /* Light yellow - brighter than original */
+}
+
+a:hover {
+    color: #ffdd3c; /* Bright yellow for hover */
+}
+
+.about-content a {
+    color: #ffea61; /* Light yellow for content links */
+}
+
+.about-content a:hover {
+    color: #ffdd3c; /* Bright yellow for hover */
+    background-color: #262626;
+}
+
+/* Special case for navbar and other accent links */
+.navbar-brand,
+.nav-link.active {
+    color: #ffdd3c !important;
+}
+
+/* Social Links - Dark Mode */
+.social-links {
+    background-color: #262626;
+    border-left-color: #ffdd3c;
+    color: #e9ecef;
+}
+
+.social-links a {
+    color: #ffea61; /* Light yellow for social links */
+}
+
+.social-links a:hover {
+    color: #ffdd3c; /* Bright yellow for hover */
+    background-color: #2d2d2d;
+}
+
+/* Buttons - Dark Mode */
+.btn-primary {
+    background-color: #ffdd3c;
+    border-color: #ffdd3c;
+    color: #000;
+}
+
+.btn-primary:hover {
+    background-color: #e6c635;
+    border-color: #e6c635;
+    color: #000;
+}
+
+/* Code and Blockquotes - Dark Mode */
+.sourceCode {
+    border-left-color: #ffea61;
+    background-color: #262626;
+}
+
+blockquote {
+    border-left-color: #ffdd3c;
+    background-color: #2d2a1f;
+    color: #e9ecef;
+}
+
+/* Focus States - Dark Mode */
+.nav-link:focus,
+.btn:focus,
+a:focus {
+    box-shadow: 0 0 0 2px #ffea61;
+}
+
+/* Tables - Dark Mode */
+table {
+    color: #e9ecef;
+}
+
+th {
+    background-color: #262626;
+    border-color: #404040;
+}
+
+td {
+    border-color: #404040;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #262626;
+}
+
+/* Page Body - Dark Mode */
+body {
+    background-color: #1a1a1a;
+    color: #e9ecef;
+}
+
+/* Knowledge Graph Specific Dark Mode Styles */
+/* These will be used by the graph when it detects dark mode */
+
+/* Override any hardcoded graph container styles */
+[id^="kg_"] {
+    background-color: #1f1f1f !important;
+}
+
+.kg-hero-wrapper,
+.kg-wrapper {
+    background-color: #1f1f1f !important;
+}
+
+/* Knowledge Graph Node Labels - Dark Mode */
+.kg-hero-wrapper text,
+.kg-wrapper text,
+svg text {
+    fill: #e9ecef !important;
+}
+
+/* Knowledge Graph Info Panel - Dark Mode */
+.kg-info-panel,
+.info-panel,
+.node-info-panel {
+    background-color: #262626 !important;
+    border: 1px solid #404040 !important;
+    color: #e9ecef !important;
+}
+
+.kg-info-panel h3,
+.kg-info-panel h4,
+.info-panel h3,
+.info-panel h4,
+.node-info-panel h3,
+.node-info-panel h4 {
+    color: #ffdd3c !important;
+    border-bottom-color: #404040 !important;
+}
+
+.kg-info-panel p,
+.kg-info-panel div,
+.info-panel p,
+.info-panel div,
+.node-info-panel p,
+.node-info-panel div {
+    color: #e9ecef !important;
+}
+
+.kg-info-panel .close-btn,
+.info-panel .close-btn,
+.node-info-panel .close-btn {
+    background-color: #404040 !important;
+    color: #e9ecef !important;
+    border: 1px solid #6c757d !important;
+}
+
+.kg-info-panel .close-btn:hover,
+.info-panel .close-btn:hover,
+.node-info-panel .close-btn:hover {
+    background-color: #6c757d !important;
+}
+
+/* Timeline Controls - Dark Mode */
+.kg-timeline-controls,
+.timeline-container,
+.timeline-controls {
+    background-color: #262626 !important;
+    border: 1px solid #404040 !important;
+}
+
+.kg-timeline-controls input[type="range"],
+.timeline-slider {
+    background-color: #404040 !important;
+}
+
+.kg-timeline-controls input[type="range"]::-webkit-slider-thumb,
+.timeline-slider::-webkit-slider-thumb {
+    background-color: #ffdd3c !important;
+}
+
+.kg-timeline-controls input[type="range"]::-moz-range-thumb,
+.timeline-slider::-moz-range-thumb {
+    background-color: #ffdd3c !important;
+    border: 2px solid #404040 !important;
+}
+
+.kg-timeline-controls label,
+.kg-timeline-controls span,
+.timeline-label,
+.timeline-year {
+    color: #e9ecef !important;
+}
+
+/* Timeline buttons and all child elements */
+.kg-timeline-controls button,
+.kg-timeline-controls .btn,
+.timeline-container button,
+.timeline-container .btn {
+    background-color: #404040 !important;
+    color: #e9ecef !important;
+    border: 1px solid #6c757d !important;
+}
+
+.kg-timeline-controls button:hover,
+.kg-timeline-controls .btn:hover,
+.timeline-container button:hover,
+.timeline-container .btn:hover {
+    background-color: #6c757d !important;
+    color: #ffdd3c !important;
+}
+
+/* View For (Audience Controls) - Dark Mode */
+.kg-audience-controls,
+.audience-controls,
+.view-for-controls {
+    background-color: #262626 !important;
+    border: 1px solid #404040 !important;
+}
+
+.kg-audience-btn,
+.audience-btn,
+.view-for-btn {
+    background-color: #404040 !important;
+    color: #e9ecef !important;
+    border: 1px solid #6c757d !important;
+}
+
+.kg-audience-btn:hover,
+.audience-btn:hover,
+.view-for-btn:hover {
+    background-color: #6c757d !important;
+}
+
+.kg-audience-btn.active,
+.audience-btn.active,
+.view-for-btn.active {
+    background-color: #ffdd3c !important;
+    color: #000 !important;
+}
+
+/* Mini Map - Dark Mode */
+.mini-map,
+.minimap-container {
+    background-color: #262626 !important;
+    border: 2px solid #404040 !important;
+}
+
+.mini-map svg {
+    background-color: #262626 !important;
+}
+
+.viewport-indicator {
+    stroke: #ffdd3c !important;
+    fill: rgba(255, 221, 60, 0.1) !important;
+}
+
+/* Refresh Button - Dark Mode */
+.kg-refresh-btn,
+.refresh-btn,
+.restart-btn {
+    background-color: #404040 !important;
+    color: #e9ecef !important;
+    border: 1px solid #6c757d !important;
+}
+
+.kg-refresh-btn:hover,
+.refresh-btn:hover,
+.restart-btn:hover {
+    background-color: #6c757d !important;
+    color: #ffdd3c !important;
+}
+
+/* Layers Tab/Controls - Dark Mode */
+.kg-layer-controls,
+.layer-controls,
+.layer-tabs,
+.layers-container {
+    background-color: #262626 !important;
+    border: 1px solid #404040 !important;
+}
+
+.kg-layer-btn,
+.layer-btn,
+.layer-tab {
+    background-color: #404040 !important;
+    color: #e9ecef !important;
+    border: 1px solid #6c757d !important;
+}
+
+.kg-layer-btn:hover,
+.layer-btn:hover,
+.layer-tab:hover {
+    background-color: #6c757d !important;
+}
+
+.kg-layer-btn.active,
+.layer-btn.active,
+.layer-tab.active {
+    background-color: #ffdd3c !important;
+    color: #000 !important;
+}
+
+.layer-legend {
+    background-color: #262626 !important;
+    border: 1px solid #404040 !important;
+}
+
+.layer-legend-item {
+    color: #e9ecef !important;
+}
+
+/* UI Controls Container - Dark Mode */
+.ui-controls,
+.graph-controls {
+    background-color: #262626 !important;
+    border: 1px solid #404040 !important;
+}
+
+/* General UI Elements - Dark Mode */
+.btn,
+.button {
+    background-color: #404040 !important;
+    color: #e9ecef !important;
+    border: 1px solid #6c757d !important;
+}
+
+.btn:hover,
+.button:hover {
+    background-color: #6c757d !important;
+}
+
+.btn.primary,
+.button.primary {
+    background-color: #ffdd3c !important;
+    color: #000 !important;
+}
+
+/* Tooltips - Dark Mode */
+.tooltip,
+.graph-tooltip {
+    background-color: #262626 !important;
+    color: #e9ecef !important;
+    border: 1px solid #404040 !important;
+}
+
+/* Scrollbars - Dark Mode */
+.info-panel::-webkit-scrollbar,
+.timeline-container::-webkit-scrollbar {
+    background-color: #404040 !important;
+}
+
+.info-panel::-webkit-scrollbar-thumb,
+.timeline-container::-webkit-scrollbar-thumb {
+    background-color: #6c757d !important;
+}
+
+.info-panel::-webkit-scrollbar-thumb:hover,
+.timeline-container::-webkit-scrollbar-thumb:hover {
+    background-color: #ffdd3c !important;
+}
+
+/* All Headings and Titles - Dark Mode */
+.listing-container,
+.post-list,
+.recent-posts {
+    background-color: #1a1a1a;
+    color: #e9ecef;
+}
+
+/* Post and Article Titles */
+.listing-title,
+.post-title,
+.title,
+.entry-title,
+h1 a,
+h2 a,
+h3 a {
+    color: #ffea61 !important; /* Bright yellow for all titles */
+}
+
+.listing-title:hover,
+.post-title:hover,
+.title:hover,
+.entry-title:hover,
+h1 a:hover,
+h2 a:hover,
+h3 a:hover {
+    color: #ffdd3c !important;
+}
+
+/* Subtitles and Descriptions - More aggressive */
+.listing-subtitle,
+.post-subtitle,
+.post-description,
+.subtitle,
+.description,
+.listing-item .description,
+.card-body .text-muted,
+.card-text,
+p.card-text,
+.card p,
+.listing-item p,
+.listing p {
+    color: #f3f4f6 !important; /* Very light gray - almost white for readability */
+}
+
+/* Dates and Meta Information */
+.listing-date,
+.post-date,
+.date,
+.meta,
+.listing-item .date,
+.listing-item .author,
+.card-footer,
+.text-muted,
+.metadata {
+    color: #9ca3af !important; /* Lighter gray for dates and authors */
+}
+
+/* Card and Section Titles */
+.card-title,
+.section-title,
+.widget-title {
+    color: #ffea61 !important;
+}
+
+.card-title:hover,
+.section-title:hover,
+.widget-title:hover {
+    color: #ffdd3c !important;
+}
+
+/* Additional Quarto-specific post metadata */
+.quarto-listing .metadata,
+.quarto-listing .listing-date,
+.quarto-listing .listing-author,
+.quarto-listing .card-footer {
+    color: #9ca3af !important;
+}
+
+/* Post descriptions - VERY aggressive styling */
+.quarto-listing .listing-description,
+.quarto-listing .card-text,
+.quarto-listing .listing-subtitle,
+.quarto-listing .card-subtitle,
+.card-body p,
+.card-body .card-text,
+.listing-container p,
+.listing-container .card-text {
+    color: #f3f4f6 !important; /* Very light gray - almost white */
+}
+
+/* Blog post metadata in listings */
+.listing-container .card .card-body small,
+.listing-container .card .card-footer small,
+.post-metadata,
+.byline {
+    color: #9ca3af !important;
+}
+
+/* Knowledge Graph Labels for Controls - Stronger Selectors */
+.kg-audience-controls,
+.kg-audience-controls *,
+.kg-audience-controls label,
+.kg-audience-controls h4,
+.kg-audience-controls h5,
+.kg-audience-controls span,
+.kg-audience-controls .control-label {
+    color: #e9ecef !important; /* Light text for "View For" label */
+}
+
+.kg-layer-controls,
+.kg-layer-controls *,
+.kg-layer-controls label,
+.kg-layer-controls h4,
+.kg-layer-controls h5,
+.kg-layer-controls span,
+.kg-layer-controls .control-label {
+    color: #e9ecef !important; /* Light text for "Layers" label */
+}
+
+.kg-timeline-controls,
+.kg-timeline-controls *,
+.kg-timeline-controls label,
+.kg-timeline-controls h4,
+.kg-timeline-controls h5,
+.kg-timeline-controls span,
+.kg-timeline-controls .control-label {
+    color: #e9ecef !important; /* Light text for timeline labels */
+}
+
+/* Override any inherited dark text colors in graph controls */
+[class*="kg-"] {
+    color: #e9ecef !important;
+}
+
+[class*="kg-"] button {
+    color: #e9ecef !important;
+}
+
+/* Info Panel Related To Section - Dark Mode - Very Specific Targeting Only */
+/* Target the specific fixedRelatedSection with white background */
+.kg-info-panel [style*="background: rgba(255, 255, 255, 0.98)"],
+.info-panel [style*="background: rgba(255, 255, 255, 0.98)"],
+.kg-info-panel [style*="background-color: white"],
+.kg-info-panel [style*="background-color: #fff"],
+.kg-info-panel [style*="background-color: #ffffff"],
+.kg-info-panel [style*="background: white"],
+.kg-info-panel [style*="background: #fff"],
+.kg-info-panel [style*="background: #ffffff"],
+.info-panel [style*="background-color: white"],
+.info-panel [style*="background-color: #fff"],
+.info-panel [style*="background-color: #ffffff"],
+.info-panel [style*="background: white"],
+.info-panel [style*="background: #fff"],
+.info-panel [style*="background: #ffffff"] {
+    background-color: #262626 !important;
+    background: rgba(38, 38, 38, 0.98) !important;
+}
+
+/* Node Links for Dark Theme - Preserve Colors but Make Dark Theme Friendly */
+.kg-info-panel a,
+.info-panel a,
+.node-info-panel a {
+    color: inherit !important; /* Let node colors show through */
+    text-decoration: underline !important;
+    opacity: 0.9 !important;
+}
+
+.kg-info-panel a:hover,
+.info-panel a:hover,
+.node-info-panel a:hover {
+    opacity: 1 !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    padding: 2px 4px !important;
+    border-radius: 3px !important;
+}

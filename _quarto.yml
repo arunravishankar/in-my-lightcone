@@ -31,5 +31,6 @@ website:
 
 format:
   html:
-    theme: cosmo
-    css: styles.css
+    theme:
+      light: [cosmo, styles.css]
+      dark: [cosmo, styles-dark.css]
