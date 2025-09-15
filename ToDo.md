@@ -1,6 +1,5 @@
 ## To Do
 * Clean up the codebase
-* Allow for system to decide on light vs dark theme
 * Ensure auto deploy on the custom domain when a PR is merged onto main
 * Finish the description of each node
 * Decide what node needs to be in the Overview section

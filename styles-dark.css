@@ -46,11 +46,11 @@ $surface-color: #262626;
 }
 
 .kg-hero-intro h1 {
-    color: #e9ecef;
+    color: #f8f9fa;
 }
 
 .kg-hero-intro p {
-    color: #adb5bd;
+    color: #e0e3e7;
 }
 
 /* Content Areas - Dark Mode */
@@ -188,8 +188,12 @@ svg text {
 /* Knowledge Graph Info Panel - Dark Mode */
 .kg-info-panel,
 .info-panel,
-.node-info-panel {
+.node-info-panel,
+.kg-info-panel[style],
+.info-panel[style],
+.node-info-panel[style] {
     background-color: #262626 !important;
+    background: #262626 !important;
     border: 1px solid #404040 !important;
     color: #e9ecef !important;
 }
@@ -204,13 +208,30 @@ svg text {
     border-bottom-color: #404040 !important;
 }
 
+/* Info Panel Title (Node Label) - Dark Mode */
+.kg-info-panel div[style*="color: #333"],
+.info-panel div[style*="color: #333"],
+.node-info-panel div[style*="color: #333"],
+.kg-info-panel [style*="font-weight: bold"][style*="color: #333"],
+.info-panel [style*="font-weight: bold"][style*="color: #333"],
+.node-info-panel [style*="font-weight: bold"][style*="color: #333"] {
+    color: #f8f9fa !important;
+}
+
+/* Info Panel Description - Dark Mode */
+.kg-info-panel div[style*="color: #555"],
+.info-panel div[style*="color: #555"],
+.node-info-panel div[style*="color: #555"] {
+    color: #e0e3e7 !important;
+}
+
 .kg-info-panel p,
 .kg-info-panel div,
 .info-panel p,
 .info-panel div,
 .node-info-panel p,
 .node-info-panel div {
-    color: #e9ecef !important;
+    color: #adb5bd !important;
 }
 
 .kg-info-panel .close-btn,
@@ -525,6 +546,15 @@ p.card-text,
     color: #9ca3af !important;
 }
 
+/* Profile Popup Dark Theme - Override Inline Styles */
+.kg-hero-intro h1[style*="color: #495057"] {
+    color: #f8f9fa !important; /* Light text for name in dark theme */
+}
+
+.kg-hero-intro p[style*="color: #666"] {
+    color: #e0e3e7 !important; /* Light gray for description in dark theme */
+}
+
 /* Knowledge Graph Labels for Controls - Stronger Selectors */
 .kg-audience-controls,
 .kg-audience-controls *,
@@ -565,6 +595,14 @@ p.card-text,
     color: #e9ecef !important;
 }
 
+/* Layer Pills - Override the generic kg- rule to ensure proper text color */
+[class*="kg-"] div[style*="background:"][style*="border-radius: 12px"],
+.kg-info-panel div[style*="background:"][style*="border-radius: 12px"],
+.info-panel div[style*="background:"][style*="border-radius: 12px"],
+.node-info-panel div[style*="background:"][style*="border-radius: 12px"] {
+    color: white !important; /* Always white text on colored background pills */
+}
+
 /* Info Panel Related To Section - Dark Mode - Very Specific Targeting Only */
 /* Target the specific fixedRelatedSection with white background */
 .kg-info-panel [style*="background: rgba(255, 255, 255, 0.98)"],
@@ -580,7 +618,26 @@ p.card-text,
 .info-panel [style*="background-color: #ffffff"],
 .info-panel [style*="background: white"],
 .info-panel [style*="background: #fff"],
-.info-panel [style*="background: #ffffff"] {
+.info-panel [style*="background: #ffffff"],
+/* Target the main info panel if it has inline white background */
+.kg-info-panel[style*="background-color: white"],
+.kg-info-panel[style*="background-color: #fff"],
+.kg-info-panel[style*="background-color: #ffffff"],
+.kg-info-panel[style*="background: white"],
+.kg-info-panel[style*="background: #fff"],
+.kg-info-panel[style*="background: #ffffff"],
+.info-panel[style*="background-color: white"],
+.info-panel[style*="background-color: #fff"],
+.info-panel[style*="background-color: #ffffff"],
+.info-panel[style*="background: white"],
+.info-panel[style*="background: #fff"],
+.info-panel[style*="background: #ffffff"],
+.node-info-panel[style*="background-color: white"],
+.node-info-panel[style*="background-color: #fff"],
+.node-info-panel[style*="background-color: #ffffff"],
+.node-info-panel[style*="background: white"],
+.node-info-panel[style*="background: #fff"],
+.node-info-panel[style*="background: #ffffff"] {
     background-color: #262626 !important;
     background: rgba(38, 38, 38, 0.98) !important;
 }
@@ -601,4 +658,57 @@ p.card-text,
     background-color: rgba(255, 255, 255, 0.1) !important;
     padding: 2px 4px !important;
     border-radius: 3px !important;
+}
+
+/* Info Panel Description Container - Dark Mode - More Specific Targeting */
+.kg-info-panel div[style*="background: #f8f9fa"],
+.info-panel div[style*="background: #f8f9fa"],
+.node-info-panel div[style*="background: #f8f9fa"],
+.kg-info-panel div[style*="background-color: #f8f9fa"],
+.info-panel div[style*="background-color: #f8f9fa"],
+.node-info-panel div[style*="background-color: #f8f9fa"],
+/* Target the specific description container styles */
+.kg-info-panel div[style*="min-height: 80px"][style*="background: #f8f9fa"],
+.info-panel div[style*="min-height: 80px"][style*="background: #f8f9fa"],
+.node-info-panel div[style*="min-height: 80px"][style*="background: #f8f9fa"],
+.kg-info-panel div[style*="max-height: 120px"][style*="background: #f8f9fa"],
+.info-panel div[style*="max-height: 120px"][style*="background: #f8f9fa"],
+.node-info-panel div[style*="max-height: 120px"][style*="background: #f8f9fa"] {
+    background-color: #2d2d2d !important;
+    background: #2d2d2d !important;
+    border: 1px solid #404040 !important;
+    border-color: #404040 !important;
+}
+
+/* Info Panel Related Section Container - Dark Mode - More Specific Targeting */
+.kg-info-panel div[style*="background: rgba(255, 255, 255, 0.98)"],
+.info-panel div[style*="background: rgba(255, 255, 255, 0.98)"],
+.node-info-panel div[style*="background: rgba(255, 255, 255, 0.98)"],
+/* Target the specific related container styles */
+.kg-info-panel div[style*="max-height: 180px"][style*="background: rgba(255, 255, 255, 0.98)"],
+.info-panel div[style*="max-height: 180px"][style*="background: rgba(255, 255, 255, 0.98)"],
+.node-info-panel div[style*="max-height: 180px"][style*="background: rgba(255, 255, 255, 0.98)"],
+.kg-info-panel div[style*="border-top: 2px solid #ddd"][style*="background: rgba(255, 255, 255, 0.98)"],
+.info-panel div[style*="border-top: 2px solid #ddd"][style*="background: rgba(255, 255, 255, 0.98)"],
+.node-info-panel div[style*="border-top: 2px solid #ddd"][style*="background: rgba(255, 255, 255, 0.98)"] {
+    background-color: #2d2d2d !important;
+    background: rgba(45, 45, 45, 0.98) !important;
+    border-top-color: #404040 !important;
+}
+
+/* Info Panel Related Item Links - Dark Mode */
+.kg-info-panel div[style*="background: #f8f9fa"][style*="border: 1px solid #e9ecef"],
+.info-panel div[style*="background: #f8f9fa"][style*="border: 1px solid #e9ecef"],
+.node-info-panel div[style*="background: #f8f9fa"][style*="border: 1px solid #e9ecef"] {
+    background-color: #404040 !important;
+    background: #404040 !important;
+    border-color: #6c757d !important;
+}
+
+/* Hover states for related item links */
+.kg-info-panel div[style*="background: #f8f9fa"]:hover,
+.info-panel div[style*="background: #f8f9fa"]:hover,
+.node-info-panel div[style*="background: #f8f9fa"]:hover {
+    background-color: #6c757d !important;
+    background: #6c757d !important;
 }

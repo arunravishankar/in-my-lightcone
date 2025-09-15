@@ -39,6 +39,69 @@ class UIControlsManager {
   }
 
   /**
+   * Detect if dark theme is currently active
+   * @returns {boolean} True if dark theme is active
+   */
+  isDarkTheme() {
+    // Check for Quarto's dark theme attribute
+    if (document.documentElement.getAttribute('data-bs-theme') === 'dark') {
+      return true;
+    }
+
+    // Check for manual dark theme classes
+    if (document.body.classList.contains('dark-theme') ||
+        document.documentElement.classList.contains('dark-theme')) {
+      return true;
+    }
+
+    // Check for dark background color on body as fallback
+    const bodyStyles = window.getComputedStyle(document.body);
+    const bodyBg = bodyStyles.backgroundColor;
+    if (bodyBg) {
+      // Convert rgb to hex for comparison if needed
+      const rgb = bodyBg.match(/\d+/g);
+      if (rgb) {
+        const r = parseInt(rgb[0]);
+        const g = parseInt(rgb[1]);
+        const b = parseInt(rgb[2]);
+        // Consider it dark if background is darker than medium gray
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        return brightness < 128;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Get theme-appropriate colors for UI elements
+   * @returns {Object} Color scheme object
+   */
+  getThemeColors() {
+    const isDark = this.isDarkTheme();
+
+    if (isDark) {
+      return {
+        background: '#2d2d2d',
+        border: '#404040',
+        text: '#e9ecef',
+        textSecondary: '#adb5bd',
+        containerBg: 'rgba(45, 45, 45, 0.98)',
+        accent: '#ffdd3c'
+      };
+    } else {
+      return {
+        background: '#f8f9fa',
+        border: '#e9ecef',
+        text: '#333',
+        textSecondary: '#555',
+        containerBg: 'rgba(255, 255, 255, 0.98)',
+        accent: '#2780e3'
+      };
+    }
+  }
+
+  /**
    * Initialize UI controls
    * @param {Element} container - Main container element
    * @param {Object} graph - KnowledgeGraphExplorer instance
@@ -632,13 +695,16 @@ class UIControlsManager {
     if (!this.infoPanel) return;
 
     this.selectedNode = node;
-  
+
+    // Get theme-appropriate colors
+    const colors = this.getThemeColors();
+
     const title = document.createElement('div');
     title.style.cssText = `
       font-weight: bold;
       font-size: 14px;
       margin-bottom: 8px;
-      color: #333;
+      color: ${colors.text};
     `;
     title.textContent = node.label;
 
@@ -646,8 +712,8 @@ class UIControlsManager {
     description.style.cssText = `
       font-size: 12px;
       line-height: 1.4;
-      color: #555;
-      margin-bottom: 10px;
+      color: ${colors.textSecondary};
+      margin: 0;
     `;
     description.textContent = node.description || 'No description available.';
 
@@ -655,8 +721,8 @@ class UIControlsManager {
     const details = document.createElement('div');
     details.style.cssText = `
       font-size: 11px;
-      color: #777;
-      border-top: 1px solid #eee;
+      color: ${colors.textSecondary};
+      border-top: 1px solid ${colors.border};
       padding-top: 8px;
       margin-bottom: 10px;
     `;
@@ -675,7 +741,7 @@ class UIControlsManager {
       layerTag.style.cssText = `
         display: inline-block;
         background: ${layerInfo?.color || '#666'};
-        color: white;
+        color: ${this.isDarkTheme() ? 'white' : 'black'} !important;
         padding: 2px 8px;
         border-radius: 12px;
         font-size: 10px;
@@ -700,41 +766,52 @@ class UIControlsManager {
       background: none;
       font-size: 16px;
       cursor: pointer;
-      color: #999;
+      color: ${colors.textSecondary};
     `;
     closeBtn.addEventListener('click', () => this.hideInfo());
 
-    // Create scrollable content area
-    const scrollableContent = document.createElement('div');
-    scrollableContent.style.cssText = `
-      max-height: 320px;
-      overflow-y: auto;
+    // Create main content area with guaranteed space for description
+    const mainContent = document.createElement('div');
+    mainContent.style.cssText = `
       margin-bottom: 10px;
-      padding-right: 5px;
     `;
 
-    // Add title, time/layer details, then description to scrollable area
-    scrollableContent.appendChild(title);
-    scrollableContent.appendChild(details);
-    scrollableContent.appendChild(description);
+    // Add title and details to main content
+    mainContent.appendChild(title);
+    mainContent.appendChild(details);
 
-    // Create fixed related section at bottom
-    const fixedRelatedSection = document.createElement('div');
-    fixedRelatedSection.style.cssText = `
-      border-top: 2px solid #ddd;
+    // Create description area with minimum height guarantee
+    const descriptionContainer = document.createElement('div');
+    descriptionContainer.style.cssText = `
+      min-height: 80px;
+      max-height: 120px;
+      overflow-y: auto;
+      margin-bottom: 12px;
+      padding: 8px;
+      background: ${colors.background};
+      border-radius: 4px;
+      border: 1px solid ${colors.border};
+    `;
+    descriptionContainer.appendChild(description);
+
+    // Create scrollable related section
+    const relatedContainer = document.createElement('div');
+    relatedContainer.style.cssText = `
+      border-top: 2px solid ${colors.border};
       padding-top: 8px;
-      background: rgba(255, 255, 255, 0.98);
-      position: sticky;
-      bottom: 0;
+      max-height: 180px;
+      overflow-y: auto;
+      background: ${colors.containerBg};
     `;
-    fixedRelatedSection.appendChild(relatedSection);
+    relatedContainer.appendChild(relatedSection);
 
     // Clear and populate
     this.infoPanel.innerHTML = '';
     this.infoPanel.appendChild(closeBtn);
-    this.infoPanel.appendChild(scrollableContent);
-    this.infoPanel.appendChild(fixedRelatedSection);
-  
+    this.infoPanel.appendChild(mainContent);
+    this.infoPanel.appendChild(descriptionContainer);
+    this.infoPanel.appendChild(relatedContainer);
+
     this.infoPanel.style.display = 'block';
   }
 
@@ -757,9 +834,12 @@ class UIControlsManager {
       return document.createElement('div'); // Return empty div if no connections
     }
 
+    // Get theme-appropriate colors
+    const colors = this.getThemeColors();
+
     const section = document.createElement('div');
     section.style.cssText = `
-      border-top: 1px solid #eee;
+      border-top: 1px solid ${colors.border};
       padding-top: 8px;
       margin-top: 8px;
     `;
@@ -769,7 +849,7 @@ class UIControlsManager {
     title.style.cssText = `
       font-weight: bold;
       font-size: 11px;
-      color: #333;
+      color: ${colors.text};
       margin-bottom: 6px;
     `;
     section.appendChild(title);
@@ -807,6 +887,9 @@ class UIControlsManager {
    * @param {string} relationship - The relationship type ('parent', 'child', 'related')
    */
   addRelatedNodeLink(container, node, relationship) {
+    // Get theme-appropriate colors
+    const colors = this.getThemeColors();
+
     const link = document.createElement('div');
     link.style.cssText = `
       display: flex;
@@ -816,8 +899,8 @@ class UIControlsManager {
       border-radius: 3px;
       cursor: pointer;
       font-size: 11px;
-      background: #f8f9fa;
-      border: 1px solid #e9ecef;
+      background: ${colors.background};
+      border: 1px solid ${colors.border};
       transition: background-color 0.2s;
     `;
 
@@ -839,7 +922,7 @@ class UIControlsManager {
     // Create text content
     const text = document.createElement('span');
     text.style.cssText = `
-      color: #333;
+      color: ${colors.text};
       font-size: 10px;
       line-height: 1.2;
       overflow: hidden;
@@ -859,13 +942,18 @@ class UIControlsManager {
     link.appendChild(colorDot);
     link.appendChild(text);
 
+    // Get hover colors - slightly different from base colors
+    const isDark = this.isDarkTheme();
+    const hoverBg = isDark ? '#3a3a3a' : '#e9ecef';
+    const originalBg = colors.background;
+
     // Add hover effects
     link.addEventListener('mouseenter', () => {
-      link.style.backgroundColor = '#e9ecef';
+      link.style.backgroundColor = hoverBg;
     });
 
     link.addEventListener('mouseleave', () => {
-      link.style.backgroundColor = '#f8f9fa';
+      link.style.backgroundColor = originalBg;
     });
 
     // Add click handler to focus on related node

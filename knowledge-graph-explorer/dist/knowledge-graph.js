@@ -1760,7 +1760,7 @@ class UIControlsManager {
       layerTag.style.cssText = `
         display: inline-block;
         background: ${layerInfo?.color || '#666'};
-        color: white;
+        color: ${this.isDarkTheme() ? 'white' : 'black'} !important;
         padding: 2px 8px;
         border-radius: 12px;
         font-size: 10px;
