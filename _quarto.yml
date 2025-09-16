@@ -3,6 +3,7 @@ project:
   output-dir: docs
   resources:
     - "profile.jpg"
+    - "imlc_logo.jpg"
 
 website:
   title: "In My Lightcone"
