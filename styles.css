@@ -329,3 +329,10 @@ body.nav-fixed {
     padding: 2px 4px;
     border-radius: 3px;
 }
+
+/* Hide Timeline - temporarily disabled but code preserved */
+.kg-timeline-controls,
+.timeline-container,
+.timeline-controls {
+    display: none !important;
+}

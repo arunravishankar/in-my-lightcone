@@ -42,9 +42,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-1fe81d0376b2c50856e68e651e390326.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-490699e2a4ef5374087f71f9c20df34b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-8bdd2f7526e4fd5df8a80d26ea7ffd49.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-490699e2a4ef5374087f71f9c20df34b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-b14658aefa774ec5e37167111b7179fa.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-879af782b1d9f9e0b0c0f39f6193d39a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-b14658aefa774ec5e37167111b7179fa.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -321,12 +321,12 @@ ul.task-list li input[type="checkbox"] {
 </style>
 <div class="hero-section">
 
-        <div id="kg_37496d1a_wrapper" class="kg-hero-wrapper" style="position: relative; width: 100%; height: 75vh; margin: 0;">
-            <div id="kg_37496d1a" style="width: 100%; height: 100%; border: none; background-color: #f9f9f9;">
+        <div id="kg_89b99715_wrapper" class="kg-hero-wrapper" style="position: relative; width: 100%; height: 75vh; margin: 0;">
+            <div id="kg_89b99715" style="width: 100%; height: 100%; border: none; background-color: #f9f9f9;">
                 <div style="padding: 20px; text-align: center; color: #666;">Loading graph...</div>
             </div>
             
-            <div class="kg-title-overlay" id="kg_37496d1a_title_overlay">
+            <div class="kg-title-overlay" id="kg_89b99715_title_overlay">
                 
             </div>
         </div>
@@ -4715,7 +4715,7 @@ class UIControlsManager {
       layerTag.style.cssText = `
         display: inline-block;
         background: ${layerInfo?.color || '#666'};
-        color: ${this.isDarkTheme() ? 'white' : 'black'};
+        color: ${this.isDarkTheme() ? 'white' : 'black'} !important;
         padding: 2px 8px;
         border-radius: 12px;
         font-size: 10px;
@@ -6554,8 +6554,8 @@ if (typeof module !== 'undefined' && module.exports) {
 
                 applyQuartoTheme();
 
-                const container = document.getElementById('kg_37496d1a');
-                const wrapper = document.getElementById('kg_37496d1a_wrapper');
+                const container = document.getElementById('kg_89b99715');
+                const wrapper = document.getElementById('kg_89b99715_wrapper');
                 container.innerHTML = ''; // Clear loading message
 
                 // Fix dimensions for hero mode - convert viewport units to pixels
@@ -6568,7 +6568,7 @@ if (typeof module !== 'undefined' && module.exports) {
                 
                 console.log('Creating KnowledgeGraphExplorer...');
                 const graph = new KnowledgeGraphExplorer(container, data, config);
-                window.kg_37496d1a = graph;
+                window.kg_89b99715 = graph;
                 
                 console.log('Graph created, adding UI controls to wrapper...');
 
@@ -6582,7 +6582,7 @@ if (typeof module !== 'undefined' && module.exports) {
                             timeline: config.timeline
                         });
                         uiControls.initialize(wrapper, graph, dataWithConfig);
-                        window['kg_37496d1a_ui'] = uiControls;
+                        window['kg_89b99715_ui'] = uiControls;
                         console.log('UI controls added to wrapper successfully');
                     } catch (uiError) {
                         console.error('UI Controls failed:', uiError);
@@ -6606,7 +6606,7 @@ if (typeof module !== 'undefined' && module.exports) {
                 });
 
                 // Setup title overlay interaction detection if present
-                const titleOverlay = document.getElementById('kg_37496d1a_title_overlay');
+                const titleOverlay = document.getElementById('kg_89b99715_title_overlay');
                 if (titleOverlay) {
                     let titleHidden = false;
 
@@ -6649,7 +6649,7 @@ if (typeof module !== 'undefined' && module.exports) {
                 console.log('Graph initialized successfully');
             } catch (error) {
                 console.error('Graph initialization failed:', error);
-                document.getElementById('kg_37496d1a').innerHTML = 
+                document.getElementById('kg_89b99715').innerHTML = 
                     '<div style="padding: 20px; color: red;">Graph failed to load: ' + error.message + '</div>';
             }
         }

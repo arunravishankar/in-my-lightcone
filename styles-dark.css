@@ -712,3 +712,10 @@ p.card-text,
     background-color: #6c757d !important;
     background: #6c757d !important;
 }
+
+/* Hide Timeline - temporarily disabled but code preserved */
+.kg-timeline-controls,
+.timeline-container,
+.timeline-controls {
+    display: none !important;
+}

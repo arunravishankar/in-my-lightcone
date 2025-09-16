@@ -8,6 +8,7 @@ website:
   title: "In My Lightcone"
   site-url: https://www.inmylightcone.com
   description: "Exploring ideas across past, present, and future lightcones"
+  favicon: imlc_logo.jpg
   
   navbar:
     left:
