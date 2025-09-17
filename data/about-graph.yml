@@ -4,6 +4,14 @@ metadata:
   timeline:
     start: 2009
     end: 2025
+  simulation:
+    linkDistance: 200
+    chargeStrength: -300
+    collisionRadius: 60
+    linkStrength: 0.25
+    centerStrength: 0.5
+    chargeDistanceMax: 500
+    velocityDecay: 0.8
 
 layers:
   - id: "physics"

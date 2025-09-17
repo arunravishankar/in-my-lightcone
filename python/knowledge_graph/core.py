@@ -76,9 +76,7 @@ class KnowledgeGraphPython:
                 "enableDrag": True
             },
             "simulation": {
-                "linkDistance": 120,
-                "linkStrength": 0.3,
-                "chargeStrength": -400
+                # No defaults - must be specified in YAML metadata
             }
         }
         
@@ -149,6 +147,15 @@ class KnowledgeGraphPython:
             metadata = raw_data['metadata']
             if 'timeline' in metadata:
                 self.config['timeline'].update(metadata['timeline'])
+            if 'simulation' in metadata:
+                self.config['simulation'].update(metadata['simulation'])
+
+        # Validate required simulation settings
+        required_sim_settings = ['linkDistance', 'chargeStrength', 'collisionRadius', 'linkStrength', 'centerStrength', 'chargeDistanceMax']
+        missing_settings = [s for s in required_sim_settings if s not in self.config['simulation']]
+        if missing_settings:
+            raise ValueError(f"Missing required simulation settings in YAML metadata: {', '.join(missing_settings)}. "
+                           f"Add a 'simulation:' section to metadata with: {', '.join(required_sim_settings)}")
         
         # Extract layers configuration
         if 'layers' in raw_data:

@@ -227,15 +227,8 @@ class KnowledgeGraphExplorer {
         dragThreshold: 5
       },
       
-      // Force simulation settings
-      simulation: {
-        linkDistance: 80,      // Reduced for compactness
-        linkStrength: 0.5,     // Increased for stronger connections
-        chargeStrength: -250,  // Reduced for less repulsion
-        chargeDistanceMax: 300, // Shorter repulsion range
-        collisionRadius: 15,   // Smaller collision radius
-        centerStrength: 1.5    // Stronger center pull
-      },
+      // Force simulation settings - must be provided by Python config from YAML
+      simulation: {},
       
       // Visual effects settings
       effects: {

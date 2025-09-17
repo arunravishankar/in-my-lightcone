@@ -4,23 +4,23 @@
  */
 class ForceSimulation {
   constructor(config = {}) {
+    // Require all force simulation settings to be provided via config
+    const required = ['linkDistance', 'chargeStrength', 'collisionRadius', 'linkStrength', 'centerStrength', 'chargeDistanceMax'];
+    const missing = required.filter(key => config[key] === undefined);
+    if (missing.length > 0) {
+      throw new Error(`ForceSimulation requires these settings in config: ${missing.join(', ')}`);
+    }
+
     this.config = {
       width: 800,
       height: 600,
-      
-      // Force strengths
-      linkDistance: 120,
-      linkStrength: 0.3,
-      chargeStrength: -400,
-      chargeDistanceMax: 500,
-      collisionRadius: 25,
-      centerStrength: 1,
-      
-      // Simulation parameters
+
+      // Simulation parameters (these have reasonable defaults)
       alphaMin: 0.001,
       alphaDecay: 0.0228,
       velocityDecay: 0.4,
-      
+
+      // Force settings - must be provided
       ...config
     };
 
