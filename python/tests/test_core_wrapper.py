@@ -49,6 +49,56 @@ def sample_data():
 
 
 @pytest.fixture
+def sample_data_multiple_parents():
+    """Sample test data with multiple parent nodes"""
+    return {
+        "nodes": [
+            {
+                "id": "node1",
+                "label": "Test Node 1",
+                "type": "test",
+                "layer": "layer1",
+                "size": 15,
+                "timespan": {"start": 2020, "end": 2022}
+            },
+            {
+                "id": "node2",
+                "label": "Test Node 2",
+                "type": "test",
+                "layer": "layer1",
+                "size": 12,
+                "timespan": {"start": 2021, "end": 2023}
+            },
+            {
+                "id": "node3",
+                "label": "Test Node 3",
+                "type": "test",
+                "layer": "layer1",
+                "size": 10,
+                "timespan": {"start": 2021, "end": 2023},
+                "parent_nodes": ["node1", "node2"]  # Multiple parents
+            },
+            {
+                "id": "node4",
+                "label": "Test Node 4",
+                "type": "test",
+                "layer": "layer1",
+                "size": 8,
+                "timespan": {"start": 2022, "end": 2023},
+                "parent_node": "node3"  # Single parent (backward compatibility)
+            }
+        ],
+        "layers": [
+            {
+                "id": "layer1",
+                "name": "Test Layer",
+                "color": "#2780e3"
+            }
+        ]
+    }
+
+
+@pytest.fixture
 def custom_config():
     """Custom configuration for testing"""
     return {
@@ -173,6 +223,55 @@ class TestKnowledgeGraphPython:
         assert graph.config["timeline"]["start"] == 2015
         assert graph.config["timeline"]["end"] == 2025
     
+    def test_multiple_parent_nodes(self, sample_data_multiple_parents):
+        """Test nodes with multiple parent nodes"""
+        graph = KnowledgeGraphPython.from_dict(sample_data_multiple_parents)
+
+        assert graph.is_loaded
+        assert len(graph.data["nodes"]) == 4
+        # Should have 3 links total:
+        # - 2 links from node1 and node2 to node3
+        # - 1 link from node3 to node4
+        assert len(graph.data["links"]) == 3
+
+        # Check that links were created correctly
+        links_to_node3 = [link for link in graph.data["links"] if link["target"] == "node3"]
+        assert len(links_to_node3) == 2
+
+        source_ids = {link["source"] for link in links_to_node3}
+        assert source_ids == {"node1", "node2"}
+
+    def test_backward_compatibility_single_parent(self, sample_data):
+        """Test that single parent_node still works (backward compatibility)"""
+        graph = KnowledgeGraphPython.from_dict(sample_data)
+
+        assert len(graph.data["links"]) == 1
+        assert graph.data["links"][0]["source"] == "node1"
+        assert graph.data["links"][0]["target"] == "node2"
+
+    def test_mixed_parent_formats(self, sample_data_multiple_parents):
+        """Test graph with both parent_node and parent_nodes formats"""
+        graph = KnowledgeGraphPython.from_dict(sample_data_multiple_parents)
+
+        # node3 has parent_nodes: ["node1", "node2"]
+        # node4 has parent_node: "node3"
+
+        links_to_node4 = [link for link in graph.data["links"] if link["target"] == "node4"]
+        assert len(links_to_node4) == 1
+        assert links_to_node4[0]["source"] == "node3"
+
+    def test_invalid_parent_reference(self):
+        """Test validation catches references to non-existent parent nodes"""
+        invalid_data = {
+            "nodes": [
+                {"id": "node1", "label": "Node 1"},
+                {"id": "node2", "label": "Node 2", "parent_nodes": ["node1", "nonexistent"]}
+            ]
+        }
+
+        with pytest.raises(ValueError, match="references unknown parent: nonexistent"):
+            KnowledgeGraphPython.from_dict(invalid_data)
+
     def test_yaml_file_not_found(self):
         """Test handling of missing YAML files"""
         with pytest.raises(FileNotFoundError, match="YAML file not found"):
@@ -206,7 +305,7 @@ class TestKnowledgeGraphPython:
             ]
         }
 
-        with pytest.raises(ValueError, match="references unknown parent_node"):
+        with pytest.raises(ValueError, match="references unknown parent"):
             KnowledgeGraphPython.from_dict(invalid_data)
 
     def test_data_validation_circular_parent_reference(self):

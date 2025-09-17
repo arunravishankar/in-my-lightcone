@@ -50,27 +50,46 @@ class KnowledgeGraphExplorer {
   }
 
   /**
-   * Generate links from parent_node relationships
+   * Generate links from parent_node/parent_nodes relationships
    * @returns {Array} - Array of link objects
    */
   generateLinksFromParents() {
     const links = [];
-    
+
     this.nodes.forEach(node => {
+      // Support both parent_node (single) and parent_nodes (array) for backward compatibility
+      let parents = [];
+
+      // Check for single parent (backward compatibility)
       if (node.parent_node && node.parent_node !== null) {
-        // Find the parent node
-        const parentNode = this.nodes.find(n => n.id === node.parent_node);
-        if (parentNode) {
-          links.push({
-            source: node.parent_node,
-            target: node.id,
-            strength: 0.5, // Default strength
-            id: `${node.parent_node}-${node.id}`
-          });
+        // parent_node can be either a string or an array
+        parents = Array.isArray(node.parent_node) ? node.parent_node : [node.parent_node];
+      }
+      // Check for multiple parents (new format)
+      else if (node.parent_nodes && node.parent_nodes !== null) {
+        if (Array.isArray(node.parent_nodes)) {
+          parents = node.parent_nodes;
+        } else {
+          // If parent_nodes is not an array, treat it as a single parent
+          parents = [node.parent_nodes];
         }
       }
+
+      // Create links for all parents
+      parents.forEach(parentId => {
+        // Find the parent node
+        const parentNode = this.nodes.find(n => n.id === parentId);
+        if (parentNode) {
+          links.push({
+            source: parentId,
+            target: node.id,
+            strength: 0.5, // Default strength
+            id: `${parentId}-${node.id}`
+          });
+        }
+      });
     });
-    
+
     return links;
   }
 
@@ -86,12 +105,21 @@ class KnowledgeGraphExplorer {
       const tempLinks = [];
       
       tempNodes.forEach(node => {
+        // Support both parent_node and parent_nodes
+        let parents = [];
         if (node.parent_node && node.parent_node !== null) {
+          // parent_node can be either a string or an array
+          parents = Array.isArray(node.parent_node) ? node.parent_node : [node.parent_node];
+        } else if (node.parent_nodes && node.parent_nodes !== null) {
+          parents = Array.isArray(node.parent_nodes) ? node.parent_nodes : [node.parent_nodes];
+        }
+
+        parents.forEach(parentId => {
           tempLinks.push({
-            source: node.parent_node,
+            source: parentId,
             target: node.id
           });
-        }
+        });
       });
 
       const dataForValidation = {

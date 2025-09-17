@@ -178,17 +178,37 @@ class KnowledgeGraphPython:
         self.is_loaded = True
 
     def _generate_links_from_parents(self) -> None:
-        """Generate links from parent_node relationships in nodes."""
+        """Generate links from parent_node/parent_nodes relationships in nodes."""
         for node in self.data['nodes']:
+            # Support both parent_node (single) and parent_nodes (array) for backward compatibility
+            parents = []
+
+            # Check for single parent (backward compatibility)
             if node.get('parent_node') and node['parent_node'] is not None:
+                # parent_node can be either a string or a list
+                if isinstance(node['parent_node'], list):
+                    parents = node['parent_node']
+                else:
+                    parents = [node['parent_node']]
+
+            # Check for multiple parents (new format)
+            elif node.get('parent_nodes') and node['parent_nodes'] is not None:
+                if isinstance(node['parent_nodes'], list):
+                    parents = node['parent_nodes']
+                else:
+                    # If parent_nodes is not a list, treat it as a single parent
+                    parents = [node['parent_nodes']]
+
+            # Create links for all parents
+            for parent_id in parents:
                 # Check if parent node exists
-                parent_exists = any(n['id'] == node['parent_node'] for n in self.data['nodes'])
+                parent_exists = any(n['id'] == parent_id for n in self.data['nodes'])
                 if parent_exists:
                     link = {
-                        "source": node['parent_node'],
+                        "source": parent_id,
                         "target": node['id'],
                         "strength": 0.5,  # Default strength
-                        "id": f"{node['parent_node']}-{node['id']}"
+                        "id": f"{parent_id}-{node['id']}"
                     }
                     self.data['links'].append(link)
 
@@ -239,11 +259,29 @@ class KnowledgeGraphPython:
             if link['target'] not in node_ids:
                 raise ValueError(f"Link {i} references unknown target node: {link['target']}")
 
-        # Check that all parent_node references are valid
+        # Check that all parent_node/parent_nodes references are valid
         for i, node in enumerate(self.data['nodes']):
+            parents = []
+
+            # Check for single parent (backward compatibility)
             if node.get('parent_node') and node['parent_node'] is not None:
-                if node['parent_node'] not in node_ids:
-                    raise ValueError(f"Node {i} ('{node['id']}') references unknown parent_node: {node['parent_node']}")
+                # parent_node can be either a string or a list
+                if isinstance(node['parent_node'], list):
+                    parents = node['parent_node']
+                else:
+                    parents = [node['parent_node']]
+
+            # Check for multiple parents (new format)
+            elif node.get('parent_nodes') and node['parent_nodes'] is not None:
+                if isinstance(node['parent_nodes'], list):
+                    parents = node['parent_nodes']
+                else:
+                    parents = [node['parent_nodes']]
+
+            # Validate all parent references
+            for parent_id in parents:
+                if parent_id not in node_ids:
+                    raise ValueError(f"Node {i} ('{node['id']}') references unknown parent: {parent_id}")
     
     def generate_html(self, output_path: Optional[Union[str, Path]] = None, 
                      standalone: bool = True) -> str:

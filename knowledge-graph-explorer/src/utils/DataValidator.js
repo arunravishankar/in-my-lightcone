@@ -45,8 +45,14 @@ class DataValidator {
 
     // Validate parent_node references
     data.nodes.forEach((node, index) => {
-      if (node.parent_node && node.parent_node !== null && !nodeIds.has(node.parent_node)) {
-        this.errors.push(`Node ${index} (${node.id}): parent_node '${node.parent_node}' does not exist`);
+      if (node.parent_node && node.parent_node !== null) {
+        // Handle both string and array formats
+        const parents = Array.isArray(node.parent_node) ? node.parent_node : [node.parent_node];
+        parents.forEach(parentId => {
+          if (!nodeIds.has(parentId)) {
+            this.errors.push(`Node ${index} (${node.id}): parent_node '${parentId}' does not exist`);
+          }
+        });
       }
     });
 
@@ -130,9 +136,20 @@ class DataValidator {
       }
     }
 
-    // Validate parent_node reference
-    if (node.parent_node && typeof node.parent_node !== 'string') {
-      this.errors.push(`${nodeRef} (${node.id}): 'parent_node' must be a string node ID`);
+    // Validate parent_node reference - can be string or array of strings
+    if (node.parent_node) {
+      if (typeof node.parent_node === 'string') {
+        // Single parent - will be validated later
+      } else if (Array.isArray(node.parent_node)) {
+        // Multiple parents - validate each is a string
+        node.parent_node.forEach((parent, idx) => {
+          if (typeof parent !== 'string') {
+            this.errors.push(`${nodeRef} (${node.id}): parent_node[${idx}] must be a string node ID`);
+          }
+        });
+      } else {
+        this.errors.push(`${nodeRef} (${node.id}): 'parent_node' must be a string or array of strings`);
+      }
     }
 
     // Validate subnode field
